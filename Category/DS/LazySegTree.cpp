@@ -9,15 +9,14 @@ public:
 
 public:
     LazySegmentTree() : n(0) {}
-    LazySegmentTree(int n_, Info v_ = Info()) { init(n_, v_); }
-    void init(int n_, Info v_ = Info()) { init(vector(n_, v_)); }
-
+    LazySegmentTree(int n_, Info v_ = Info()) { init(vector(n_, v_)); }
     template <class T>
-    LazySegmentTree(vector<T> init_) {
+    LazySegmentTree(vector<T>& init_) {
         init(init_);
     }
+
     template <class T>
-    void init(vector<T> init_) {
+    void init(vector<T>& init_) {
         n = init_.size();
         info.assign(4 << __lg(n), Info());
         tag.assign(4 << __lg(n), Tag());
@@ -43,13 +42,12 @@ private:
 
     void pull(int o) { info[o] = info[o << 1] + info[o << 1 | 1]; }
     void push(int o) {
-        apply(2 * o, tag[o]);
-        apply(2 * o + 1, tag[o]);
+        apply(o << 1, tag[o]);
+        apply(o << 1 | 1, tag[o]);
         tag[o] = Tag();
     }
 
 public:
-    // 赋值式更新
     void modify(int o, int l, int r, int x, const Info& v) {
         if (l + 1 == r) {
             info[o] = v;
@@ -66,7 +64,6 @@ public:
     }
     void modify(int o, const Info& v) { modify(1, 0, n, o, v); }
 
-    // [l, r)
     Info rangeQuery(int o, int l, int r, int x, int y) {
         if (r <= x || l >= y) {
             return Info();
@@ -139,54 +136,56 @@ public:
     }
 
 public:
-    void maintainL(int p, int l, int r, int pre) {
-        if (info[p].difl > 0 && info[p].maxlowl < pre) {
+    void maintainL(int o, int l, int r, int pre) {
+        if (info[o].difl > 0 && info[o].maxlowl < pre) {
             return;
         }
         if (r - l == 1) {
-            info[p].max = info[p].maxlowl;
-            info[p].maxl = info[p].maxr = l;
-            info[p].maxlowl = info[p].maxlowr = -inf;
+            info[o].max = info[o].maxlowl;
+            info[o].maxl = info[o].maxr = l;
+            info[o].maxlowl = info[o].maxlowr = -inf;
             return;
         }
         int m = (l + r) / 2;
-        push(p);
-        maintainL(2 * p, l, m, pre);
-        pre = max(pre, info[2 * p].max);
-        maintainL(2 * p + 1, m, r, pre);
-        pull(p);
+        push(o);
+        maintainL(o << 1, l, m, pre);
+        pre = max(pre, info[o << 1].max);
+        maintainL(o << 1 | 1, m, r, pre);
+        pull(o);
     }
     void maintainL() { maintainL(1, 0, n, -1); }
-    void maintainR(int p, int l, int r, int suf) {
-        if (info[p].difr > 0 && info[p].maxlowr < suf) {
+
+    void maintainR(int o, int l, int r, int suf) {
+        if (info[o].difr > 0 && info[o].maxlowr < suf) {
             return;
         }
         if (r - l == 1) {
-            info[p].max = info[p].maxlowl;
-            info[p].maxl = info[p].maxr = l;
-            info[p].maxlowl = info[p].maxlowr = -inf;
+            info[o].max = info[o].maxlowl;
+            info[o].maxl = info[o].maxr = l;
+            info[o].maxlowl = info[o].maxlowr = -inf;
             return;
         }
         int m = (l + r) / 2;
-        push(p);
-        maintainR(2 * p + 1, m, r, suf);
-        suf = max(suf, info[2 * p + 1].max);
-        maintainR(2 * p, l, m, suf);
-        pull(p);
+        push(o);
+        maintainR(o << 1 | 1, m, r, suf);
+        suf = max(suf, info[o << 1 | 1].max);
+        maintainR(o << 1, l, m, suf);
+        pull(o);
     }
     void maintainR() { maintainR(1, 0, n, -1); }
 };
-// 下标从 0 开始
+// 原代码：下标从 0 开始，覆盖式更新，[l, r)
 
 struct Tag {
     int add = 0;
+    Tag(int v) : add(v) {}
     void apply(const Tag& t) { add += t.add; }
 };
 
 struct Info {
-    int mx = 0;
-    void apply(const Tag& t) { mx += t.add; }
+    int sum = 0, len = 1;
+    void apply(const Tag& t) { sum += t.add * len; }
 };
 Info operator+(const Info& a, const Info& b) {
-    return Info(max(a.mx, b.mx));
+    return Info(a.sum + b.sum, a.len + b.len);
 }

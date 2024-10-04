@@ -4,20 +4,21 @@ int BFS_TopoSort() {
     int n, m; // 点数、边数
     cin >> n >> m;
 
-    vector<int> adjlist[MAX]; // 邻接表
-    int inDegree[MAX] {}; // 入度
+    vector<vector<int>> adj(MAX);
+    vector<int> inDeg(MAX);
 
-    //* Data processing
-    int a, b;
-    for (int i = 0; i < m; i++) {
+    for (int i = 0; i < m; ++i) {
+        int a, b;
         cin >> a >> b;
-        adjlist[a].emplace_back(b);
-        inDegree[b]++;
+        a--, b--;
+
+        adj[a].emplace_back(b);
+        inDeg[b]++;
     }
 
     queue<int> q;
-    for (int i = 1; i <= n; i++) {
-        if (inDegree[i] == 0) { // 入度为 0 的点入队
+    for (int i = 0; i < n; ++i) {
+        if (inDeg[i] == 0) { // 入度为 0 的点入队
             q.emplace(i);
         }
     }
@@ -29,9 +30,9 @@ int BFS_TopoSort() {
         res.emplace_back(u);
         q.pop();
 
-        for (int i = 0; i < adjlist[u].size(); i++) {
-            int v = adjlist[u][i];
-            if (--inDegree[v] == 0) { // 若入度减为0，则入队
+        for (int i = 0; i < adj[u].size(); ++i) {
+            int v = adj[u][i];
+            if (--inDeg[v] == 0) { // 若入度减为0，则入队
                 q.emplace(v);
             }
         }
@@ -45,7 +46,7 @@ int BFS_TopoSort() {
     }
 
     // 图无环，存在拓扑序列
-    for (int i = 0; i < res.size(); i++) {
+    for (int i = 0; i < res.size(); ++i) {
         cout << res[i] << " \n"[i == res.size() - 1];
     }
 
