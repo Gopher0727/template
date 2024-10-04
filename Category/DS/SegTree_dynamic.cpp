@@ -12,9 +12,9 @@ class SegTree {
 private:
     Node* root;
 
-    void push_up(Node* node) { node->v = max(node->left->v, node->right->v); }
+    void pull(Node* node) { node->v = max(node->left->v, node->right->v); }
 
-    void push_down(Node* node) {
+    void push(Node* node) {
         if (node->left == nullptr) {
             node->left = new Node(node->l, node->mid);
         }
@@ -37,14 +37,14 @@ private:
             node->v = node->add = v;
             return;
         }
-        push_down(node);
+        push(node);
         if (l <= node->mid) {
             update(l, r, v, node->left);
         }
         if (r > node->mid) {
             update(l, r, v, node->right);
         }
-        push_up(node);
+        pull(node);
     }
 
     int query(int l, int r, Node* node) {
@@ -54,7 +54,7 @@ private:
         if (node->l >= l && node->r <= r) {
             return node->v;
         }
-        push_down(node);
+        push(node);
         int v = 0;
         if (l <= node->mid) {
             v = max(v, query(l, r, node->left));

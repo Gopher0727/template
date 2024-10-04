@@ -1,17 +1,17 @@
 static constexpr ll inf = 9e18;
 
 template <class Info, class Tag>
-class LazySegmentTree {
+class SegTree {
 public:
     int n;
     vector<Info> info;
     vector<Tag> tag;
 
 public:
-    LazySegmentTree() : n(0) {}
-    LazySegmentTree(int n_, Info v_ = Info()) { init(vector(n_, v_)); }
+    SegTree() : n(0) {}
+    SegTree(int n_, Info v_ = Info()) { init(vector(n_, v_)); }
     template <class T>
-    LazySegmentTree(vector<T>& init_) {
+    SegTree(vector<T>& init_) {
         init(init_);
     }
 
@@ -21,17 +21,17 @@ public:
         info.assign(4 << __lg(n), Info());
         tag.assign(4 << __lg(n), Tag());
 
-        function<void(int, int, int)> build = [&](int o, int l, int r) {
+        auto build = [&](auto&& build, int o, int l, int r) {
             if (l + 1 == r) {
                 info[o] = init_[l];
                 return;
             }
             int m = l + (r - l) / 2;
-            build(o << 1, l, m);
-            build(o << 1 | 1, m, r);
+            build(build, o << 1, l, m);
+            build(build, o << 1 | 1, m, r);
             pull(o);
         };
-        build(1, 0, n);
+        build(build, 1, 0, n);
     }
 
 private:

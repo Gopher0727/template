@@ -9,8 +9,8 @@ private:
     int n, m;
     vector<Node> t;
 
-    void push_up(ll o) { t[o].sum = t[o << 1].sum + t[o << 1 | 1].sum; }
-    void push_down(ll o) {
+    void pull(ll o) { t[o].sum = t[o << 1].sum + t[o << 1 | 1].sum; }
+    void push(ll o) {
         t[o << 1].sum = t[o << 1].sum * t[o].mul + t[o].add * (t[o << 1].r - t[o << 1].l + 1);
         t[o << 1 | 1].sum = t[o << 1 | 1].sum * t[o].mul + t[o].add * (t[o << 1 | 1].r - t[o << 1 | 1].l + 1);
 
@@ -35,7 +35,7 @@ public:
             ll mid = l + (r - l) / 2;
             build(o << 1, l, mid);
             build(o << 1 | 1, mid + 1, r);
-            push_up(o);
+            pull(o);
         };
         build(1, 1, n);
     }
@@ -47,7 +47,7 @@ public:
             t[o].sum *= k;
             return;
         }
-        push_down(o);
+        push(o);
         ll mid = t[o].l + (t[o].r - t[o].l) / 2;
         if (l <= mid) {
             lazyMul(o << 1, l, r, k);
@@ -55,7 +55,7 @@ public:
         if (r > mid) {
             lazyMul(o << 1 | 1, l, r, k);
         }
-        push_up(o);
+        pull(o);
     }
     void lazyAdd(ll o, ll l, ll r, ll k) {
         if (l <= t[o].l && t[o].r <= r) {
@@ -63,7 +63,7 @@ public:
             t[o].sum += k * (t[o].r - t[o].l + 1);
             return;
         }
-        push_down(o);
+        push(o);
         ll mid = t[o].l + (t[o].r - t[o].l) / 2;
         if (l <= mid) {
             lazyAdd(o << 1, l, r, k);
@@ -71,14 +71,14 @@ public:
         if (r > mid) {
             lazyAdd(o << 1 | 1, l, r, k);
         }
-        push_up(o);
+        pull(o);
     }
 
     ll query(ll o, ll l, ll r) {
         if (l <= t[o].l && t[o].r <= r) {
             return t[o].sum;
         }
-        push_down(o);
+        push(o);
         ll val = 0, mid = t[o].l + (t[o].r - t[o].l) / 2;
         if (l <= mid) {
             val += query(o << 1, l, r);

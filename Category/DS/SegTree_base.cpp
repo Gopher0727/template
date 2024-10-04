@@ -8,10 +8,6 @@ auto Op = [](int i, int j) {
     return max(i, j);
 };
 
-void make_tag() {}
-
-void push() {}
-
 void pull(int o) {
     tree[o] = Op(tree[o << 1], tree[o << 1 | 1]);
 }

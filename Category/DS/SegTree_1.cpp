@@ -78,7 +78,7 @@ public:
 
     template <class T>
     void init(const vector<T>& init_) {
-        n = init_.size();
+        n = init_.size() - 1;
         info.assign(4 << __lg(n), Info());
         tag.assign(4 << __lg(n), Tag());
 
@@ -97,9 +97,9 @@ public:
 
 public:
     void modify(int x, const Info& v) { modify(x, v, 1, 1, n); }
-    void rangeModify(int l, int r, Tag& t) { rangeModify(l, r, t, 1, 1, n); }
-    Info query(int x) { query(x, 1, 1, n); }
-    Info rangeQuery(int L, int R) { rangeQuery(L, R, 1, 1, n); }
+    void rangeModify(int L, int R, const Tag& t) { rangeModify(L, R, t, 1, 1, n); }
+    Info query(int x) { return query(x, 1, 1, n); }
+    Info rangeQuery(int L, int R) { return rangeQuery(L, R, 1, 1, n); }
 };
 
 struct Tag {
@@ -108,10 +108,11 @@ struct Tag {
 };
 
 struct Info {
-    ll mn = inf, mx = -inf, sum = 0, len;
-    void apply(const Tag& t) { mn += t.add, mx += t.add, sum += len * t.add; }
+    ll sum = 0, len = 0;
+    void apply(const Tag& t) {
+        sum += len * t.add;
+    }
 };
 Info operator+(const Info& a, const Info& b) {
-    return Info(min(a.mn, b.mn), max(a.mx, b.mx), a.sum + b.sum, a.len + b.len);
+    return Info(a.sum + b.sum, a.len + b.len);
 }
-// Info 下标从 1开始
