@@ -33,11 +33,12 @@ private:
         if (l == r) {
             return info[o];
         }
+        push(o);
         int m = l + (r - l) / 2;
         if (x <= m) {
-            query(x, o << 1, l, m);
+            return query(x, o << 1, l, m);
         } else {
-            query(x, o << 1 | 1, m + 1, r);
+            return query(x, o << 1 | 1, m + 1, r);
         }
     }
 

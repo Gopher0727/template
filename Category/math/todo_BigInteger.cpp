@@ -28,7 +28,7 @@ private:
         }
 
         size_t i = 0;
-        int n = big.number.length();
+        const int n = big.number.length();
         while (i < n) {
             if (big.number[n - 1 - i] == '0' && big.point > 0) {
                 big.point--;

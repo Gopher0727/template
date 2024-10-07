@@ -29,15 +29,6 @@ struct Point {
     friend std::ostream& operator<<(std::ostream& os, const Point& p) { return os << "(" << p.x << ", " << p.y << ")"; }
 };
 
-template <typename T = ll>
-long long dis_2d_Square(T x1, T y1, T x2, T y2) { // 平面距离的平方
-    return (x1 - x2) * 1ll * (x1 - x2) + (y1 - y2) * 1ll * (y1 - y2);
-}
-template <typename T = ll>
-long long dis_2d_Square(Point<T>& p1, Point<T>& p2) { // 平面距离的平方
-    return (p1.x - p2.x) * 1ll * (p1.x - p2.x) + (p1.y - p2.y) * 1ll * (p1.y - p2.y);
-}
-
 double toArc(double x) { // 角度转弧度
     return PI / 180 * x;
 }

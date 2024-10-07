@@ -64,18 +64,19 @@ public:
     }
     void modify(int o, const Info& v) { modify(1, 0, n, o, v); }
 
-    Info rangeQuery(int o, int l, int r, int x, int y) {
-        if (r <= x || l >= y) {
-            return Info();
-        }
-        if (x <= l && r <= y) {
+    Info query(int o, int l, int r, int x) {
+        if (l + 1 == r) {
             return info[o];
         }
-        int m = l + (r - l) / 2;
         push(o);
-        return rangeQuery(o << 1, l, m, x, y) + rangeQuery(o << 1 | 1, m, r, x, y);
+        int m = l + (r - l) / 2;
+        if (x <= m) {
+            return query(o << 1, l, m, o);
+        } else {
+            return query(o << 1 | 1, m + 1, r, o);
+        }
     }
-    Info rangeQuery(int l, int r) { return rangeQuery(1, 0, n, l, r); }
+    Info query(int o) { return query(1, 0, n, o); }
 
     void rangeModify(int o, int l, int r, int x, int y, const Tag& v) {
         if (r <= x || l >= y) {
@@ -92,6 +93,19 @@ public:
         pull(o);
     }
     void rangeModify(int l, int r, const Tag& v) { return rangeModify(1, 0, n, l, r, v); }
+
+    Info rangeQuery(int o, int l, int r, int x, int y) {
+        if (r <= x || l >= y) {
+            return Info();
+        }
+        if (x <= l && r <= y) {
+            return info[o];
+        }
+        int m = l + (r - l) / 2;
+        push(o);
+        return rangeQuery(o << 1, l, m, x, y) + rangeQuery(o << 1 | 1, m, r, x, y);
+    }
+    Info rangeQuery(int l, int r) { return rangeQuery(1, 0, n, l, r); }
 
     template <class F>
     int findFirst(int o, int l, int r, int x, int y, F& pred) {
