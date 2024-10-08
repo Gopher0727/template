@@ -101,11 +101,6 @@ public:
     Info rangeQuery(int L, int R) { return rangeQuery(L, R, 1, 1, n); }
 };
 
-struct Tag {
-    ll add = 0;
-    void apply(const Tag& t) { add += t.add; }
-};
-
 struct Info {
     ll sum = 0, len = 0;
     void apply(const Tag& t) {
@@ -115,3 +110,8 @@ struct Info {
 Info operator+(const Info& a, const Info& b) {
     return Info(a.sum + b.sum, a.len + b.len);
 }
+
+struct Tag {
+    ll add = 0;
+    void apply(const Tag& t) { add += t.add; }
+};
