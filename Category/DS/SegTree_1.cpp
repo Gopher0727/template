@@ -9,9 +9,7 @@ private:
 
 private:
     void apply(int o, const Tag& t) { tag[o].apply(t), info[o].apply(t); }
-
     void push(int o) { apply(o << 1, tag[o]), apply(o << 1 | 1, tag[o]), tag[o] = Tag(); }
-
     void pull(int o) { info[o] = info[o << 1] + info[o << 1 | 1]; }
 
     void modify(int x, const Info& v, int o, int l, int r) {
