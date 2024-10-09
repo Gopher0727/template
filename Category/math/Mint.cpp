@@ -22,8 +22,10 @@ private:
 
 public:
     constexpr ModIntBase() : x(0) {}
+    constexpr ModIntBase(bool b) : x(norm(static_cast<T>(b))) {}
     template <integral U>
-    constexpr ModIntBase(U x_ = 0) : x(norm(x_ % U(P))) {}
+        requires integral<U>
+    constexpr ModIntBase(U x_ = 0) : x(norm(x_ % U {P})) {}
 
     constexpr T norm(T x) {
         if ((x >> (8 * sizeof(T) - 1) & 1) == 1) {
@@ -44,10 +46,11 @@ public:
     constexpr ModIntBase inv() const { return qpow(*this, P - 2); }
 
 public:
-    constexpr ModIntBase& operator*=(const ModIntBase& rv) & { return *this = mulMod<P>(x, rv.val()); }
-    constexpr ModIntBase& operator+=(const ModIntBase& rv) & { return *this = norm(x + rv.x); }
-    constexpr ModIntBase& operator-=(const ModIntBase& rv) & { return *this = norm(x - rv.x); }
-    constexpr ModIntBase& operator/=(const ModIntBase& rv) & { return *this *= rv.inv(); }
+    constexpr ModIntBase& operator*=(const ModIntBase& rv) & { return x = mulMod<P>(x, rv.val()), *this; }
+    constexpr ModIntBase& operator+=(const ModIntBase& rv) & { return x = norm(x + rv.x), *this; }
+    constexpr ModIntBase& operator-=(const ModIntBase& rv) & { return x = norm(x - rv.x), *this; }
+    constexpr ModIntBase& operator/=(const ModIntBase& rv) & { return x *= rv.inv(), *this; }
+
     constexpr ModIntBase& operator++() & { return x = norm(x + 1), *this; }
     constexpr ModIntBase& operator--() & { return x = norm(x - 1), *this; }
     constexpr ModIntBase operator++(int) { // 后置
@@ -65,6 +68,7 @@ public:
     friend constexpr ModIntBase operator-(ModIntBase lv, const ModIntBase& rv) { return lv -= rv; }
     friend constexpr ModIntBase operator*(ModIntBase lv, const ModIntBase& rv) { return lv *= rv; }
     friend constexpr ModIntBase operator/(ModIntBase lv, const ModIntBase& rv) { return lv /= rv; }
+
     friend constexpr bool operator<(ModIntBase lv, const ModIntBase rv) { return lv.val() < rv.val(); }
     friend constexpr bool operator==(ModIntBase lv, const ModIntBase rv) { return lv.val() == rv.val(); }
     friend constexpr bool operator!=(ModIntBase lv, const ModIntBase rv) { return lv.val() != rv.val(); }
