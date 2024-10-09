@@ -1,3 +1,10 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+using ll = long long;
+
+static constexpr int MOD = 1'000'000'007;
+
 static constexpr ll inf = 9e18;
 
 template <class Info, class Tag>
@@ -188,7 +195,12 @@ public:
     }
     void maintainR() { maintainR(1, 0, n, -1); }
 };
-// 原代码：下标从 0 开始，覆盖式更新，[l, r)
+
+struct Tag {
+    int add = 0;
+    Tag(int v) : add(v) {}
+    void apply(const Tag& t) { add += t.add; }
+};
 
 struct Info {
     int sum = 0, len = 0;
@@ -197,9 +209,3 @@ struct Info {
 Info operator+(const Info& a, const Info& b) {
     return Info(a.sum + b.sum, a.len + b.len);
 }
-
-struct Tag {
-    int add = 0;
-    Tag(int v) : add(v) {}
-    void apply(const Tag& t) { add += t.add; }
-};

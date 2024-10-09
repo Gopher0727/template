@@ -1,3 +1,10 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+using ll = long long;
+
+static constexpr int MOD = 1'000'000'007;
+
 static constexpr ll inf = 9e18;
 
 template <class Info, class Tag>
@@ -101,17 +108,15 @@ public:
     Info rangeQuery(int L, int R) { return rangeQuery(L, R, 1, 1, n); }
 };
 
-struct Info {
-    ll sum = 0, len = 0;
-    void apply(const Tag& t) {
-        sum += len * t.add;
-    }
-};
-Info operator+(const Info& a, const Info& b) {
-    return Info(a.sum + b.sum, a.len + b.len);
-}
-
 struct Tag {
     ll add = 0;
     void apply(const Tag& t) { add += t.add; }
 };
+
+struct Info {
+    ll sum = 0, len = 0;
+    void apply(const Tag& t) { sum += len * t.add; }
+};
+Info operator+(const Info& a, const Info& b) {
+    return Info(a.sum + b.sum, a.len + b.len);
+}
