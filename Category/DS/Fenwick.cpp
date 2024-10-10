@@ -1,31 +1,32 @@
+template <typename T>
 class Fenwick {
 private:
-    vector<int> f;
-    int Op(int a, int b) { return a + b; } // add, max
+    vector<T> f;
+    T Op(T a, T b) { return a + b; } // add, max
 
 public:
     explicit Fenwick(int n) : f(n + 1, 0) {}
-    explicit Fenwick(vector<int>& vec) : f(vec.size() + 1) {
+    explicit Fenwick(vector<T>& vec) : f(vec.size() + 1) {
         for (int i = 0; i < vec.size(); ++i) {
-            update(i + 1, vec[i]);
+            add(i + 1, vec[i]);
         }
     }
 
-    void update(int id, int val) { // a[i] += val, i in [1, n]
+    void add(int id, T val) { // a[i] += val, i in [1, n]
         for (int i = id; i <= f.size(); i += i & -i) {
             f[i] = Op(f[i], val);
         }
     }
 
-    int preSum(int id) { // [1, id]
-        int res = 0;
+    T query(int id) { // [1, id]
+        T res = 0;
         for (int i = id; i > 0; i &= i - 1) { // i -= i & -i
             res += f[i];
         }
         return res;
     }
 
-    int rangeSum(int l, int r) { return preSum(r) - preSum(l - 1); } // [l, r]
+    T rangeQuery(int l, int r) { return query(r) - query(l - 1); } // [l, r]
 };
 
 // 差分树状数组
