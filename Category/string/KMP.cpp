@@ -60,7 +60,7 @@ vector<int> nextArray(string& s) {
 }
 
 // 返回文本串 text 中，模式串 pattern 首次出现的下标（pattern[0] 在 text 中的下标）
-int kmp(string& text, string& pattern) {
+int KMP(string& text, string& pattern) {
     vector<int> nxt(nextArray(pattern));
     int n = text.size(), m = pattern.size();
     int x = 0, y = 0;
