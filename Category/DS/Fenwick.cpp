@@ -2,7 +2,7 @@ template <typename T>
 class Fenwick {
 private:
     vector<T> f;
-    T Op(T a, T b) { return a + b; } // add, max
+    T Op(T a, T b) { return a + b; }
 
 public:
     explicit Fenwick(int n) : f(n + 1, 0) {}
