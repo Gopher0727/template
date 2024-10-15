@@ -10,9 +10,9 @@ double area(int a, int b, int x1, int y1, int x2, int y2) {
 ## 海伦公式
 ```cpp
 double area(int ax, int ay, int bx, int by, int cx, int cy) {
-    double ab = sqrt((ax - bx) * (ax - bx) + (ay - by) * (ay - by));
-    double ac = sqrt((ax - cx) * (ax - cx) + (ay - cy) * (ay - cy));
-    double bc = sqrt((bx - cx) * (bx - cx) + (by - cy) * (by - cy));
+    double ab = hypot(ax - bx, ay - by);
+    double ac = hypot(ax - cx, ay - cy);
+    double bc = hypot(bx - cx, by - cy);
     double q = (ab + ac + bc) / 2;
     return sqrt(q * (q - ab) * (q - ac) * (q - bc)); // 海伦公式
 }

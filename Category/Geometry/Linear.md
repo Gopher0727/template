@@ -11,7 +11,7 @@ if (x1 == x2) {
 
 # 判断点在直线上
 ```cpp []
-if (x1 == x2 && x1 == a ||(double) (y1 - y2) / (x1 - x2) == (double) (y1 - b) / (x1 - a)) {
+if (x1 == x2 && x1 == a || (y1 - y2) * (x1 - a) == (y1 - b) * (x1 - x2)) {
     cout << "Yes\n";
     return;
 }
