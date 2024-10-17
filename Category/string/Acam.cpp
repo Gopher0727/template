@@ -61,55 +61,206 @@ struct AhoCorasick {
     }
 };
 
-/*
+// 0x3f template
 static constexpr int nodeSize = 26;
 
-struct Node {
-    Node* children[nodeSize] {};
-    Node* fail;
-    Node* last; // 后缀链接（suffix link）
-    int idx; // isEnd / 字符串长度（节点深度）
-    int cnt; // （子树中）完整字符串的个数
-    int nodeId; // 用于构建 fail 树
+struct acamNode {
+    acamNode* son[acamNodeSize];
+    acamNode* fail;
+    acamNode* last;
+    int idx;
+    int cnt;
+    int nodeID;
 };
 
 struct gInfo {
-    int l, r; // [l, r]
+    int l, r;
 };
 
-struct acam {
+class acam {
 public:
-    vector<string> patterns; // 额外保存，方便 debug
-
-    Node* root;
+    vector<string> patterns;
+    acamNode* root;
     int nodeCnt;
-
-    vector<vector<int>> g; // fail 树
+    vector<vector<int>> g;
     vector<gInfo> gInfo;
     int dfn;
-
-    map<Node*, int> inDeg; // 求拓扑序
+    map<acamNode*, int> inDeg;
 
 public:
-
-};
-
-acam* newAcam(vector<string> patterns) {
-    auto ac = &acam;
-    ac.patterns = patterns, ac.root = &Node{}, ac.nodeCnt = 1, ac.inDeg = map<Node*, int>();
-    for (int i = 0; i < patterns.size(); ++i) {
-        ac.insert(patterns[i], i + 1); // !
+    acam(const vector<string>& patterns) : patterns(patterns) {
+        root = new acamNode();
+        root->fail = root;
+        root->last = root;
+        root->nodeID = nodeCnt++;
+        for (int i = 0; i < patterns.size(); ++i) {
+            put(patterns[i], i + 1);
+        }
+        buildFail();
     }
-    ac.buildFail();
-    return ac;
+
+    ~acam() {
+        // Free memory
+        queue<acamNode*> q;
+        q.push(root);
+        while (!q.empty()) {
+            acamNode* node = q.front();
+            q.pop();
+            for (int i = 0; i < acamNodeSize; ++i) {
+                if (node->son[i]) q.push(node->son[i]);
+            }
+            delete node;
+        }
+    }
+
+public:
+    void put(const string& s, int idx) {
+        acamNode* o = root;
+        for (char b : s) {
+            int i = b - 'a';
+            if (!o->son[i]) {
+                o->son[i] = new acamNode();
+                o->son[i]->nodeID = nodeCnt++;
+            }
+            o = o->son[i];
+        }
+        o->cnt++;
+        o->idx = idx;
+    }
+
+    void buildFail() {
+        queue<acamNode*> q;
+        for (int i = 0; i < acamNodeSize; ++i) {
+            if (root->son[i]) {
+                root->son[i]->fail = root;
+                root->son[i]->last = root;
+                g[root->nodeID].push_back(root->son[i]->nodeID);
+                q.push(root->son[i]);
+            } else {
+                root->son[i] = root;
+            }
+        }
+        while (!q.empty()) {
+            acamNode* o = q.front();
+            q.pop();
+            for (int i = 0; i < acamNodeSize; ++i) {
+                if (o->son[i]) {
+                    acamNode* f = o->fail->son[i];
+                    o->son[i]->fail = f;
+                    o->son[i]->last = f->cnt > 0 ? f : f->last;
+                    g[f->nodeID].push_back(o->son[i]->nodeID);
+                    q.push(o->son[i]);
+                } else {
+                    o->son[i] = o->fail->son[i];
+                }
+            }
+        }
+    }
+
+    void buildDFN() {
+        gInfo.resize(g.size());
+        dfn = 0;
+        function<void(int)> dfs = [&](int v) {
+            dfn++;
+            gInfo[v].l = dfn;
+            for (int w : g[v]) {
+                dfs(w);
+            }
+            gInfo[v].r = dfn;
+        };
+        dfs(root->nodeID);
+    }
+
+    int sumCountAllPatterns(const string& text) {
+        int cnt = 0;
+        acamNode* o = root;
+        for (char b : text) {
+            o = o->son[b - 'a'];
+            for (acamNode* match = o; match != root; match = match->last) {
+                if (match->cnt != -1) {
+                    cnt += match->cnt;
+                    match->cnt = -1;
+                }
+            }
+        }
+        return cnt;
+    }
+
+    vector<vector<int>> acSearch(const string& text) {
+        vector<vector<int>> pos(patterns.size());
+        acamNode* o = root;
+        for (int i = 0; i < text.size(); ++i) {
+            o = o->son[text[i] - 'a'];
+            for (acamNode* match = o; match != root; match = match->last) {
+                if (match->idx > 0) {
+                    pos[match->idx - 1].push_back(i - patterns[match->idx - 1].size() + 1);
+                }
+            }
+        }
+        return pos;
+    }
+
+    vector<int> acSearchCount(const string& text) {
+        acamNode* o = root;
+        for (char b : text) {
+            o = o->son[b - 'a'];
+            o->cnt++;
+        }
+
+        vector<int> cnt(patterns.size(), 0);
+        queue<acamNode*> q;
+        for (auto& p : inDeg) {
+            if (p.second == 0) q.push(p.first);
+        }
+        while (!q.empty()) {
+            acamNode* v = q.front();
+            q.pop();
+            if (v->idx > 0) {
+                cnt[v->idx - 1] = v->cnt;
+            }
+            acamNode* w = v->fail;
+            w->cnt += v->cnt;
+            if (--inDeg[w] == 0) {
+                q.push(w);
+            }
+        }
+        return cnt;
+    }
+
+    void debug(const string& text) {
+        cout << "text: " << text << endl;
+        cout << "patterns (下面简称 p)" << endl;
+        for (int i = 0; i < patterns.size(); ++i) {
+            cout << i << ": " << patterns[i] << endl;
+        }
+
+        acamNode* o = root;
+        for (int i = 0; i < text.size(); ++i) {
+            o = o->son[text[i] - 'a'];
+            int cnt = 0;
+            for (acamNode* f = o; f != root; f = f->fail) {
+                if (f->idx > 0) cnt++;
+            }
+            if (cnt == 0) continue;
+
+            cout << endl;
+            cout << text << endl;
+            cout << string(i, ' ');
+            cout << "^ i=" << i << endl;
+            cout << "找到 " << cnt << " 个模式串" << endl;
+
+            for (acamNode* f = o; f != root; f = f->fail) {
+                if (f->idx == 0) continue;
+                int pIdx = f->idx - 1;
+                cout << "p[" << pIdx << "]=" << patterns[pIdx] << endl;
+            }
+        }
+    }
 };
-*/
 
 
-// jiangly
-/**   AC自动机（AhoCorasick 新新版）
- *    2024-04-09: https://www.luogu.com.cn/record/155114676 【模板】
-**/
+
+// jiangly template
 struct AhoCorasick {
     static constexpr int ALPHABET = 26;
     struct Node {

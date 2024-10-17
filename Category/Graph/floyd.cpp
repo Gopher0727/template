@@ -1,12 +1,15 @@
 /*
     Floyd-Warshall 求解图中任意两点之间的最短路径
-    适用于任何图，不管有向无向，边权正负，但是最短路必须存在。（不能有个负环）
+    适用于任何图，不管有向无向，边权正负，但是最短路必须存在。（不能有负环）
+
+    时间复杂度 O(n^3)
+    空间复杂度 O(n^2)
 */
 static constexpr int inf = INT_MAX / 2;
 
 vector<vector<int>> shortestPathFloydWarshall(int n, vector<vector<int>>& edges) { // 顶点数、边列表
-    vector<vector<int>> g(n, vector<int>(n, inf));
-    for (int i = 0; i < n; i++) { // 初始化，保证 g[i][i] = 0
+    vector g(n, vector<int>(n, inf));
+    for (int i = 0; i < n; i++) {
         g[i][i] = 0;
     }
 
@@ -33,7 +36,7 @@ vector<vector<int>> shortestPathFloydWarshall(int n, vector<vector<int>>& edges)
     for (int i = 0; i < n; i++) {
         g[i][i] = 0;
     }
-    function<void(int, int, int)> addEdge = [&](int from, int to, int dis) {
+    auto addEdge = [&](int from, int to, int dis) {
         if (dis >= g[from][to]) { // 无法让任何最短路变短
             return;
         }
@@ -45,3 +48,4 @@ vector<vector<int>> shortestPathFloydWarshall(int n, vector<vector<int>>& edges)
     };
     return g;
 }
+
