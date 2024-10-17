@@ -1,18 +1,23 @@
 template <typename T>
-constexpr T qpow(T x, uint64_t k) {
+constexpr T qpow(T x, uint64_t a) {
     T res = 1;
-    for (; k; k >>= 1) {
-        if (k & 1) {
+    for (; a; a >>= 1, x *= x) {
+        if (a & 1) {
             res *= x;
         }
-        x *= x;
     }
     return res;
 }
 
+template <uint32_t P>
+constexpr uint32_t mulMod(uint32_t a, uint32_t b) {
+    return a * 1ull * b % P;
+}
 template <uint64_t P>
 constexpr uint64_t mulMod(uint64_t a, uint64_t b) {
-    return a * 1ull * b % P;
+    uint64_t res = a * b - uint64_t(1.L * a * b / P - 0.5L) * P;
+    res %= P;
+    return res;
 }
 
 template <typename T, T P>
@@ -27,7 +32,7 @@ public:
         requires integral<U>
     constexpr ModIntBase(U x_ = 0) : x(norm(x_ % U {P})) {}
 
-    constexpr T norm(T x) {
+    constexpr static T norm(T x) {
         if ((x >> (8 * sizeof(T) - 1) & 1) == 1) {
             x += P;
         }
@@ -49,7 +54,7 @@ public:
     constexpr ModIntBase& operator*=(const ModIntBase& rv) & { return x = mulMod<P>(x, rv.val()), *this; }
     constexpr ModIntBase& operator+=(const ModIntBase& rv) & { return x = norm(x + rv.x), *this; }
     constexpr ModIntBase& operator-=(const ModIntBase& rv) & { return x = norm(x - rv.x), *this; }
-    constexpr ModIntBase& operator/=(const ModIntBase& rv) & { return x *= rv.inv(), *this; }
+    constexpr ModIntBase& operator/=(const ModIntBase& rv) & { return *this *= rv.inv(); } //
 
     constexpr ModIntBase& operator++() & { return x = norm(x + 1), *this; }
     constexpr ModIntBase& operator--() & { return x = norm(x - 1), *this; }
@@ -82,9 +87,12 @@ public:
     friend constexpr ostream& operator<<(ostream& os, const ModIntBase& v) { return os << v.val(); }
 };
 
+template <uint32_t P>
+using ModInt32 = ModIntBase<uint32_t, P>;
 template <uint64_t P>
 using ModInt64 = ModIntBase<uint64_t, P>;
-using MI = ModInt64<MOD>;
+
+using MI = ModInt32<MOD>;
 
 // Attention:
 // qpow 取模时，第一个参数应为 MI 类型
