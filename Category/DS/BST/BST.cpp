@@ -1,24 +1,108 @@
-/*
-    二叉树旋转之后，中序遍历的顺序不变。
+//---------------------------------------------------------------------------------------
+namespace BST {
+    class BST {
+        const int inf = 2147483647; // 标志
 
-    无旋：
-        > ScapegoatTree (替罪羊树)： 暴力重构
-            · https://oi-wiki.org/ds/sgt/
-            · https://riteme.site/blog/2016-4-6/scapegoat.html
+        struct Node {
+            Node* left = 0;
+            Node* right = 0;
+            int val = 0, lcnt = 0, rcnt = 0;
+            Node(int val) : val(val) {}
+        }* root = nullptr;
 
-        （换了一种实现方式）
-        > （无旋）fhq Treap： 分裂（按值分裂，按大小分裂） + 合并
-            > Treap
-            > SegTreap  区间操作（利用懒标记实现区间翻转）
+    private:
+        vector<int> Inorder;
+        void dfs(Node* now) {
+            if (!now) return;
+            dfs(now->left);
+            Inorder.push_back(now->val);
+            dfs(now->right);
+        }
 
-            · 二叉搜索树 + 二叉堆（特点：父节点优先级高）
-            · 当作普通平衡树使用时，多采用按值分裂
-            · 维护区间信息时多采用按大小分裂，如 '文艺平衡树' SegTreap
+        void insert(Node*& now, int key) {
+            if (!now) {
+                now = new Node(key);
+                return;
+            }
+            if (now->val <= key) {
+                insert(now->right, key);
+                now->rcnt++;
+            } else {
+                insert(now->left, key);
+                now->lcnt++;
+            }
+        }
+        bool findKey(Node* now, int key) {
+            if (!now) return false;
+            if (now->val == key) return true;
+            if (now->val < key) {
+                return findKey(now->right, key);
+            }
+            return findKey(now->left, key);
+        }
+        int getNum(Node* now, int rank) {
+            if (!now) return inf;
+            int tmp = now->lcnt + 1;
+            if (tmp == rank) return now->val;
+            if (tmp < rank) {
+                return getNum(now->right, (rank - tmp));
+            }
+            return getNum(now->left, rank);
+        }
+        int getRank(Node* now, int x, int K = 0) {
+            if (!now) return K;
+            if (now->val == x) return K + now->lcnt + 1;
+            if (now->val < x) {
+                return getRank(now->right, x, K + (now->lcnt + 1));
+            }
+            return getRank(now->left, x, K);
+        }
+        vector<int> snapshot(Node* now) {
+            Inorder.clear();
+            dfs(now);
+            return Inorder;
+        }
 
-    有旋：
-        > AVL
-        > 红黑树
-*/
+    public:
+        void insert(int key) { insert(root, key); }
+        bool findKey(int key) { return findKey(root, key); }
+        int getNum(int x) { return getNum(root, x); }
+        int getRank(int x) { return getRank(root, x); }
+        int getPre(int key) {
+            int ret = -inf;
+            Node* p = root;
+            while (p) {
+                if (key > (p->val)) {
+                    ret = p->val;
+                    p = p->right;
+                } else {
+                    p = p->left;
+                }
+            }
+            return ret;
+        }
+        int getNxt(int key) {
+            int ret = inf;
+            Node* p = root;
+            while (p) {
+                if (key < p->val) {
+                    ret = p->val;
+                    p = p->left;
+                } else {
+                    p = p->right;
+                }
+            }
+            return ret;
+        }
+        vector<int> snapshot() { return snapshot(root); }
+    };
+};
+
+//---------------------------------------------------------------------------------------
+// 替罪羊树： 暴力重构
+// 无旋，数组实现）
+//    [link] https://oi-wiki.org/ds/sgt/
+//    [link] https://riteme.site/blog/2016-4-6/scapegoat.html
 namespace ScapegoatTree {
     static constexpr double alpha = 0.75;
     static int cnt = 0, root = 0;
@@ -189,6 +273,14 @@ namespace ScapegoatTree {
     };
 };
 
+//---------------------------------------------------------------------------------------
+// fhq Treap： 分裂（按值分裂，按大小分裂） + 合并
+//（无旋）
+//   · 二叉搜索树 + 二叉堆（特点：父节点优先级高）
+//   · 当作普通平衡树使用时，多采用按值分裂，维护区间信息时多采用按大小分裂
+// SegTreap 区间操作（利用懒标记实现区间翻转）
+
+// 数组实现
 namespace Treap {
     static int cnt = 0, root = 0;
     static int x = 0, y = 0, z = 0;
@@ -302,7 +394,6 @@ namespace Treap {
         }
     };
 };
-
 namespace SegTreap {
     static int cnt = 0, root = 0;
     static int x = 0, y = 0, z = 0;
@@ -364,7 +455,6 @@ namespace SegTreap {
             InorderTraversal(tree[cur].right);
         }
 
-    public:
         int newNode(int val) {
             cnt++;
             tree[cnt].val = val;
@@ -393,6 +483,11 @@ namespace SegTreap {
                 return y;
             }
         }
+
+    public:
+        void insert(int i) {
+            root = merge(root, newNode(i));
+        }
         // [l >= 1, r]
         void reverse(int l, int r) {
             int x, y, z;
@@ -401,7 +496,6 @@ namespace SegTreap {
             tree[y].isReverse ^= 1;
             root = merge(merge(x, y), z);
         }
-
         vector<int> snapshot(int cur = root) {
             Inorder.clear();
             InorderTraversal(cur);
@@ -410,15 +504,247 @@ namespace SegTreap {
     };
 };
 
+// 指针实现
+namespace Treap {
+    class Treap {
+        struct Node {
+            Node* ch[2] {};
+            int val = 0;
+            int key = rand();
+            int cnt = 1;
+            int size = 1;
+
+            Node(int val) : val(val) {}
+            Node(Node* node) : val(node->val), key(node->key), cnt(node->cnt), size(node->size) {}
+
+            void update_size() {
+                size = cnt;
+                if (ch[0] != nullptr) {
+                    size += ch[0]->size;
+                }
+                if (ch[1] != nullptr) {
+                    size += ch[1]->size;
+                }
+            }
+        }* root = nullptr;
+
+    private:
+        pair<Node*, Node*> split(Node* cur, int key) {
+            if (cur == nullptr) return {nullptr, nullptr};
+            if (cur->val <= key) {
+                auto temp = split(cur->ch[1], key);
+                cur->ch[1] = temp.first;
+                cur->update_size();
+                return {cur, temp.second};
+            } else {
+                auto temp = split(cur->ch[0], key);
+                cur->ch[0] = temp.second;
+                cur->update_size();
+                return {temp.first, cur};
+            }
+        }
+
+        tuple<Node*, Node*, Node*> split_rank(Node* cur, int rk) {
+            if (cur == nullptr) return {nullptr, nullptr, nullptr};
+            int ls_siz = cur->ch[0] == nullptr ? 0 : cur->ch[0]->size;
+            if (rk <= ls_siz) {
+                Node *l = nullptr, *mid = nullptr, *r = nullptr;
+                tie(l, mid, r) = split_rank(cur->ch[0], rk);
+                cur->ch[0] = r;
+                cur->update_size();
+                return {l, mid, cur};
+            } else if (rk <= ls_siz + cur->cnt) {
+                Node* lt = cur->ch[0];
+                Node* rt = cur->ch[1];
+                cur->ch[0] = cur->ch[1] = nullptr;
+                return {lt, cur, rt};
+            } else {
+                Node *l = nullptr, *mid = nullptr, *r = nullptr;
+                tie(l, mid, r) = split_rank(cur->ch[1], rk - ls_siz - cur->cnt);
+                cur->ch[1] = l;
+                cur->update_size();
+                return {cur, mid, r};
+            }
+        }
+        Node* merge(Node* u, Node* v) {
+            if (u == nullptr && v == nullptr) return nullptr;
+            if (u != nullptr && v == nullptr) return u;
+            if (v != nullptr && u == nullptr) return v;
+            if (u->key < v->key) {
+                u->ch[1] = merge(u->ch[1], v);
+                u->update_size();
+                return u;
+            } else {
+                v->ch[0] = merge(u, v->ch[0]);
+                v->update_size();
+                return v;
+            }
+        }
+        int getRank(Node* cur, int val) {
+            auto temp = split(cur, val - 1);
+            int ret = (temp.first == nullptr ? 0 : temp.first->size) + 1;
+            root = merge(temp.first, temp.second);
+            return ret;
+        }
+        int getVal(Node* cur, int rk) {
+            Node *l, *mid, *r;
+            tie(l, mid, r) = split_rank(cur, rk);
+            int ret = mid->val;
+            root = merge(merge(l, mid), r);
+            return ret;
+        }
+
+    public:
+        void insert(int val) {
+            auto temp = split(root, val);
+            auto l_tr = split(temp.first, val - 1);
+            Node* new_node;
+            if (l_tr.second == nullptr) {
+                new_node = new Node(val);
+            } else {
+                l_tr.second->cnt++;
+                l_tr.second->update_size();
+            }
+            Node* l_tr_combined = merge(l_tr.first, l_tr.second == nullptr ? new_node : l_tr.second);
+            root = merge(l_tr_combined, temp.second);
+        }
+        void del(int val) {
+            auto temp = split(root, val);
+            auto l_tr = split(temp.first, val - 1);
+            if (l_tr.second->cnt > 1) {
+                l_tr.second->cnt--;
+                l_tr.second->update_size();
+                l_tr.first = merge(l_tr.first, l_tr.second);
+            } else {
+                if (temp.first == l_tr.second) {
+                    temp.first = nullptr;
+                }
+                delete l_tr.second;
+                l_tr.second = nullptr;
+            }
+            root = merge(l_tr.first, temp.second);
+        }
+        int getRank(int val) { return getRank(root, val); }
+        int getVal(int rank) { return getVal(root, rank); }
+        int getPre(int val) {
+            auto temp = split(root, val - 1);
+            int ret = getVal(temp.first, temp.first->size);
+            root = merge(temp.first, temp.second);
+            return ret;
+        }
+        int getNxt(int val) {
+            auto temp = split(root, val);
+            int ret = getVal(temp.second, 1);
+            root = merge(temp.first, temp.second);
+            return ret;
+        }
+    };
+}
+namespace SegTreap {
+    class SegTreap {
+    private:
+        struct Node {
+            Node* ch[2] {};
+            int val = 0, key = rand(), cnt = 1, size = 1;
+            bool isReverse = false; // 需要把这个子树下的每一个节点都翻转过来
+
+            Node(int val) : val(val) {}
+            Node(Node* node) : val(node->val), key(node->key), cnt(node->cnt), size(node->size) {}
+
+            void update_size() {
+                size = cnt;
+                if (ch[0] != nullptr) size += ch[0]->size;
+                if (ch[1] != nullptr) size += ch[1]->size;
+            }
+            void push() {
+                swap(ch[0], ch[1]);
+                if (ch[0] != nullptr) ch[0]->isReverse ^= 1;
+                if (ch[1] != nullptr) ch[1]->isReverse ^= 1;
+                isReverse = false;
+            }
+            void check_tag() {
+                if (isReverse) push();
+            }
+        }* root = nullptr;
+
+    private:
+        pair<Node*, Node*> split(Node* cur, int size) { // 按照树的大小划分
+            if (cur == nullptr) return {nullptr, nullptr};
+            cur->check_tag();
+            int s = cur->ch[0] == nullptr ? 0 : cur->ch[0]->size;
+            if (size <= s) {
+                auto temp = split(cur->ch[0], size);
+                cur->ch[0] = temp.second;
+                cur->update_size();
+                return {temp.first, cur};
+            } else {
+                auto temp = split(cur->ch[1], size - s - 1);
+                cur->ch[1] = temp.first;
+                cur->update_size();
+                return {cur, temp.second};
+            }
+        }
+        Node* merge(Node* x, Node* y) {
+            if (x == nullptr && y == nullptr) return nullptr;
+            if (x != nullptr && y == nullptr) return x;
+            if (x == nullptr && y != nullptr) return y;
+            x->check_tag(), y->check_tag();
+            if (x->key < y->key) {
+                x->ch[1] = merge(x->ch[1], y);
+                x->update_size();
+                return x;
+            } else {
+                y->ch[0] = merge(x, y->ch[0]);
+                y->update_size();
+                return y;
+            }
+        }
+
+        vector<int> Inorder;
+        void dfs(Node* cur) {
+            if (!cur) return;
+            dfs(cur->ch[0]);
+            Inorder.push_back(cur->val);
+            dfs(cur->ch[1]);
+        }
+        vector<int> snapshot(Node* cur) {
+            Inorder.clear();
+            dfs(cur);
+            return Inorder;
+        }
+
+    public:
+        void insert(int val) {
+            auto temp = split(root, val);
+            auto l_tr = split(temp.first, val - 1);
+            Node* new_node;
+            if (l_tr.second == nullptr) {
+                new_node = new Node(val);
+            }
+            Node* l_tr_combined = merge(l_tr.first, l_tr.second == nullptr ? new_node : l_tr.second);
+            root = merge(l_tr_combined, temp.second);
+        }
+        void reverse(int l, int r) {
+            auto less = split(root, l - 1);
+            auto more = split(less.second, r - l + 1);
+            more.first->isReverse = true;
+            root = merge(less.first, merge(more.first, more.second));
+        }
+        vector<int> snapshot() { return snapshot(root); }
+    };
+}
+
+//---------------------------------------------------------------------------------------
+// 有旋：二叉树旋转之后，中序遍历的顺序不变。
+    > AVL （以下代码只实现了基础的插入操作）
+    > Splay
+    > 红黑树
 namespace AVLTree {
     struct Node {
         Node* ch[2] {};
         int height = 0, val = 0;
 
-    public:
-        Node() : height(0), val(0), ch {} {}
-
-        void maintain() { height = max(ch[0]->height, ch[1]->height) + 1; }
+        void update() { height = max(ch[0]->height, ch[1]->height) + 1; }
     };
 
     Node* nil = new Node;
@@ -427,18 +753,18 @@ namespace AVLTree {
         Node* k = o->ch[d ^ 1];
         o->ch[d ^ 1] = k->ch[d];
         k->ch[d] = o;
-        o->maintain();
-        k->maintain();
+        o->update();
+        k->update();
         o = k;
     }
-    Node* Insert(int X, Node* T) {
+    Node* Insert(Node* T, int X) {
         if (T == nil) {
             T = new Node;
             T->val = X;
             T->height = 0;
             T->ch[0] = T->ch[1] = nil;
         } else if (X < T->val) {
-            T->ch[0] = Insert(X, T->ch[0]);
+            T->ch[0] = Insert(T->ch[0], X);
             if (T->ch[0]->height - T->ch[1]->height == 2) {
                 if (X >= T->ch[0]->val) {
                     rotate(T->ch[0], 0);
@@ -446,7 +772,7 @@ namespace AVLTree {
                 rotate(T, 1);
             }
         } else if (X > T->val) {
-            T->ch[1] = Insert(X, T->ch[1]);
+            T->ch[1] = Insert(T->ch[1], X);
             if (T->ch[1]->height - T->ch[0]->height == 2) {
                 if (X <= T->ch[1]->val) {
                     rotate(T->ch[1], 1);
@@ -458,7 +784,7 @@ namespace AVLTree {
         return T;
     }
 
-    int main() {
+    void solve() {
         int n;
         cin >> n;
 
@@ -466,343 +792,8 @@ namespace AVLTree {
         for (int i = 0; i < n; ++i) {
             int val;
             cin >> val;
-            root = Insert(val, root);
+            root = Insert(root, val);
         }
         cout << root->val << "\n";
-
-        return 0;
-    }
-};
-
-namespace Splay {
-    // 若要修改一个点的点权，应当先将其splay到根，然后修改，最后还要调用pull维护。
-    // 调用完splay之后根结点会改变，应该用splay的返回值更新根结点。
-    const int MX = 110000;
-
-    vector<array<int, 2>> ch;
-    vector<int> pa, size, key;
-    vector<int> stk, rev;
-    int cur = 0;
-
-    auto init = []() {
-        ch.resize(MX);
-        pa.resize(MX);
-        size.resize(MX);
-        key.resize(MX);
-        stk.resize(MX);
-        rev.resize(MX);
-        return 0;
-    }();
-
-    int newNode(int val) {
-        int x = ++cur;
-        ch[x][0] = ch[x][1] = pa[x] = rev[x] = 0;
-        size[x] = 1;
-        key[x] = val;
-        return x;
-    }
-    bool son(int x) {
-        return ch[pa[x]][1] == x;
-    }
-    void pull(int x) {
-        size[x] = size[ch[x][0]] + size[ch[x][1]] + 1;
-    }
-    void push(int x) {
-        if (rev[x]) {
-            rev[x] = 0;
-            swap(ch[x][0], ch[x][1]);
-            rev[ch[x][0]] ^= 1;
-            rev[ch[x][1]] ^= 1;
-        }
-    }
-    void rotate(int x) {
-        int y = pa[x], z = pa[y], c = son(x);
-        if (pa[y]) {
-            ch[z][son(y)] = x;
-        }
-        pa[x] = z;
-        ch[y][c] = ch[x][!c];
-        pa[ch[y][c]] = y;
-        ch[x][!c] = y;
-        pa[y] = x;
-        pull(y);
-    }
-    void ascend(int x) {
-        for (int y = pa[x]; y; rotate(x), y = pa[x]) {
-            if (pa[y]) {
-                son(x) ^ son(y) ? rotate(x) : rotate(y);
-            }
-        }
-        pull(x);
-    }
-    // 没有push操作时，可以直接用ascend替换splay
-    int splay(int x) {
-        int top = 0;
-        for (int i = x; i; i = pa[i]) {
-            stk[++top] = i;
-        }
-        while (top) {
-            push(stk[top--]);
-        }
-        ascend(x);
-        return x;
-    }
-    // 将以x为根的子树中的第k个结点旋转到根结点
-    int splay(int x, int k) {
-        while (push(x), k != size[ch[x][0]] + 1) {
-            if (k <= size[ch[x][0]])
-                x = ch[x][0];
-            else
-                k -= size[ch[x][0]] + 1, x = ch[x][1];
-        }
-        if (x) ascend(x);
-        return x;
-    }
-    template <typename... T>
-    int merge(int x, int y, T... args) {
-        if constexpr (sizeof...(args) == 0) {
-            // swap(x, y);
-            if (x == 0) {
-                return y;
-            }
-            x = splay(x, size[x]);
-            ch[x][1] = y;
-            pa[y] = x;
-            pull(x);
-            return x;
-        } else {
-            return merge(merge(x, y), args...);
-        }
-    }
-    // 分成两个区间[1, pos - 1]和[pos, n]
-    auto split(int x, int pos) {
-        if (pos == size[x] + 1) {
-            return make_pair(x, 0);
-        }
-        x = splay(x, pos);
-        int y = ch[x][0];
-        pa[y] = ch[x][0] = 0;
-        pull(x);
-        return make_pair(y, x);
-    }
-    auto extract(int x, int L, int R) {
-        auto [left, y] = split(x, L);
-        auto [mid, right] = split(y, R - L + 2);
-        return make_tuple(left, mid, right);
-    }
-    void traverse(int x) {
-        if (x != 0) {
-            traverse(ch[x][0]);
-            cout << key[x] << " ";
-            // cout << format("{} (left: {}, right: {})  size: {}  key: {}\n", x, ch[x][0], ch[x][1], size[x], key[x]);
-            traverse(ch[x][1]);
-        }
-    }
-
-    int main() {
-        vector<int> vec(50);
-        int root = 0;
-        for (int i = 1; i <= 10; ++i) {
-            vec[i] = newNode(i);
-            root = merge(root, vec[i]);
-        }
-        traverse(get<1>(extract(root, 3, 10)));
-        cout << "\n";
-        return 0;
-    }
-};
-
-namespace SplayJiangly {
-    struct Node {
-        Node *l = nullptr;
-        Node *r = nullptr;
-        int cnt = 0;
-        i64 sum = 0;
-    };
-
-    Node *add(Node *t, int l, int r, int p, int v) {
-        Node *x = new Node;
-        if (t) {
-            *x = *t;
-        }
-        x->cnt += 1;
-        x->sum += v;
-        if (r - l == 1) {
-            return x;
-        }
-        int m = (l + r) / 2;
-        if (p < m) {
-            x->l = add(x->l, l, m, p, v);
-        } else {
-            x->r = add(x->r, m, r, p, v);
-        }
-        return x;
-    }
-
-    int find(Node *tl, Node *tr, int l, int r, int x) {
-        if (r <= x) {
-            return -1;
-        }
-        if (l >= x) {
-            int cnt = (tr ? tr->cnt : 0) - (tl ? tl->cnt : 0);
-            if (cnt == 0) {
-                return -1;
-            }
-            if (r - l == 1) {
-                return l;
-            }
-        }
-        int m = (l + r) / 2;
-        int res = find(tl ? tl->l : tl, tr ? tr->l : tr, l, m, x);
-        if (res == -1) {
-            res = find(tl ? tl->r : tl, tr ? tr->r : tr, m, r, x);
-        }
-        return res;
-    }
-
-    std::pair<int, i64> get(Node *t, int l, int r, int x, int y) {
-        if (l >= y || r <= x || !t) {
-            return {0, 0LL};
-        }
-        if (l >= x && r <= y) {
-            return {t->cnt, t->sum};
-        }
-        int m = (l + r) / 2;
-        auto [cl, sl] = get(t->l, l, m, x, y);
-        auto [cr, sr] = get(t->r, m, r, x, y);
-        return {cl + cr, sl + sr};
-    }
-
-    struct Tree {
-        int add = 0;
-        int val = 0;
-        int id = 0;
-        Tree *ch[2] = {};
-        Tree *p = nullptr;
-    };
-
-    int pos(Tree *t) {
-        return t->p->ch[1] == t;
-    }
-
-    void add(Tree *t, int v) {
-        t->val += v;
-        t->add += v;
-    }
-
-    void push(Tree *t) {
-        if (t->ch[0]) {
-            add(t->ch[0], t->add);
-        }
-        if (t->ch[1]) {
-            add(t->ch[1], t->add);
-        }
-        t->add = 0;
-    }
-
-    void rotate(Tree *t) {
-        Tree *q = t->p;
-        int x = !pos(t);
-        q->ch[!x] = t->ch[x];
-        if (t->ch[x]) t->ch[x]->p = q;
-        t->p = q->p;
-        if (q->p) q->p->ch[pos(q)] = t;
-        t->ch[x] = q;
-        q->p = t;
-    }
-
-    void splay(Tree *t) {
-        std::vector<Tree *> s;
-        for (Tree *i = t; i->p; i = i->p) s.push_back(i->p);
-        while (!s.empty()) {
-            push(s.back());
-            s.pop_back();
-        }
-        push(t);
-        while (t->p) {
-            if (t->p->p) {
-                if (pos(t) == pos(t->p)) rotate(t->p);
-                else rotate(t);
-            }
-            rotate(t);
-        }
-    }
-
-    void insert(Tree *&t, Tree *x, Tree *p = nullptr) {
-        if (!t) {
-            t = x;
-            x->p = p;
-            return;
-        }
-
-        push(t);
-        if (x->val < t->val) {
-            insert(t->ch[0], x, t);
-        } else {
-            insert(t->ch[1], x, t);
-        }
-    }
-
-    void dfs(Tree *t) {
-        if (!t) {
-            return;
-        }
-        push(t);
-        dfs(t->ch[0]);
-        std::cerr << t->val << " ";
-        dfs(t->ch[1]);
-    }
-
-    std::pair<Tree *, Tree *> split(Tree *t, int x) {
-        if (!t) {
-            return {t, t};
-        }
-        Tree *v = nullptr;
-        Tree *j = t;
-        for (Tree *i = t; i; ) {
-            push(i);
-            j = i;
-            if (i->val >= x) {
-                v = i;
-                i = i->ch[0];
-            } else {
-                i = i->ch[1];
-            }
-        }
-
-        splay(j);
-        if (!v) {
-            return {j, nullptr};
-        }
-
-        splay(v);
-
-        Tree *u = v->ch[0];
-        if (u) {
-            v->ch[0] = u->p = nullptr;
-        }
-        // std::cerr << "split " << x << "\n";
-        // dfs(u);
-        // std::cerr << "\n";
-        // dfs(v);
-        // std::cerr << "\n";
-        return {u, v};
-    }
-
-    Tree *merge(Tree *l, Tree *r) {
-        if (!l) {
-            return r;
-        }
-        if (!r) {
-            return l;
-        }
-        Tree *i = l;
-        while (i->ch[1]) {
-            i = i->ch[1];
-        }
-        splay(i);
-        i->ch[1] = r;
-        r->p = i;
-        return i;
     }
 };
