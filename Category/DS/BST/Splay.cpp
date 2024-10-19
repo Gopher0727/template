@@ -136,16 +136,16 @@ namespace Splay {
     }
 };
 
-namespace SplayJiangly {
+namespace SplayTree {
     struct Node {
-        Node *l = nullptr;
-        Node *r = nullptr;
+        Node* l = nullptr;
+        Node* r = nullptr;
         int cnt = 0;
-        i64 sum = 0;
+        ll sum = 0;
     };
 
-    Node *add(Node *t, int l, int r, int p, int v) {
-        Node *x = new Node;
+    Node* add(Node* t, int l, int r, int p, int v) {
+        Node* x = new Node;
         if (t) {
             *x = *t;
         }
@@ -163,7 +163,7 @@ namespace SplayJiangly {
         return x;
     }
 
-    int find(Node *tl, Node *tr, int l, int r, int x) {
+    int find(Node* tl, Node* tr, int l, int r, int x) {
         if (r <= x) {
             return -1;
         }
@@ -184,7 +184,7 @@ namespace SplayJiangly {
         return res;
     }
 
-    std::pair<int, i64> get(Node *t, int l, int r, int x, int y) {
+    std::pair<int, ll> get(Node* t, int l, int r, int x, int y) {
         if (l >= y || r <= x || !t) {
             return {0, 0LL};
         }
@@ -197,24 +197,24 @@ namespace SplayJiangly {
         return {cl + cr, sl + sr};
     }
 
-    struct Tree {
+    struct TreeNode {
         int add = 0;
         int val = 0;
         int id = 0;
-        Tree *ch[2] = {};
-        Tree *p = nullptr;
+        TreeNode* ch[2] = {};
+        TreeNode* p = nullptr;
     };
 
-    int pos(Tree *t) {
+    int pos(TreeNode* t) {
         return t->p->ch[1] == t;
     }
 
-    void add(Tree *t, int v) {
+    void add(TreeNode* t, int v) {
         t->val += v;
         t->add += v;
     }
 
-    void push(Tree *t) {
+    void push(TreeNode* t) {
         if (t->ch[0]) {
             add(t->ch[0], t->add);
         }
@@ -224,8 +224,8 @@ namespace SplayJiangly {
         t->add = 0;
     }
 
-    void rotate(Tree *t) {
-        Tree *q = t->p;
+    void rotate(TreeNode* t) {
+        TreeNode* q = t->p;
         int x = !pos(t);
         q->ch[!x] = t->ch[x];
         if (t->ch[x]) t->ch[x]->p = q;
@@ -235,9 +235,9 @@ namespace SplayJiangly {
         q->p = t;
     }
 
-    void splay(Tree *t) {
-        std::vector<Tree *> s;
-        for (Tree *i = t; i->p; i = i->p) s.push_back(i->p);
+    void splay(TreeNode* t) {
+        std::vector<TreeNode*> s;
+        for (TreeNode* i = t; i->p; i = i->p) s.push_back(i->p);
         while (!s.empty()) {
             push(s.back());
             s.pop_back();
@@ -245,14 +245,16 @@ namespace SplayJiangly {
         push(t);
         while (t->p) {
             if (t->p->p) {
-                if (pos(t) == pos(t->p)) rotate(t->p);
-                else rotate(t);
+                if (pos(t) == pos(t->p))
+                    rotate(t->p);
+                else
+                    rotate(t);
             }
             rotate(t);
         }
     }
 
-    void insert(Tree *&t, Tree *x, Tree *p = nullptr) {
+    void insert(TreeNode*& t, TreeNode* x, TreeNode* p = nullptr) {
         if (!t) {
             t = x;
             x->p = p;
@@ -267,7 +269,7 @@ namespace SplayJiangly {
         }
     }
 
-    void dfs(Tree *t) {
+    void dfs(TreeNode* t) {
         if (!t) {
             return;
         }
@@ -277,13 +279,13 @@ namespace SplayJiangly {
         dfs(t->ch[1]);
     }
 
-    std::pair<Tree *, Tree *> split(Tree *t, int x) {
+    std::pair<TreeNode*, TreeNode*> split(TreeNode* t, int x) {
         if (!t) {
             return {t, t};
         }
-        Tree *v = nullptr;
-        Tree *j = t;
-        for (Tree *i = t; i; ) {
+        TreeNode* v = nullptr;
+        TreeNode* j = t;
+        for (TreeNode* i = t; i;) {
             push(i);
             j = i;
             if (i->val >= x) {
@@ -301,7 +303,7 @@ namespace SplayJiangly {
 
         splay(v);
 
-        Tree *u = v->ch[0];
+        TreeNode* u = v->ch[0];
         if (u) {
             v->ch[0] = u->p = nullptr;
         }
@@ -313,14 +315,14 @@ namespace SplayJiangly {
         return {u, v};
     }
 
-    Tree *merge(Tree *l, Tree *r) {
+    TreeNode* merge(TreeNode* l, TreeNode* r) {
         if (!l) {
             return r;
         }
         if (!r) {
             return l;
         }
-        Tree *i = l;
+        TreeNode* i = l;
         while (i->ch[1]) {
             i = i->ch[1];
         }

@@ -2,7 +2,48 @@ template <typename T>
 class Fenwick {
 private:
     int n;
-    vector<int> f;
+    vector<T> nums, tree;
+
+    void update(int id, T val) {
+        for (int i = id + 1; i <= n; i += i & -i) {
+            tree[i - 1] += val;
+        }
+    }
+
+public:
+    explicit Fenwick(int n) : n(n), nums(n), tree(n) {}
+    template <typename U>
+    explicit Fenwick(const vector<U>& nums) : Fenwick(nums.size()) {
+        for (int i = 0; i < n; ++i) {
+            this->nums[i] = nums[i];
+            update(i, nums[i]);
+        }
+    }
+
+    void add(int id, T val) {
+        update(id, val);
+        nums[id] += val;
+    }
+    void modify(int id, T x) {
+        add(id, x - nums[id]);
+        nums[id] = x;
+    }
+    T preSum(int id) {
+        T ans = 0;
+        for (int i = id + 1; i > 0; i &= i - 1) {
+            ans += tree[i - 1];
+        }
+        return ans;
+    }
+    T rangeSum(int l, int r) { return preSum(r) - preSum(l); }
+};
+// The Fenwick is aligned with the input array 0-index and the modifications are not independent.
+
+template <typename T>
+class Fenwick {
+private:
+    int n;
+    vector<T> f;
 
 public:
     explicit Fenwick(int n) : n(n), f(n + 1, 0) {}
@@ -18,7 +59,7 @@ public:
             f[i] += val;
         }
     }
-    void add(int l, int r, int k) { add(l, k), add(r, -k); }
+    void add(int l, int r, T k) { add(l, k), add(r, -k); }
 
     T query(int id) {
         T ans = 0;
@@ -28,37 +69,42 @@ public:
         return ans;
     }
     T rangeQuery(int l, int r) { return query(r) - query(l - 1); }
-
-    T kthMax(int k) {
-        T ans = 0;
-        for (int i = __lg(n); i >= 0; i--) {
-            int val = ans + (1 << i);
-            if (val < n && f[val] < k) {
-                k -= f[val];
-                ans = val;
-            }
-        }
-        return ans + 1;
-    }
-
-    T getInvPair(const vector<T>& val) {
-        this->n = val.size() - 1;
-        f.resize(n + 1);
-
-        vector<pair<int, int>> alls;
-        for (int i = 1; i <= n; i++) {
-            alls.emplace_back(val[i], i);
-        }
-        ranges::sort(alls);
-
-        T ans = 0;
-        for (auto& [val, idx] : alls) {
-            ans += query(idx + 1, n);
-            add(idx, 1);
-        }
-        return ans;
-    }
 };
+
+/*
+补充函数：
+
+T kthMax(int k) {
+    T ans = 0;
+    for (int i = __lg(n); i >= 0; i--) {
+        int val = ans + (1 << i);
+        if (val < n && f[val] < k) {
+            k -= f[val];
+            ans = val;
+        }
+    }
+    return ans + 1;
+}
+
+T getInvPair(const vector<T>& val) {
+    this->n = val.size() - 1;
+    f.resize(n + 1);
+
+    vector<pair<int, int>> alls;
+    for (int i = 1; i <= n; i++) {
+        alls.emplace_back(val[i], i);
+    }
+    ranges::sort(alls);
+
+    T ans = 0;
+    for (auto& [val, idx] : alls) {
+        ans += query(idx + 1, n);
+        add(idx, 1);
+    }
+    return ans;
+}
+*/
+
 
 // 差分树状数组
 // 利用差分数组，实现 O(log n) 的区间加、区间查询
