@@ -284,7 +284,8 @@ namespace ScapegoatTree {
 namespace Treap {
     static int cnt = 0, root = 0;
     static int x = 0, y = 0, z = 0;
-    std::mt19937 rnd(233);
+    // std::mt19937 rnd(233);
+    mt19937_64 rnd{random_device{}()};
 
     class Treap {
         struct Node {
@@ -397,7 +398,8 @@ namespace Treap {
 namespace SegTreap {
     static int cnt = 0, root = 0;
     static int x = 0, y = 0, z = 0;
-    std::mt19937 rnd(233);
+    // std::mt19937 rnd(233);
+    mt19937_64 rnd{random_device{}()};
 
     class SegTreap {
         struct Node {

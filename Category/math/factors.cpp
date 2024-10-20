@@ -1,7 +1,8 @@
 // 因数
-#define N 100005
-vector<vector<int>> factors(N);
+#define N 1000005
+vector<vector<int>> factors;
 auto init = []() {
+    factors.resize(N);
     for (int i = 1; i < N; ++i) {
         for (int j = i; j < N; j += i) {
             factors[j].emplace_back(i);

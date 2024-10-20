@@ -2,7 +2,7 @@ template <typename T>
 class Fenwick {
 private:
     int n;
-    vector<T> nums, tree;
+    vector<T> tree;
 
     void update(int id, T val) {
         for (int i = id + 1; i <= n; i += i & -i) {
@@ -11,12 +11,15 @@ private:
     }
 
 public:
+    vector<T> nums;
+
+public:
     explicit Fenwick(int n) : n(n), nums(n), tree(n) {}
     template <typename U>
-    explicit Fenwick(const vector<U>& nums) : Fenwick(nums.size()) {
+    explicit Fenwick(const vector<U>& vec) : Fenwick(vec.size()) {
         for (int i = 0; i < n; ++i) {
-            this->nums[i] = nums[i];
-            update(i, nums[i]);
+            this->nums[i] = vec[i];
+            update(i, vec[i]);
         }
     }
 
@@ -46,10 +49,11 @@ private:
     vector<T> f;
 
 public:
-    explicit Fenwick(int n) : n(n), f(n + 1, 0) {}
-    explicit Fenwick(vector<T>& vec) : f(vec.size() + 1) {
-        for (int i = 0; i < vec.size(); ++i) {
-            add(i + 1, vec[i]);
+    explicit Fenwick(int n) : n(n), f(n, 0) {}
+    template <typename U>
+    explicit Fenwick(vector<U>& vec) : f(vec.size()) {
+        for (int i = 1; i <= vec.size(); ++i) {
+            add(i, vec[i]);
         }
     }
 
@@ -59,8 +63,6 @@ public:
             f[i] += val;
         }
     }
-    void add(int l, int r, T k) { add(l, k), add(r, -k); }
-
     T query(int id) {
         T ans = 0;
         for (int i = id; i > 0; i &= i - 1) {
@@ -70,6 +72,7 @@ public:
     }
     T rangeQuery(int l, int r) { return query(r) - query(l - 1); }
 };
+// The Fenwick is aligned with the input array 1-index and the modifications are independent.
 
 /*
 补充函数：
@@ -106,42 +109,37 @@ T getInvPair(const vector<T>& val) {
 */
 
 
-// 差分树状数组
-// 利用差分数组，实现 O(log n) 的区间加、区间查询
-// a[1] = diff[1]
-// a[2] = diff[1] + diff[2]
-// a[m] = diff[1] + ... + diff[m]
-// 所以   a[1] + ... + a[m]
-//     = ∑((m-i+1)* diff[i])
-//     = (m+1)∑diff[i] - ∑(i* diff[i])
-// [0] 维护 ∑ diff[i]
-// [1] 维护 ∑ i*diff[i]
+// 差分树状数组，利用差分数组，实现 O(log n) 的区间加、区间查询
+// a[1] = diff[1], a[2] = diff[1] + diff[2], ..., a[m] = diff[1] + ... + diff[m]
+// 所以   a[1] + ... + a[m] = ∑((m-i+1)* diff[i]) = (m+1)∑diff[i] - ∑(i* diff[i])
+// [0] 维护 ∑ diff[i], [1] 维护 ∑ i*diff[i]
+template <typename T>
 class FenwickDiff {
 public:
-    vector<vector<int>> fd;
+    vector<vector<T>> fd;
 
 public:
-    explicit FenwickDiff(int n) : fd(n + 1, vector<int>(2)) {}
-    explicit FenwickDiff(vector<int>& vec) : fd(vec.size() + 1, vector<int>(2)) {
-        for (int i = 0; i < vec.size(); ++i) {
-            add(i + 1, vec[i]);
+    explicit FenwickDiff(int n) : fd(n, vector<int>(2)) {}
+    template <typename U>
+    explicit FenwickDiff(vector<U>& vec) : fd(vec.size(), vector<int>(2)) {
+        for (int i = 1; i <= vec.size(); ++i) {
+            add(i, vec[i]);
         }
     }
 
-    void add(int id, int val) {
+    void add(int id, T val) {
         for (int i = id, iv = i * val; i < fd.size(); i += i & -i) {
             fd[i][0] += val;
             fd[i][1] += iv;
         }
     }
-
-    void add(int l, int r, int val) {
+    void add(int l, int r, T val) {
         add(l, val);
         add(r + 1, -val);
     }
 
-    int preSum(int id) {
-        int s0 = 0, s1 = 0;
+    T preSum(int id) {
+        T s0 = 0, s1 = 0;
         for (int i = id; i > 0; i &= i - 1) {
             s0 += fd[i][0];
             s1 += fd[i][1];
@@ -149,8 +147,9 @@ public:
         return (id + 1) * s0 - s1;
     }
 
-    int rangeSum(int l, int r) { return preSum(r) - preSum(l - 1); }
+    T rangeSum(int l, int r) { return preSum(r) - preSum(l - 1); }
 };
+// The Fenwick is aligned with the input array 1-index and the modifications are independent.
 
 
 template <typename T>

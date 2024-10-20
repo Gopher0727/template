@@ -9,9 +9,10 @@ bool is_prime(int n) {
 }
 
 // 埃氏筛 ErlichScreen
-#define N 100'000
-vector<int> isPrime(N + 1, 1);
+#define N 1000005
+vector<int> isPrime;
 auto init = []() {
+    isPrime.resize(N + 1, 1);
     isPrime[0] = isPrime[1] = 0;
     for (int i = 2; i <= N; ++i) {
         if (!isPrime[i]) {

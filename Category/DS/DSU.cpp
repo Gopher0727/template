@@ -1,3 +1,7 @@
+/*
+    无向图
+*/
+
 struct DSU { // Implement (union by size) + (path compression)
     vector<int> pa, _size;
 
