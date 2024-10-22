@@ -4,8 +4,6 @@ pair<vector<double>, bool> gaussJordanElimination(vector<vector<int>>& A, vector
     constexpr double eps = 1e-8;
 
     int n = A.size();
-
-    // 增广矩阵
     vector a(n, vector<double>(n + 1));
     for (int i = 0; i < n; ++i) {
         copy(A[i].begin(), A[i].end(), a[i].begin());

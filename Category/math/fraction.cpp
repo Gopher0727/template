@@ -44,12 +44,12 @@ public:
     friend constexpr bool operator==(const Frac i, const Frac j) { return i.x * j.y == i.y * j.x; }
     friend constexpr bool operator!=(const Frac i, const Frac j) { return i.x * j.y != i.y * j.x; }
 
-    friend constexpr auto& operator<<(ostream& o, const Frac& j) {
+    friend constexpr auto& operator<<(ostream& os, const Frac& j) {
         T p = gcd(j.x, j.y);
         if (j.y == p) {
-            return o << j.x / p;
+            return os << j.x / p;
         } else {
-            return o << j.x / p << "/" << j.y / p;
+            return os << j.x / p << "/" << j.y / p;
         }
     }
 };

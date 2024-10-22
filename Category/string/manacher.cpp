@@ -9,23 +9,23 @@
  */
 
 vector<int> manacher(string& s) {
-    int n = s.size() * 2 + 1;
-    string t(n, ' ');
-    for (int i = 0, j = 0; i < n; ++i) {
+    int m = s.size() * 2 + 1;
+    string t(m, ' ');
+    for (int i = 0, j = 0; i < m; ++i) {
         t[i] = i & 1 ? s[j++] : '#';
     }
 
-    vector<int> vec(n);
-    for (int i = 0, c = 0, r = 0; i < n; ++i) {
-        int len = r > i ? min(vec[2 * c - i], r - i) : 1;
-        while (i + len <= n && i - len >= 0 && t[i - len] == t[i + len]) {
+    vector<int> Len(m);
+    for (int i = 0, c = 0, r = 0; i < m; ++i) {
+        int len = r > i ? min(Len[2 * c - i], r - i) : 1;
+        while (i + len <= m && i - len >= 0 && t[i - len] == t[i + len]) {
             len++;
         }
         if (i + len > r) {
             r = i + len;
             c = i;
         }
-        vec[i] = len;
+        Len[i] = len;
     }
-    return vec;
-} // 返回值为真实长度 +1
+    return Len;
+} // 返回值为真实回文串长度 +1

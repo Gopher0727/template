@@ -1,18 +1,20 @@
-ll exgcd(ll& a, ll& b, ll& x, ll& y) {
+template <typename T>
+T exgcd(T& a, T& b, T& x, T& y) {
     if (b == 0) {
         return x = 1, y = 0, a;
     }
-    ll g = exgcd(b, a % b, y, x);
+    T g = exgcd(b, a % b, y, x);
     y -= a / b * x;
     return g;
 }
 
 // ax + b == 0 (mod m)
-pair<ll, ll> sol(ll a, ll b, ll m) {
+template <typename T>
+pair<T, T> sol(T a, T b, T m) {
     assert(m > 0);
     b *= -1;
-    ll x, y;
-    ll g = exgcd(a, m, x, y);
+    T x, y;
+    T g = exgcd(a, m, x, y);
     if (g < 0) {
         g *= -1, x *= -1, y *= -1;
     }
@@ -26,7 +28,8 @@ pair<ll, ll> sol(ll a, ll b, ll m) {
     return {x, m / g};
 }
 
-array<ll, 3> exgcd(ll a, ll b) {
+template <typename T>
+array<T, 3> exgcd(T a, T b) {
     if (b == 0) {
         return {a, 1, 0};
     }
