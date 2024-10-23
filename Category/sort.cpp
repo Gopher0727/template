@@ -65,7 +65,8 @@ void half_insertion_sort(int* a, int n) {
 // 计数排序：需要一个额外空间存储待排序数组中相应元素的个数，还需要计算前缀和解决元素重复的情况
 const int N = 10'010;
 const int W = 10'010;
-int a[N], b[N], cnt[W] {}, n, w;
+vector<int> a(N), b(N), cnt(W);
+int n, w;
 void counting_sort() {
     for (int i = 0; i < n; ++i) {
         cnt[a[i]]++;

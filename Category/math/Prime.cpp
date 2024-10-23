@@ -36,7 +36,7 @@ void sieve(ll x) {
 }
 
 
-// 埃氏筛  ErlichScreen  2e6
+// 埃氏筛  ErlichScreen  2e7
 vector<int> isPrime;
 void sieve(int n) {
     isPrime.assign(n + 1, 1);
@@ -45,15 +45,15 @@ void sieve(int n) {
         if (!isPrime[i]) {
             continue;
         }
-        for (auto j = i * 1ll * i; j <= N; j += i) {
+        for (auto j = i * 1ll * i; j <= n; j += i) {
             isPrime[j] = 0;
         }
     }
 }
 
 
-// 线性筛  Linear screen  2e6
-// (Euler screen) ———— 让每个合数只被标记一次
+// 线性筛  LinearScreen  5e7
+// (EulerScreen) ———— 让每个合数只被标记一次
 vector<int> primes, isPrime;
 void sieve(int n) {
     isPrime.resize(n + 1, 1);
@@ -77,7 +77,7 @@ void sieve(int n) {
 
 // 合数 = 最小质因数 * 最大真因数
 
-// 线性筛 + 最小质因数  2e6
+// 线性筛 + 最小质因数  1e8
 vector<int> minp, primes;
 void sieve(int n) {
     minp.assign(n + 1, 0);
@@ -102,7 +102,7 @@ void sieve(int n) {
 }
 
 
-// 块筛选  ——  计算不大于 n 的质数的总数量
+// 块筛选  ——  计算不大于 n 的质数的总数量  3e8
 int count_primes(int n) {
     const int S = 10000;
 
