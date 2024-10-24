@@ -1,17 +1,17 @@
-const double PI = numbers::pi; // acos(-1);
-
-template <typename T = ll>
+template <typename T>
 struct Point {
     T x, y;
-    Point(const T& x_ = 0, const T& y_ = 0) : x(x_), y(y_) {}
+
+    Point() = default;
+    Point(const T& x_, const T& y_) : x(x_), y(y_) {}
 
     template <typename U = ll>
-    operator Point<U>() {
+    operator Point<U>() const {
         return Point<U>(U(x), U(y));
     }
 
     Point operator-() const { return Point(-x, -y); }
-    int operator^(const Point& a) { return x * a.y - y * a.x; }
+    T operator^(const Point& a) const { return x * a.y - y * a.x; }
 
     Point& operator+=(const Point& p) { return x += p.x, y += p.y, *this; }
     Point& operator-=(const Point& p) { return x -= p.x, y -= p.y, *this; }
@@ -28,9 +28,9 @@ struct Point {
     friend std::istream& operator>>(std::istream& is, Point& p) { return is >> p.x >> p.y; }
     friend std::ostream& operator<<(std::ostream& os, const Point& p) { return os << "(" << p.x << ", " << p.y << ")"; }
 };
+using point = Point<ll>;
 
+const double PI = numbers::pi; // acos(-1);
 double toArc(double x) { // 角度转弧度
     return PI / 180 * x;
 }
-
-// hypot() 求直角三角形斜边长度

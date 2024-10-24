@@ -16,7 +16,6 @@ public:
         }
         node->isEnd = true;
     }
-
     bool find(string& s) {
         Trie* node = this;
         for (char ch : s) {
@@ -27,7 +26,6 @@ public:
         }
         return node->isEnd;
     }
-
     bool startsWith(string& s) {
         Trie* node = this;
         for (char ch : s) {
@@ -57,7 +55,6 @@ public:
             node = node->children[val >> k & 1];
         }
     }
-
     int query(int val) {
         Trie* node = this;
         int res = 0;
