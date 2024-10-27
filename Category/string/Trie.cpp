@@ -1,3 +1,6 @@
+// 题目：
+// https://atcoder.jp/contests/abc377/tasks/abc377_g
+
 class Trie {
 private:
     Trie* children[26] {};

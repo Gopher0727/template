@@ -14,9 +14,9 @@ public:
     vector<T> nums;
 
 public:
-    explicit Fenwick(int n) : n(n), nums(n), tree(n) {}
+    Fenwick(int n = 0) : n(n), nums(n), tree(n) {}
     template <typename U>
-    explicit Fenwick(const vector<U>& vec) : Fenwick(vec.size()) {
+    Fenwick(const vector<U>& vec) : Fenwick(vec.size()) {
         for (int i = 0; i < n; ++i) {
             this->nums[i] = vec[i];
             update(i, vec[i]);
@@ -49,9 +49,9 @@ private:
     vector<T> f;
 
 public:
-    explicit Fenwick(int n) : n(n), f(n, 0) {}
+    Fenwick(int n = 0) : n(n), f(n, 0) {}
     template <typename U>
-    explicit Fenwick(vector<U>& vec) : f(vec.size()) {
+    Fenwick(vector<U>& vec) : f(vec.size()) {
         for (int i = 1; i <= vec.size(); ++i) {
             add(i, vec[i]);
         }

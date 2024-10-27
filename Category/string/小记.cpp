@@ -5,26 +5,25 @@
 //
 // https://www.luogu.com.cn/article/lt2rnl6d
 // https://oi-wiki.org/string/lyndon/
-
+//
 vector<string> duval(const string& s) {
-    int n = s.size();
-
     vector<string> res;
+    int n = s.size();
     int i = 0;
     while (i < n) {
-        int j = i + 1; // s3 首字符
-        int k = i; // 当前字符
-        while (j < n && s[k] <= s[j]) {
-            if (s[k] < s[j]) {
-                k = i;
+        int j = i;
+        int k = i + 1;
+        while (k < n && s[j] <= s[k]) {
+            if (s[j] < s[k]) {
+                j = i;
             } else {
-                k++;
+                j++;
             }
-            j++;
+            k++;
         }
-        while (i <= k) {
-            res.emplace_back(s.substr(i, j - k));
-            i += j - k;
+        while (i <= j) {
+            res.emplace_back(s.substr(i, k - j));
+            i += k - j;
         }
     }
     return res;
