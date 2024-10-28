@@ -2,9 +2,10 @@ struct Tree {
     int n;
     vector<vector<int>> g;
 
+public:
     Tree(int n) : n(n), g(n + 1) {}
 
-    void add(int x, int y) {
+    void addEdge(int x, int y) {
         g[x].push_back(y);
         // g[y].push_back(x);
     }

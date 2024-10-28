@@ -1,18 +1,14 @@
-#define MAX 200001
-
-int BFS_TopoSort() {
+int TopoSort() {
     int n, m; // 点数、边数
     cin >> n >> m;
 
-    vector<vector<int>> adj(MAX);
-    vector<int> inDeg(MAX);
-
+    vector<vector<int>> g(n);
+    vector<int> inDeg(n);
     for (int i = 0; i < m; ++i) {
         int a, b;
         cin >> a >> b;
         a--, b--;
-
-        adj[a].emplace_back(b);
+        g[a].push_back(b);
         inDeg[b]++;
     }
 
@@ -27,24 +23,20 @@ int BFS_TopoSort() {
     vector<int> res;
     while (!q.empty()) {
         int u = q.front();
-        res.emplace_back(u);
+        res.push_back(u);
         q.pop();
-
-        for (int i = 0; i < adj[u].size(); ++i) {
-            int v = adj[u][i];
+        for (int i = 0; i < g[u].size(); ++i) {
+            int v = g[u][i];
             if (--inDeg[v] == 0) { // 若入度减为0，则入队
                 q.emplace(v);
             }
         }
-
         cnt++;
     }
-
     if (cnt != n) {
         cout << -1;
         return 0;
     }
-
     // 图无环，存在拓扑序列
     for (int i = 0; i < res.size(); ++i) {
         cout << res[i] << " \n"[i == res.size() - 1];
@@ -52,3 +44,4 @@ int BFS_TopoSort() {
 
     return 0;
 }
+// The node-index starts from 0

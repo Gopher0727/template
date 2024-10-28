@@ -1,13 +1,15 @@
-// 以下为无向边的情况：
+// 无向边
+//
 void solve() {
     int n, m;
     cin >> n >> m;
 
     using PII = pair<int, int>;
-    vector<vector<PII>> g(n + 1);
+    vector<vector<PII>> g(n);
     for (int i = 0; i < m; ++i) {
         int u, v, w;
         cin >> u >> v >> w;
+        u--, v--;
         g[u].emplace_back(v, w);
     }
 
@@ -16,8 +18,8 @@ void solve() {
     bool ok = false; // 判断是否有最小生成树
 
     priority_queue<PII, vector<PII>, greater<PII>> pq; // w, v
-    vector<int> vis(n + 1);
-    pq.emplace(0, 1);
+    vector<int> vis(n);
+    pq.emplace(0, 0);
     while (!pq.empty()) {
         auto [w, v] = pq.top();
         pq.pop();
@@ -31,7 +33,6 @@ void solve() {
             ok = true;
             break;
         }
-
         for (auto& [to, w] : g[v]) {
             if (vis[to] == 1) {
                 continue;
@@ -46,3 +47,4 @@ void solve() {
         cout << "orz\n";
     }
 }
+// The node-index starts from 0

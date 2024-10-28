@@ -1,8 +1,7 @@
-/*
-    BellmanFord  可以处理有负权，但不能有负环
-
-    时间复杂度 O(nm)
-*/
+// BellmanFord  可以处理有负权，但不能有负环
+//
+// 时间复杂度 O(nm)
+//
 static constexpr int inf = INT_MAX / 2;
 
 void solve() {
@@ -32,12 +31,12 @@ void solve() {
 }
 
 
-/*
-    SPFA
 
-    对于 Bellman-Ford 的过程来说，只有上一次被松弛过的节点，所连接的边才可能引起下一次松弛，
-    可以利用队列维护需要进行松弛的节点。
-*/
+// SPFA
+//
+// 对于 Bellman-Ford 的过程来说，只有上一次被松弛过的节点，所连接的边才可能引起下一次松弛，
+// 可以利用队列维护需要进行松弛的节点。
+//
 static constexpr int inf = INT_MAX / 2;
 
 void solve {
