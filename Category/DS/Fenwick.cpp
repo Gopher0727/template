@@ -1,4 +1,40 @@
 template <typename T>
+struct Fenwick {
+    int n;
+    vector<T> tree;
+
+    Fenwick(int n_ = 0) : n(n_), tree(n, T {}) {}
+
+    void add(int x, const T& v) {
+        for (int i = x + 1; i <= n; i += i & -i) {
+            tree[i - 1] = tree[i - 1] + v;
+        }
+    }
+    T query(int x) {
+        T ans {};
+        for (int i = x; i > 0; i -= i & -i) {
+            ans = ans + tree[i - 1];
+        }
+        return ans;
+    }
+    T rangeQuery(int l, int r) { return query(r) - query(l); }
+
+    int select(const T& k) {
+        T cur {};
+        int x = 0;
+        for (int i = 1 << __lg(n); i; i /= 2) {
+            if (x + i <= n && cur + tree[x + i - 1] <= k) {
+                x += i;
+                cur += tree[x - 1];
+            }
+        }
+        return x;
+    }
+};
+// The Fenwick is aligned with the input array 0-index.
+
+
+template <typename T>
 class Fenwick {
 private:
     int n;
@@ -31,16 +67,17 @@ public:
         add(id, x - nums[id]);
         nums[id] = x;
     }
-    T preSum(int id) {
+    T query(int id) {
         T ans = 0;
         for (int i = id + 1; i > 0; i &= i - 1) {
             ans += tree[i - 1];
         }
         return ans;
     }
-    T rangeSum(int l, int r) { return preSum(r) - preSum(l); }
+    T rangeQuery(int l, int r) { return query(r) - query(l); }
 };
 // The Fenwick is aligned with the input array 0-index and the modifications are not independent.
+
 
 template <typename T>
 class Fenwick {
@@ -71,42 +108,20 @@ public:
         return ans;
     }
     T rangeQuery(int l, int r) { return query(r) - query(l - 1); }
-};
-// The Fenwick is aligned with the input array 1-index and the modifications are independent.
 
-/*
-补充函数：
-
-T kthMax(int k) {
-    T ans = 0;
-    for (int i = __lg(n); i >= 0; i--) {
-        int val = ans + (1 << i);
-        if (val < n && f[val] < k) {
-            k -= f[val];
-            ans = val;
+    T kthMax(int k) {
+        T ans = 0;
+        for (int i = __lg(n); i >= 0; i--) {
+            int val = ans + (1 << i);
+            if (val < n && f[val] < k) {
+                k -= f[val];
+                ans = val;
+            }
         }
+        return ans + 1;
     }
-    return ans + 1;
-}
-
-T getInvPair(const vector<T>& val) {
-    this->n = val.size() - 1;
-    f.resize(n + 1);
-
-    vector<pair<int, int>> alls;
-    for (int i = 1; i <= n; i++) {
-        alls.emplace_back(val[i], i);
-    }
-    ranges::sort(alls);
-
-    T ans = 0;
-    for (auto& [val, idx] : alls) {
-        ans += query(idx + 1, n);
-        add(idx, 1);
-    }
-    return ans;
-}
-*/
+};
+// The Fenwick is aligned with the input array 1-index.
 
 
 // 差分树状数组，利用差分数组，实现 O(log n) 的区间加、区间查询
@@ -149,7 +164,7 @@ public:
 
     T rangeSum(int l, int r) { return preSum(r) - preSum(l - 1); }
 };
-// The Fenwick is aligned with the input array 1-index and the modifications are independent.
+// The Fenwick is aligned with the input array 1-index.
 
 
 template <typename T>

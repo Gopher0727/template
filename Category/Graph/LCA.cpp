@@ -1,3 +1,5 @@
+// 倍增法求 LCA
+//
 class TreeAncestor {
     vector<int> depth;
     vector<vector<int>> parent;
@@ -16,7 +18,7 @@ public:
         depth.resize(n);
         parent.resize(n, vector<int>(m, -1));
 
-        auto dfs = [&](auto&& dfs, int x, int pa) -> void {
+        auto dfs = [&](auto&& dfs, int x, int pa = -1) -> void {
             parent[x][0] = pa;
             for (int y : g[x]) {
                 if (y != pa) {
@@ -25,7 +27,7 @@ public:
                 }
             }
         };
-        dfs(dfs, s, -1);
+        dfs(dfs, s);
 
         for (int i = 0; i < m - 1; i++) {
             for (int x = 0; x < n; x++) {
