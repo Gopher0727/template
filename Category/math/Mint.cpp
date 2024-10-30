@@ -92,8 +92,6 @@ using ModInt32 = ModIntBase<uint32_t, P>;
 template <uint64_t P>
 using ModInt64 = ModIntBase<uint64_t, P>;
 
-using MI = ModInt32<MOD>;
-
-// Attention:
-// qpow 取模时，第一个参数应为 MI 类型
+using Mint = ModInt32<MOD>;
+// qpow 取模时，第一个参数应为 Mint 类型
 // 默认模数是 1e9+7，注意修改...

@@ -36,7 +36,6 @@ void build(string& s) {
         h[i + 1] = h[i] * base + s[i] - 'a' + 1;
     }
 }
-
 ull get(string& s) {
     ull val = 0;
     for (char ch : s) {
@@ -44,16 +43,14 @@ ull get(string& s) {
     }
     return val;
 }
-
 ull get(int l, int r) { // [l, r)
     return h[r] - h[l] * p[r - l];
 }
 
 
 // class
-
+//
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-
 bool is_prime(int n) {
     for (int i = 2; i * i <= n; i++) {
         if (n % i == 0) {
@@ -68,7 +65,6 @@ int findPrime(int n) {
     }
     return n;
 }
-
 template <int N>
 class StringHash {
     static array<int, N> mod;
@@ -101,7 +97,6 @@ public:
         return ans;
     }
 };
-
 constexpr int HN = 2;
 template <>
 array<int, 2> StringHash<HN>::mod {findPrime(rng() % 900000000 + 100000000), findPrime(rng() % 900000000 + 100000000)};

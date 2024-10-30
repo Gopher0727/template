@@ -1,7 +1,5 @@
-/*
-    无向图
-*/
-
+// 无向图
+//
 struct DSU { // Implement (union by size) + (path compression)
     vector<int> pa, _size;
 
@@ -22,7 +20,6 @@ struct DSU { // Implement (union by size) + (path compression)
     }
 
     bool same(int x, int y) { return find(x) == find(y); }
-
     int size(int x) { return _size[find(x)]; }
 };
 
@@ -84,7 +81,6 @@ struct DSU {
         }
         return x;
     }
-
     bool merge(int x, int y) {
         x = find(x), y = find(y);
         if (x == y) {
@@ -98,9 +94,7 @@ struct DSU {
         pa[y] = x;
         return true;
     }
-
     int time() { return his.size(); }
-
     void revert(int time) {
         while (his.size() > time) {
             auto [x, y] = his.back();
