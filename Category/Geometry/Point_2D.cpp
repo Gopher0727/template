@@ -25,10 +25,10 @@ struct Point {
     friend istream& operator>>(istream& is, Point& p) { return is >> p.x >> p.y; }
     friend ostream& operator<<(ostream& os, const Point& p) { return os << "(" << p.x << ", " << p.y << ")"; }
 
+    T length(const Point& p) { return hypot(x, y); }
     // 点积（内积）
     friend T dot(const Point& a, const Point& b) { return a.x * b.x + a.y * b.y; }
     friend T square(const Point& p) { return dot(p, p); }
-    friend T length(const Point& p) { return sqrt(square(p)); }
     friend T distance(const Point& a, const Point& b) { return length(a - b); }
     friend Point norm(const Point& p) { return p / length(p); }
     friend Point rotate(const Point& a) { return Point(-a.y, a.x); }
