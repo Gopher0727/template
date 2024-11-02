@@ -1,4 +1,8 @@
-﻿const int maxn = 200005;
+﻿// 李超线段树
+//
+// 用来维护在平面直角坐标系上的线段关系
+
+const int maxn = 200005;
 const int inf = 1 << 30;
 int cur = 0;
 struct segment {

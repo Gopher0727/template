@@ -1,4 +1,4 @@
-struct Node {
+struct Info {
     ll sum = 0, add = 0, mul = 1;
     int l, r;
 };
@@ -7,7 +7,7 @@ struct Node {
 class SegTree {
 private:
     int n, m;
-    vector<Node> t;
+    vector<Info> t;
 
     void pull(ll o) { t[o].sum = t[o << 1].sum + t[o << 1 | 1].sum; }
     void push(ll o) {
