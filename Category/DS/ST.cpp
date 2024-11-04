@@ -24,7 +24,8 @@ public:
     }
 };
 
-// todo: 二维 ST 表
+
+// 二维 ST 表
 
 // 初始化 log 表
 vector<vector<int>> log_;

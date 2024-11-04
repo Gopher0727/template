@@ -22,7 +22,21 @@
 # 定理及性质
 
 **位运算**
-> 4i ^ (4i+1) ^ (4i+2) ^ (4i+3) = 0
+
+```cpp []
+// 4i ^ (4i+1) ^ (4i+2) ^ (4i+3) = 0
+ll get(ll n) {
+    if (n % 4 == 0) {
+        return n;
+    } else if (n % 4 == 1) {
+        return 1;
+    } else if (n % 4 == 2) {
+        return n + 1;
+    } else {
+        return 0;
+    }
+}
+```
 
 **裴蜀定理（贝祖定理）**
 > 设 x, y 是不全为零的整数，对任意整数 a,b，满足 gcd(x, y) | ax + by，且存在整数 a,b, 使得 ax + by = gcd(x,y)，同时

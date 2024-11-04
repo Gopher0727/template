@@ -29,3 +29,18 @@ class Combinatorics:
 
 
 C = Combinatorics(2 * 10**5)
+
+
+# 预处理
+MOD = 1_000_000_007
+MX = 41
+
+fac = [0] * MX  # f[i] = i!
+fac[0] = 1
+for i in range(1, MX):
+    fac[i] = fac[i - 1] * i % MOD
+
+inv_f = [0] * MX  # inv_f[i] = i!^-1
+inv_f[-1] = pow(fac[-1], -1, MOD)
+for i in range(MX - 1, 0, -1):
+    inv_f[i - 1] = inv_f[i] * i % MOD

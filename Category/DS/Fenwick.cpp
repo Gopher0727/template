@@ -7,17 +7,17 @@ struct Fenwick {
 
     void add(int x, const T& v) {
         for (int i = x + 1; i <= n; i += i & -i) {
-            tree[i - 1] = tree[i - 1] + v;
+            tree[i - 1] += v;
         }
     }
     T query(int x) {
         T ans {};
-        for (int i = x; i > 0; i -= i & -i) {
+        for (int i = x; i > 0; i -= i & -i) { // i &= i-1
             ans = ans + tree[i - 1];
         }
         return ans;
     }
-    T rangeQuery(int l, int r) { return query(r) - query(l); }
+    T query(int l, int r) { return query(r) - query(l); }
 
     int select(const T& k) {
         T cur {};
@@ -107,7 +107,7 @@ public:
         }
         return ans;
     }
-    T rangeQuery(int l, int r) { return query(r) - query(l - 1); }
+    T query(int l, int r) { return query(r) - query(l - 1); }
 
     T kthMax(int k) {
         T ans = 0;
