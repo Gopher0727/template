@@ -22,18 +22,18 @@ void sieve(int n) {
 
 
 // 找到一个数的所有质因数
-vector<int> prifac;
-void sieve(ll x) {
+map<int, int> priFac;
+auto sieve = [&](ll x) {
     for (int i = 2; i * 1ll * i <= x; ++i) {
         while (x % i == 0) {
             x /= i;
-            prifac.emplace_back(i);
+            priFac[i]++;
         }
     }
     if (x > 1) {
-        prifac.emplace_back(x);
+        priFac[x]++;
     }
-}
+};
 
 
 // 埃氏筛  ErlichScreen  2e7
