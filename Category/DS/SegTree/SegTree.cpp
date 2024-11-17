@@ -21,7 +21,7 @@ public:
 
     template <class T>
     void init(const vector<T>& init_) {
-        n = init_.size() - 1;
+        n = init_.size();
         tree.assign(4 << __lg(n), Info());
         tag.assign(4 << __lg(n), Tag());
 
@@ -100,6 +100,8 @@ public:
         return query(L, R, o << 1, l, m) + query(L, R, o << 1 | 1, m + 1, r);
     }
     Info query(int L, int R) { return query(L, R, 1, 0, n - 1); }
+
+    Info queryAll() { return tree[1]; }
 
     template <class F>
     int findFirst(int L, int R, F& pred, int o, int l, int r) {

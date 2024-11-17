@@ -1,3 +1,44 @@
+// '二分图' 定义：
+// 如果一张无向图的 N 个节点可以分成 A，B 两个不相交的非空集合，并且同一个集合内的点没有边相连，那么称该无向图为二分图。
+//
+
+
+// 代码采用邻接表存图，且点下标从 0 开始。
+
+
+// '二分图' 判定：
+// 染色法：由于，二分图不存在奇环。尝试用两种颜色标记图中的节点，当一个点被标记后，所有与它相邻的节点应该标记与它相反的颜色，
+//       若标记过程中产生冲突，则说明图中存在奇环。
+//
+vector<int> color(n, -1);
+
+auto dfs = [&](auto&& dfs, int u, int c = 0) -> bool {
+    color[u] = c;
+    for (int v : g[u]) {
+        if (color[v] == -1) {
+            if (dfs(dfs, v, c ^ 1)) {
+                return true;
+            }
+        } else if (color[v] == c) {
+            return true;
+        }
+    }
+    return false;
+};
+
+bool flag = false;
+for (int i = 0; i < n; ++i) {
+    if (color[i] == -1) {
+        if (dfs(i)) {
+            flag = true; // 发现奇环
+            break;
+        }
+    }
+}
+
+
+
+
 const int maxn = 1000 + 5; // 单侧顶点的最大数目
 
 // 二分图最大基数匹配

@@ -12,9 +12,11 @@ public:
 
     int getlen(int root) { // 获取x所在树的直径
         map<int, int> dep;
-        auto dfs = [&](auto&& dfs, int x, int fa = 0) -> void {
+        auto dfs = [&](auto&& dfs, int x, int pa = 0) -> void {
             for (auto y : g[x]) {
-                if (y == fa) continue;
+                if (y == pa) {
+                    continue;
+                }
                 dep[y] = dep[x] + 1;
                 dfs(dfs, y, x);
             }
@@ -29,16 +31,17 @@ public:
     }
 
     vector<int> subTreeSize() {
-        vector<int> res(n, 1);
-        auto dfs = [&](auto&& dfs, int x) -> void {
+        vector<int> _size(n, 1);
+        auto dfs = [&](auto&& dfs, int x, int pa = -1) -> void {
             for (int y : g[x]) {
-                if (y != -1) {
-                    dfs(dfs, y);
-                    res[x] += res[y];
+                if (y == pa) {
+                    continue;
                 }
+                dfs(dfs, y, x);
+                _size[x] += _size[y];
             }
         };
         dfs(dfs, 0);
-        return res;
+        return _size;
     }
 };
