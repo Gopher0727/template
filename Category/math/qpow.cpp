@@ -1,6 +1,5 @@
 // 乘法快速幂，带取模
-ll qpow(ll a, ll b, int p) {
-    ll res = 1;
+ll qpow(ll a, ll b, int p, ll res = 1) {
     a = (a % p + p) % p;
     for (; b; b >>= 1, a = a * a % p) {
         if (b & 1) {
@@ -11,8 +10,7 @@ ll qpow(ll a, ll b, int p) {
 }
 
 // 乘法快速幂，未取模
-ll qpow(ll a, ll b) {
-    ll res = 1;
+ll qpow(ll a, ll b, ll res = 1) {
     for (; b; b >>= 1, a *= a) {
         if (b & 1) {
             res = res * a;

@@ -14,16 +14,16 @@ public:
 
 public:
     constexpr double val() const { return 1. * x / y; }
-    constexpr Frac norm() const { // 调整符号、转化为最简形式
+    constexpr Frac norm() const { // 约分
         T p = gcd(x, y);
         return {x / p, y / p};
     }
 
 public:
-    constexpr Frac& operator+=(const Frac& i) { return x = x * i.y + y * i.x, y *= i.y, *this; }
-    constexpr Frac& operator-=(const Frac& i) { return x = x * i.y - y * i.x, y *= i.y, *this; }
-    constexpr Frac& operator*=(const Frac& i) { return x *= i.x, y *= i.y, *this; }
-    constexpr Frac& operator/=(const Frac& i) {
+    constexpr Frac& operator+=(const Frac& i) const { return x = x * i.y + y * i.x, y *= i.y, *this; }
+    constexpr Frac& operator-=(const Frac& i) const { return x = x * i.y - y * i.x, y *= i.y, *this; }
+    constexpr Frac& operator*=(const Frac& i) const { return x *= i.x, y *= i.y, *this; }
+    constexpr Frac& operator/=(const Frac& i) const {
         x *= i.y;
         y *= i.x;
         if (y < 0) {
@@ -33,16 +33,14 @@ public:
         return *this;
     }
 
-    friend constexpr Frac operator+(const Frac i, const Frac j) { return i += j; }
-    friend constexpr Frac operator-(const Frac i, const Frac j) { return i -= j; }
-    friend constexpr Frac operator-(const Frac i) { return Frac(-i.x, i.y); }
-    friend constexpr Frac operator*(const Frac i, const Frac j) { return i *= j; }
-    friend constexpr Frac operator/(const Frac i, const Frac j) { return i /= j; }
+    friend constexpr Frac operator+(const Frac& i, const Frac& j) { return i += j; }
+    friend constexpr Frac operator-(const Frac& i, const Frac& j) { return i -= j; }
+    friend constexpr Frac operator-(const Frac& i) { return Frac(-i.x, i.y); }
+    friend constexpr Frac operator*(const Frac& i, const Frac& j) { return i *= j; }
+    friend constexpr Frac operator/(const Frac& i, const Frac& j) { return i /= j; }
 
-    friend constexpr bool operator<(const Frac i, const Frac j) { return i.x * j.y < i.y * j.x; }
-    friend constexpr bool operator>(const Frac i, const Frac j) { return i.x * j.y > i.y * j.x; }
-    friend constexpr bool operator==(const Frac i, const Frac j) { return i.x * j.y == i.y * j.x; }
-    friend constexpr bool operator!=(const Frac i, const Frac j) { return i.x * j.y != i.y * j.x; }
+    friend constexpr strong_ordering operator<=>(const Frac& i, const Frac& j) { return i.x * j.y <=> i.y * j.x; }
+    friend constexpr bool operator==(const Frac& i, const Frac& j) { return i.x * j.y == i.y * j.x; }
 
     friend constexpr auto& operator<<(ostream& os, const Frac& j) {
         T p = gcd(j.x, j.y);

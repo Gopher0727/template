@@ -1,6 +1,5 @@
 template <typename T>
-constexpr T qpow(T x, uint64_t a) {
-    T res = 1;
+constexpr T qpow(T x, uint64_t a, T res = 1) {
     for (; a; a >>= 1, x *= x) {
         if (a & 1) {
             res *= x;
@@ -74,11 +73,10 @@ public:
     friend constexpr ModIntBase operator*(ModIntBase lv, const ModIntBase& rv) { return lv *= rv; }
     friend constexpr ModIntBase operator/(ModIntBase lv, const ModIntBase& rv) { return lv /= rv; }
 
-    friend constexpr bool operator<(ModIntBase lv, const ModIntBase rv) { return lv.val() < rv.val(); }
+    friend constexpr strong_ordering operator<=>(ModIntBase lhs, ModIntBase rhs) { return lhs.val() <=> rhs.val(); }
     friend constexpr bool operator==(ModIntBase lv, const ModIntBase rv) { return lv.val() == rv.val(); }
-    friend constexpr bool operator!=(ModIntBase lv, const ModIntBase rv) { return lv.val() != rv.val(); }
 
-    friend constexpr istream& operator>>(istream& in, ModIntBase<T, P>& v) {
+    friend constexpr istream& operator>>(istream& in, ModIntBase& v) {
         T x;
         in >> x;
         v.x = v.norm(x % T(P));
