@@ -5,7 +5,17 @@ struct DSU { // Implement (union by size) + (path compression)
 
     DSU(int n) : pa(n), _size(n, 1) { iota(pa.begin(), pa.end(), 0); }
 
-    int find(int x) { return x == pa[x] ? x : pa[x] = find(pa[x]); }
+    // int find(int x) { return x == pa[x] ? x : pa[x] = find(pa[x]); }
+    int find(int x) {
+        int root = x;
+        while (pa[root] != root) {
+            root = pa[root];
+        }
+        while (pa[x] != root) {
+            tie(pa[x], x) = pair(root, pa[x]);
+        }
+        return root;
+    }
 
     void merge(int x, int y) {
         int px = find(x), py = find(y);
@@ -20,6 +30,7 @@ struct DSU { // Implement (union by size) + (path compression)
     }
 
     bool same(int x, int y) { return find(x) == find(y); }
+
     int size(int x) { return _size[find(x)]; }
 };
 
@@ -29,13 +40,8 @@ struct DSU {
 
     DSU(int n) : pa(n + 1), p(n + 1, 1), e(n + 1, 1), f(n + 1, 1) { iota(pa.begin(), pa.end(), 0); }
 
-    // int find(int x) { return x == pa[x] ? x : pa[x] = find(pa[x]); }
-    int find(int x) {
-        while (x != pa[x]) {
-            x = pa[x] = pa[pa[x]];
-        }
-        return x;
-    }
+    int find(int x) { return x == pa[x] ? x : pa[x] = find(pa[x]); }
+
     bool merge(int x, int y) { // 设 x 是 y 的祖先
         if (x == y) {
             f[find(x)] = 1;
@@ -54,6 +60,7 @@ struct DSU {
         e[x] += e[y];
         return true;
     }
+
     bool same(int x, int y) { return find(x) == find(y); }
 
     bool F(int x) { // 判断连通块内是否存在自环
@@ -81,6 +88,7 @@ struct DSU {
         }
         return x;
     }
+
     bool merge(int x, int y) {
         x = find(x), y = find(y);
         if (x == y) {
@@ -94,7 +102,9 @@ struct DSU {
         pa[y] = x;
         return true;
     }
+
     int time() { return his.size(); }
+
     void revert(int time) {
         while (his.size() > time) {
             auto [x, y] = his.back();

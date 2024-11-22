@@ -1,6 +1,6 @@
 struct Combinatorics {
     int n;
-    std::vector<MI> _fac, _invfac, _inv;
+    std::vector<Mint> _fac, _invfac, _inv;
 
     Combinatorics() : n {0}, _fac {1}, _invfac {1}, _inv {0} {}
     Combinatorics(int n) : Combinatorics() { init(n); }
@@ -22,28 +22,27 @@ struct Combinatorics {
         n = m;
     }
 
-    MI fac(int m) {
+    Mint fac(int m) {
         if (m > n) init(2 * m);
         return _fac[m];
     }
-    MI invfac(int m) {
+    Mint invfac(int m) {
         if (m > n) init(2 * m);
         return _invfac[m];
     }
-    MI inv(int m) {
+    Mint inv(int m) {
         if (m > n) init(2 * m);
         return _inv[m];
     }
-    MI comb(int n, int m) {
+    Mint comb(int n, int m) {
         if (n < m || m < 0) return 0;
         return fac(n) * invfac(m) * invfac(n - m);
     }
-    MI perm(int n, int m) {
+    Mint perm(int n, int m) {
         if (n < m || m < 0) return 0;
         return fac(n) * invfac(n - m);
     }
 } C;
-
 
 // 预处理
 namespace Comb {
