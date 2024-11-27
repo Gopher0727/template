@@ -73,8 +73,8 @@ public:
     friend constexpr ModIntBase operator*(ModIntBase lv, const ModIntBase& rv) { return lv *= rv; }
     friend constexpr ModIntBase operator/(ModIntBase lv, const ModIntBase& rv) { return lv /= rv; }
 
-    friend constexpr strong_ordering operator<=>(ModIntBase lhs, ModIntBase rhs) { return lhs.val() <=> rhs.val(); }
-    friend constexpr bool operator==(ModIntBase lv, const ModIntBase rv) { return lv.val() == rv.val(); }
+    friend constexpr strong_ordering operator<=>(ModIntBase& lhs, ModIntBase& rhs) { return lhs.val() <=> rhs.val(); }
+    friend constexpr bool operator==(ModIntBase& lv, const ModIntBase& rv) { return lv.val() == rv.val(); }
 
     friend constexpr istream& operator>>(istream& in, ModIntBase& v) {
         T x;

@@ -1,21 +1,24 @@
+from typing import List, NamedTuple, Optional, cast
+
+
 class MFGraph:
     class Edge(NamedTuple):
         src: int
         dst: int
         cap: int
         flow: int
- 
+
     class _Edge:
         def __init__(self, dst: int, cap: int) -> None:
             self.dst = dst
             self.cap = cap
             self.rev: Optional[MFGraph._Edge] = None
- 
+
     def __init__(self, n: int) -> None:
         self._n = n
         self._g: List[List[MFGraph._Edge]] = [[] for _ in range(n)]
         self._edges: List[MFGraph._Edge] = []
- 
+
     def add_edge(self, src: int, dst: int, cap: int) -> int:
         assert 0 <= src < self._n
         assert 0 <= dst < self._n
@@ -29,21 +32,16 @@ class MFGraph:
         self._g[dst].append(re)
         self._edges.append(e)
         return m
- 
+
     def get_edge(self, i: int) -> Edge:
         assert 0 <= i < len(self._edges)
         e = self._edges[i]
         re = cast(MFGraph._Edge, e.rev)
-        return MFGraph.Edge(
-            re.dst,
-            e.dst,
-            e.cap + re.cap,
-            re.cap
-        )
- 
+        return MFGraph.Edge(re.dst, e.dst, e.cap + re.cap, re.cap)
+
     def edges(self) -> List[Edge]:
         return [self.get_edge(i) for i in range(len(self._edges))]
- 
+
     def change_edge(self, i: int, new_cap: int, new_flow: int) -> None:
         assert 0 <= i < len(self._edges)
         assert 0 <= new_flow <= new_cap
@@ -51,21 +49,21 @@ class MFGraph:
         e.cap = new_cap - new_flow
         assert e.rev is not None
         e.rev.cap = new_flow
- 
+
     def flow(self, s: int, t: int, flow_limit: Optional[int] = None) -> int:
         assert 0 <= s < self._n
         assert 0 <= t < self._n
         assert s != t
         if flow_limit is None:
             flow_limit = cast(int, sum(e.cap for e in self._g[s]))
- 
+
         current_edge = [0] * self._n
         level = [0] * self._n
- 
+
         def fill(arr: List[int], value: int) -> None:
             for i in range(len(arr)):
                 arr[i] = value
- 
+
         def bfs() -> bool:
             fill(level, self._n)
             queue = []
@@ -84,7 +82,7 @@ class MFGraph:
                         return True
                     queue.append(e.dst)
             return False
- 
+
         def dfs(lim: int) -> int:
             stack = []
             edge_stack: List[MFGraph._Edge] = []
@@ -114,7 +112,7 @@ class MFGraph:
                         edge_stack.pop()
                     level[v] = self._n
             return 0
- 
+
         flow = 0
         while flow < flow_limit:
             if not bfs():
@@ -126,7 +124,7 @@ class MFGraph:
                 if f == 0:
                     break
         return flow
- 
+
     def min_cut(self, s: int) -> List[bool]:
         visited = [False] * self._n
         stack = [s]

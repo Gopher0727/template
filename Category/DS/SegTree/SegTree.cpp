@@ -25,17 +25,17 @@ public:
         tree.assign(4 << __lg(n), Info());
         tag.assign(4 << __lg(n), Tag());
 
-        function<void(int, int, int)> build = [&](int o, int l, int r) -> void {
+        auto build = [&](auto&& self, int o, int l, int r) -> void {
             if (l == r) {
                 tree[o] = init_[l];
                 return;
             }
             int m = l + (r - l) / 2;
-            build(o << 1, l, m);
-            build(o << 1 | 1, m + 1, r);
+            self(self, o << 1, l, m);
+            self(self, o << 1 | 1, m + 1, r);
             pull(o);
         };
-        build(1, 0, n - 1);
+        build(build, 1, 0, n - 1);
     }
 
 public:

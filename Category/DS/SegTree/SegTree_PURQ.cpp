@@ -8,17 +8,17 @@ class SegTree {
 public:
     SegTree(int n) : n(n), tree(4 << __lg(n)) {}
     SegTree(const vector<Info>& init) : SegTree(init.size()) {
-        function<void(int, int, int)> build = [&](int o, int l, int r) {
+         auto build = [&](auto&& self, int o, int l, int r) -> void {
             if (l == r) {
                 tree[o] = init[l];
                 return;
             }
-            int m = (l + r) / 2;
-            build(o << 1, l, m);
-            build(o << 1 | 1, m + 1, r);
+            int m = l + (r - l) / 2;
+            self(self, o << 1, l, m);
+            self(self, o << 1 | 1, m + 1, r);
             pull(o);
         };
-        build(1, 0, n - 1);
+        build(build, 1, 0, n - 1);
     }
 
     void modify(int id, const Info& v, int o, int l, int r) {
@@ -50,6 +50,8 @@ public:
         return query(L, R, o << 1, l, m) + query(L, R, o << 1 | 1, m + 1, r);
     }
     Info query(int L, int R) { return query(L, R, 1, 0, n - 1); }
+
+    Info queryAll() { return tree[1]; }
 
     template <class F>
     int findFirst(int L, int R, F& pred, int o, int l, int r) {

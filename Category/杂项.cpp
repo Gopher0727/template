@@ -1,4 +1,3 @@
-```cpp
 // 蛇形路径
 //
 vector<string> snakeWay(const vector<string>& g) {
@@ -20,14 +19,3 @@ vector<string> snakeWay(const vector<string>& g) {
         cout << t << "\n";
     }
 }
-```
-
-```py
-# 字符大小写转换
-#
-mp = {}
-for x in ascii_lowercase:
-    mp[x] = x.upper()
-for x in ascii_uppercase:
-    mp[x] = x.lower()
-```
