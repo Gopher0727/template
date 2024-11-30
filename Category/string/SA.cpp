@@ -1,75 +1,67 @@
-﻿/*
-    SA —— 后缀数组（sa[i] 表示排序为 i 的后缀编号）
-    rk —— 名次数组（rk[i] 表示后缀 i 的排名）
-    ht —— 高度数组（rk 相邻的两个后缀的 LCP）
-          高度数组表示两个后缀的相似度，排序后相邻两个后缀相似度最高
-
-    把字符串 str 的所有后缀按字典序排序，sa[i] 表示排名为 i 的后缀的开头下标
-
-求解 SA：（倍增，基数排序/桶排序）
-    先把以每个位置开始的长度为 1 的子串排序，在此基础上再把长度为 2 的子串排序，以此类推，直到子串的末尾。
-    rk[i] 表示当前长度下，i 开始的后缀的排名。
-
-求解 ht：利用 SA 和 rk 数组计算 ht 数组
-*/
-
-/**   jiangly 后缀数组（SA及其应用 新版）
- *    2023-09-24: https://qoj.ac/submission/187270
- *    2024-04-07: https://qoj.ac/submission/381482
-**/
-struct SA {
+﻿// 求解 SA：（倍增，基数排序/桶排序）
+//    先把以每个位置开始的长度为 1 的子串排序，在此基础上再把长度为 2 的子串排序，以此类推，直到子串的末尾。
+//
+struct suffixArray {
     int n;
-    std::vector<int> sa, rk, lc;
+    // sa —— 后缀数组（sa[i] 表示排序为 i 的后缀编号）
+    // 把字符串 str 的所有后缀按字典序排序，sa[i] 表示排名为 i 的后缀的开头下标
+    // rk —— 名次数组（rk[i] 表示后缀 i 的排名）
+    // rk[i] 表示当前长度下，i 开始的后缀的排名。
+    vector<int> sa, rk, lc;
 
-    SA(std::string s) {
-        n = s.size();
-        sa.resize(n);
-        lc.resize(n - 1);
-        rk.resize(n);
-        std::iota(sa.begin(), sa.end(), 0);
-        std::sort(sa.begin(), sa.end(),
-            [&](int a, int b) {
-                return s[a] < s[b];
-            });
+    suffixArray(const string& s) : n(s.size()), sa(n), lc(n - 1), rk(n) {
+        iota(sa.begin(), sa.end(), 0);
+        // 按所有后缀的第一个字符排序
+        sort(sa.begin(), sa.end(), [&](int a, int b) { return s[a] < s[b]; });
         rk[sa[0]] = 0;
         for (int i = 1; i < n; i++) {
             rk[sa[i]] = rk[sa[i - 1]] + (s[sa[i]] != s[sa[i - 1]]);
         }
-        int k = 1;
-        std::vector<int> tmp, cnt(n);
+
+        vector<int> cnt(n), tmp;
         tmp.reserve(n);
-        while (rk[sa[n - 1]] < n - 1) {
+        for (int k = 1; rk[sa[n - 1]] < n - 1; k <<= 1) {
+            // 首先添加长度为 k 的后缀，然后添加其余后缀的下一半
             tmp.clear();
             for (int i = 0; i < k; i++) {
                 tmp.push_back(n - k + i);
             }
-            for (auto i : sa) {
+            for (int i : sa) {
                 if (i >= k) {
                     tmp.push_back(i - k);
                 }
             }
-            std::fill(cnt.begin(), cnt.end(), 0);
+
+            // 使用计数排序对 tmp 中的后缀进行排序。
+            // 首先计数每个排名的出现次数，然后计算排名的累积计数。
+            fill(cnt.begin(), cnt.end(), 0);
             for (int i = 0; i < n; i++) {
                 cnt[rk[i]]++;
             }
             for (int i = 1; i < n; i++) {
                 cnt[i] += cnt[i - 1];
             }
+
+            // 根据计数数组 cnt 将 tmp 中的后缀按排名顺序放入 sa。
             for (int i = n - 1; i >= 0; i--) {
                 sa[--cnt[rk[tmp[i]]]] = tmp[i];
             }
-            std::swap(rk, tmp);
+
+            // tmp 现在存储旧的排名，重新计算排名
+            swap(rk, tmp);
             rk[sa[0]] = 0;
             for (int i = 1; i < n; i++) {
                 rk[sa[i]] = rk[sa[i - 1]] + (tmp[sa[i - 1]] < tmp[sa[i]] || sa[i - 1] + k == n || tmp[sa[i - 1] + k] < tmp[sa[i] + k]);
             }
-            k *= 2;
         }
+
+        // 最长公共前缀（LCP）
         for (int i = 0, j = 0; i < n; i++) {
             if (rk[i] == 0) {
                 j = 0;
             } else {
-                for (j -= j > 0; i + j < n && sa[rk[i] - 1] + j < n && s[i + j] == s[sa[rk[i] - 1] + j]; ) {
+                j -= j > 0;
+                while (i + j < n && sa[rk[i] - 1] + j < n && s[i + j] == s[sa[rk[i] - 1] + j]) {
                     j++;
                 }
                 lc[rk[i] - 1] = j;
@@ -77,6 +69,7 @@ struct SA {
         }
     }
 };
+
 
 void solve() {
     constexpr int K = 21;
@@ -119,7 +112,6 @@ void solve() {
 }
 
 
-
 /*
 1.  rank[i]表示下标i的排名（排名从0开始）。
 2.  sa[i]表示第i小的后缀的下标（i从0开始）。
@@ -128,67 +120,6 @@ void solve() {
 const int maxn = 210000; //maxn应当开到最大字符串长度的两倍，否则(1)处下标访问可能越界。
 const int maxlog = 20;
 struct Suffix_Array {
-    char s[maxn];
-    int sa[maxn], rank[maxn], height[maxn];
-    int t[maxn], t2[maxn], c[maxn], n;
-    void init(const char* str) {
-        strcpy(s, str);
-        n = strlen(s);
-        memset(t, 0, sizeof(int) * (2 * n + 10));  //为了保证(1)处访问越界时得到的数组值恒为0，应当将t和t2数组清空
-        memset(t2, 0, sizeof(int) * (2 * n + 10));
-    }
-    void build_sa(int m = 256) {
-        int* x = t, * y = t2;
-        for (int i = 0; i < m; ++i) c[i] = 0;
-        for (int i = 0; i < n; ++i) c[x[i] = s[i]]++;
-        for (int i = 1; i < m; ++i) c[i] += c[i - 1];
-        for (int i = n - 1; i >= 0; --i) sa[--c[x[i]]] = i;
-        for (int k = 1; k <= n; k <<= 1) {
-            int p = 0;
-            for (int i = n - 1; i >= n - k; --i) y[p++] = i;
-            for (int i = 0; i < n; ++i) if (sa[i] >= k) y[p++] = sa[i] - k;
-            for (int i = 0; i < m; ++i) c[i] = 0;
-            for (int i = 0; i < n; ++i) c[x[y[i]]]++;
-            for (int i = 1; i < m; ++i) c[i] += c[i - 1];
-            for (int i = n - 1; i >= 0; --i) sa[--c[x[y[i]]]] = y[i];
-            swap(x, y);
-            p = 1; x[sa[0]] = 0;
-            for (int i = 1; i < n; ++i)
-                x[sa[i]] = y[sa[i - 1]] == y[sa[i]] && y[sa[i - 1] + k] == y[sa[i] + k] ? p - 1 : p++; //(1)
-            if (p >= n) break;
-            m = p;
-        }
-    }
-    void getheight() {
-        int k = 0;
-        for (int i = 0; i < n; ++i) rank[sa[i]] = i;
-        for (int i = 0; i < n; ++i) if (rank[i] > 0) {
-            if (k) k--;
-            int j = sa[rank[i] - 1];
-            while (i + k < n && j + k < n && s[i + k] == s[j + k]) k++;
-            height[rank[i]] = k;
-        }
-    }
-    int d[maxn][maxlog], log[maxn];
-    void RMQ_init() {
-        log[0] = -1;
-        for (int i = 1; i <= n; ++i)
-            log[i] = log[i / 2] + 1;
-        for (int i = 0; i < n; ++i)
-            d[i][0] = height[i];
-        for (int j = 1; j <= log[n]; ++j)
-            for (int i = 0; i + (1 << j) - 1 < n; ++i)
-                d[i][j] = min(d[i][j - 1], d[i + (1 << (j - 1))][j - 1]);
-    }
-    int lcp(int i, int j) { //返回下标i开始的后缀与下标j开始的后缀的最长公共前缀。
-        if (i == j)
-            return n - i;
-        if (rank[i] > rank[j])
-            swap(i, j);
-        int x = rank[i] + 1, y = rank[j];
-        int k = log[y - x + 1];
-        return min(d[x][k], d[y - (1 << k) + 1][k]);
-    }
     pair<int, int> locate(int l, int r) {
         //返回一个最长的区间[L, R]使得sa中下标从L到R的所有后缀都以s[l, r]为前缀。
         int pos = rank[l], length = r - l + 1;
@@ -307,21 +238,4 @@ struct Suffix_Array {
             return { 0, -1 }; //空区间
         return { tmp, L };
     }
-}arr;
-
-int main() {
-    static char s[maxn];
-    scanf("%s", s);
-    int n = strlen(s), Q;
-    scanf("%d", &Q);
-    arr.init(s);
-    arr.build_sa();
-    arr.getheight();
-    arr.RMQ_init();
-    while (Q--) {
-        int x, y, a, b;
-        scanf("%d %d %d %d", &x, &y, &a, &b); --x; --y; --a; --b;
-        auto [L, R] = arr.locate(vector<pair<int, int>>{make_pair(x, y), make_pair(a, b)});
-        printf("%d\n", R - L + 1);
-    }
-}
+};
