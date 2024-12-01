@@ -1,5 +1,5 @@
 struct Tree {
-    int n;
+    int n; // 边数
     vector<vector<int>> g;
 
 public:
@@ -7,41 +7,52 @@ public:
 
     void addEdge(int x, int y) {
         g[x].push_back(y);
-        // g[y].push_back(x);
+        g[y].push_back(x);
     }
 
-    int getlen(int root) { // 获取x所在树的直径
-        map<int, int> dep;
-        auto dfs = [&](auto&& dfs, int x, int pa = 0) -> void {
-            for (auto y : g[x]) {
-                if (y == pa) {
-                    continue;
-                }
-                dep[y] = dep[x] + 1;
-                dfs(dfs, y, x);
-            }
-            if (dep[x] > dep[root]) {
-                root = x;
-            }
-        };
-        dfs(dfs, root);
-        dep.clear();
-        dfs(dfs, root);
-        return dep[root];
-    }
 
-    vector<int> subTreeSize() {
-        vector<int> _size(n, 1);
-        auto dfs = [&](auto&& dfs, int x, int pa = -1) -> void {
-            for (int y : g[x]) {
-                if (y == pa) {
-                    continue;
+    // 获取子树大小（包括当前节点并以当前节点为根）
+    vector<int> subTreeSize(int x) {
+        vector<int> _size(n + 1, 1);
+        vector<int> vis(n + 1);
+        stack<pair<int, int>> stk;
+        stk.emplace(x, -1); // 子节点，父节点
+        while (!stk.empty()) {
+            auto [x, pa] = stk.top();
+            if (vis[x] == 0) {
+                vis[x] = 1;
+                for (int y : g[x]) {
+                    if (y != pa && vis[y] == 0) {
+                        stk.emplace(y, x);
+                    }
                 }
-                dfs(dfs, y, x);
-                _size[x] += _size[y];
+            } else { // 当前节点及其子树已经完全访问，处理子树大小
+                for (int y : g[x]) {
+                    if (y != pa) {
+                        _size[x] += _size[y];
+                    }
+                }
+                stk.pop();
             }
-        };
-        dfs(dfs, 0);
+        }
         return _size;
     }
 };
+/*
+    获取子树大小（包括当前节点并以当前节点为根）
+    递归写法：
+*/
+// vector<int> subTreeSize(int x) {
+//     vector<int> _size(n + 1, 1);
+//     auto dfs = [&](auto&& dfs, int x, int pa = -1) -> void {
+//         for (int y : g[x]) {
+//             if (y == pa) {
+//                 continue;
+//             }
+//             dfs(dfs, y, x);
+//             _size[x] += _size[y];
+//         }
+//     };
+//     dfs(dfs, x);
+//     return _size;
+// }

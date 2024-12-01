@@ -1,6 +1,9 @@
 // 线段树有两个下标，一个是线段树底层数组的下标，一个是线段树维护的区间的下标（这个其实无所谓，从 0 从 1 开始都可以）。
 // 底层数组的下标从 1 开始。
 // 线段树维护的区间的下标从 0 开始。
+// 函数调用的左右端点为闭区间形式。
+
+
 
 // 参考链接
 //
@@ -80,5 +83,38 @@
 // 势能线段树：区间开方、区间取模、区间 GCD 一个数，都是可以暴力更新的
 
 
+// 实现一个区间赋值
+//
+// https://atcoder.jp/contests/abc382/tasks/abc382_f
+//
+struct Tag {
+    int s = 0;
+    void apply(const Tag& t) {
+        if (t.s != -1) {
+            s = max(s, t.s);
+        }
+    }
+};
+struct Info {
+    int mx = 0;
+    void apply(const Tag& t) {
+        if (t.s != -1) {
+            mx = max(mx, t.s);
+        }
+    }
+};
+Info operator+(const Info& a, const Info& b) {
+    return Info(max(a.mx, b.mx));
+}
 
 
+// 当维护的信息较多，且传入构造的参数有条件时，
+// 该函数可以用需要传入的参数新建节点（solve 函数内部使用）
+//
+// https://codeforces.com/contest/1609/problem/E
+//
+Info newInfo(char ch) {
+    Info o;
+    //
+    return o;
+}

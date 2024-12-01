@@ -99,11 +99,3 @@ struct Info {
 Info operator+(const Info& p, const Info& q) {
     return Info();
 }
-
-// 当维护的信息较多，且传入构造的参数有条件时，
-// 该函数可以用需要传入的参数新建节点
-Info newInfo() {
-    Info o;
-    //
-    return o;
-}

@@ -187,20 +187,20 @@ public:
 
 struct Tag {
     ll add = 0;
-    void apply(const Tag& t) { add += t.add; }
+    void apply(const Tag& t) {
+        if (t.add) {
+            add += t.add;
+        }
+    }
 };
 struct Info {
     ll sum = 0, len = 0;
-    void apply(const Tag& t) { sum += len * t.add; }
+    void apply(const Tag& t) {
+        if (t.add) {
+            sum += len * t.add;
+        }
+    }
 };
 Info operator+(const Info& a, const Info& b) {
     return Info(a.sum + b.sum, a.len + b.len);
-}
-
-// 当维护的信息较多，且传入构造的参数有条件时，
-// 该函数可以用需要传入的参数新建节点
-Info newInfo(char ch) {
-    Info o;
-    //
-    return o;
 }
