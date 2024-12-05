@@ -107,15 +107,3 @@ struct Info {
 Info operator+(const Info& a, const Info& b) {
     return Info(max(a.mx, b.mx));
 }
-
-
-// 当维护的信息较多，且传入构造的参数有条件时，
-// 该函数可以用需要传入的参数新建节点（solve 函数内部使用）
-//
-// https://codeforces.com/contest/1609/problem/E
-//
-Info newInfo(char ch) {
-    Info o;
-    //
-    return o;
-}

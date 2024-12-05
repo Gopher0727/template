@@ -21,20 +21,20 @@ public:
         build(build, 1, 0, n - 1);
     }
 
-    void modify(int id, const Info& v, int o, int l, int r) {
+    void modify(int id, const Info& info, int o, int l, int r) {
         if (l == r) {
-            tree[o] = v;
+            tree[o] = info;
             return;
         }
         int m = l + (r - l) / 2;
         if (id <= m) {
-            modify(id, v, o << 1, l, m);
+            modify(id, info, o << 1, l, m);
         } else {
-            modify(id, v, o << 1 | 1, m + 1, r);
+            modify(id, info, o << 1 | 1, m + 1, r);
         }
         pull(o);
     }
-    void modify(int id, const Info& v) { modify(id, v, 1, 0, n - 1); }
+    void modify(int id, const Info& info) { modify(id, info, 1, 0, n - 1); }
 
     Info query(int L, int R, int o, int l, int r) {
         if (L <= l && r <= R) {
@@ -95,7 +95,10 @@ public:
 };
 struct Info {
     //
+    Info() {}
 };
 Info operator+(const Info& p, const Info& q) {
-    return Info();
+    Info info;
+
+    return info;
 }

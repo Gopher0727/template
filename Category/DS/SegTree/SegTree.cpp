@@ -39,38 +39,38 @@ public:
     }
 
 public:
-    void modify(int id, const Info& v, int o, int l, int r) {
+    void modify(int id, const Info& info, int o, int l, int r) {
         if (l == r) {
-            tree[o] = v;
+            tree[o] = info;
             return;
         }
         push(o);
         int m = l + (r - l) / 2;
         if (id <= m) {
-            modify(id, v, o << 1, l, m);
+            modify(id, info, o << 1, l, m);
         } else {
-            modify(id, v, o << 1 | 1, m + 1, r);
+            modify(id, info, o << 1 | 1, m + 1, r);
         }
         pull(o);
     }
-    void modify(int id, const Info& v) { modify(id, v, 1, 0, n - 1); }
+    void modify(int id, const Info& info) { modify(id, info, 1, 0, n - 1); }
 
-    void modify(int L, int R, const Tag& t, int o, int l, int r) {
+    void modify(int L, int R, const Tag& tag, int o, int l, int r) {
         if (L <= l && r <= R) {
-            apply(o, t);
+            apply(o, tag);
             return;
         }
         push(o);
         int m = l + (r - l) / 2;
         if (L <= m) {
-            modify(L, R, t, o << 1, l, m);
+            modify(L, R, tag, o << 1, l, m);
         }
         if (m < R) {
-            modify(L, R, t, o << 1 | 1, m + 1, r);
+            modify(L, R, tag, o << 1 | 1, m + 1, r);
         }
         pull(o);
     }
-    void modify(int L, int R, const Tag& t) { modify(L, R, t, 1, 0, n - 1); }
+    void modify(int L, int R, const Tag& tag) { modify(L, R, tag, 1, 0, n - 1); }
 
     Info query(int id, int o, int l, int r) {
         if (l == r) {
@@ -195,6 +195,7 @@ struct Tag {
 };
 struct Info {
     ll sum = 0, len = 0;
+    Info() {}
     void apply(const Tag& t) {
         if (t.add) {
             sum += len * t.add;
@@ -202,5 +203,8 @@ struct Info {
     }
 };
 Info operator+(const Info& a, const Info& b) {
-    return Info(a.sum + b.sum, a.len + b.len);
+    Info info;
+    info.sum = a.sum + b.sum;
+    info.len = a.len + b.len;
+    return info;
 }
