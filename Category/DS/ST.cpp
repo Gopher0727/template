@@ -7,7 +7,7 @@ private:
 public:
     explicit ST(int n, function<int(int, int)> Op) : n(n), len(__lg(n)), Op(Op), st(n, vector<int>(len + 1)) {}
 
-    void init(vector<int>& vec) {
+    void init(const vector<int>& vec) {
         for (int i = 0; i < n; ++i) {
             st[i][0] = vec[i];
         }

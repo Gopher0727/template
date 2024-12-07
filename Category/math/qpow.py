@@ -1,3 +1,4 @@
+"""
 def qpow(a: int, b: int, p: int):
     ans = 1
     while b:
@@ -16,7 +17,7 @@ def qpow(a: int, b: int):
         a *= a
         b >>= 1
     return ans
-
+"""
 
 # a @ b，其中 @ 是矩阵乘法
 def multiply(a: List[List[int]], b: List[List[int]]) -> List[List[int]]:
