@@ -26,7 +26,7 @@ auto dijkstra = [&](int s = 0) {
     dis[s] = 0;
 
     using PLL = pair<ll, ll>;
-    priority_queue<PLL, vector<PLL>, greater<PLL>> pq;
+    priority_queue<PLL, vector<PLL>, greater<>> pq;
     pq.emplace(0, s); // dis[k], k
     while (!pq.empty()) {
         auto [d, cur] = pq.top();

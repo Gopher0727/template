@@ -90,12 +90,11 @@ public:
     }
     template <class F>
     int findLast(int l, int r, F& pred) {
-        return findLast(l, r, pred, 1, 0, n);
+        return findLast(l, r, pred, 1, 0, n - 1);
     }
 };
 struct Info {
     //
-    Info() {}
 };
 Info operator+(const Info& p, const Info& q) {
     Info info;

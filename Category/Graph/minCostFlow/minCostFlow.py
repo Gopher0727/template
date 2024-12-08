@@ -22,7 +22,7 @@ class MCFGraph:
         self._g: List[List[MCFGraph._Edge]] = [[] for _ in range(n)]
         self._edges: List[MCFGraph._Edge] = []
 
-    def add_edge(self, src: int, dst: int, cap: int, cost: int) -> int:
+    def addEdge(self, src: int, dst: int, cap: int, cost: int) -> int:
         assert 0 <= src < self._n
         assert 0 <= dst < self._n
         assert 0 <= cap
@@ -35,14 +35,14 @@ class MCFGraph:
         self._edges.append(e)
         return m
 
-    def get_edge(self, i: int) -> Edge:
+    def getEdge(self, i: int) -> Edge:
         assert 0 <= i < len(self._edges)
         e = self._edges[i]
         re = cast(MCFGraph._Edge, e.rev)
         return MCFGraph.Edge(re.dst, e.dst, e.cap + re.cap, re.cap, e.cost)
 
     def edges(self) -> List[Edge]:
-        return [self.get_edge(i) for i in range(len(self._edges))]
+        return [self.getEdge(i) for i in range(len(self._edges))]
 
     def flow(self, s: int, t: int, flow_limit: Optional[int] = None) -> Tuple[int, int]:
         """

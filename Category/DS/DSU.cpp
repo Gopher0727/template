@@ -1,9 +1,10 @@
 // 无向图
-//
+
 struct DSU { // Implement (union by size) + (path compression)
     vector<int> pa, _size;
+    int block; // 记录连通块的数量
 
-    DSU(int n) : pa(n), _size(n, 1) { iota(pa.begin(), pa.end(), 0); }
+    DSU(int n) : pa(n), _size(n, 1), block(n) { iota(pa.begin(), pa.end(), 0); }
 
     // int find(int x) { return x == pa[x] ? x : pa[x] = find(pa[x]); }
     int find(int x) {
@@ -12,7 +13,9 @@ struct DSU { // Implement (union by size) + (path compression)
             root = pa[root];
         }
         while (pa[x] != root) {
-            tie(pa[x], x) = pair(root, pa[x]);
+            int tmp = pa[x];
+            pa[x] = root;
+            x = tmp;
         }
         return root;
     }
@@ -27,6 +30,7 @@ struct DSU { // Implement (union by size) + (path compression)
         }
         pa[px] = py;
         _size[py] += _size[px];
+        block--;
     }
 
     bool same(int x, int y) { return find(x) == find(y); }
@@ -34,20 +38,44 @@ struct DSU { // Implement (union by size) + (path compression)
     int size(int x) { return _size[find(x)]; }
 };
 
+
 // DSU++
-struct DSU {
-    vector<int> pa, p, e, f;
+struct DSU { // Implement (union by size) + (path compression)
+    vector<int> pa;
+    vector<int> _size;
+    vector<int> _edges;
+    vector<int> _loop;
+    int block; // 记录连通块的数量
 
-    DSU(int n) : pa(n + 1), p(n + 1, 1), e(n + 1, 1), f(n + 1, 1) { iota(pa.begin(), pa.end(), 0); }
+    DSU(int n) {
+        pa.resize(n + 1);
+        iota(pa.begin(), pa.end(), 0);
+        _size.resize(n + 1, 1);
+        _edges.resize(n + 1, 1);
+        _loop.resize(n + 1, 1);
+        block = n;
+    }
 
-    int find(int x) { return x == pa[x] ? x : pa[x] = find(pa[x]); }
+    // int find(int x) { return x == pa[x] ? x : pa[x] = find(pa[x]); }
+    int find(int x) {
+        int root = x;
+        while (pa[root] != root) {
+            root = pa[root];
+        }
+        while (pa[x] != root) {
+            int tmp = pa[x];
+            pa[x] = root;
+            x = tmp;
+        }
+        return root;
+    }
 
     bool merge(int x, int y) { // 设 x 是 y 的祖先
         if (x == y) {
-            f[find(x)] = 1;
+            _loop[find(x)] = 1;
         }
         x = find(x), y = find(y);
-        e[x]++;
+        _edges[x]++;
         if (x == y) {
             return false;
         }
@@ -55,24 +83,22 @@ struct DSU {
             swap(x, y);
         }
         pa[y] = x;
-        f[x] |= f[y];
-        p[x] += p[y];
-        e[x] += e[y];
+        _loop[x] |= _loop[y];
+        _size[x] += _size[y];
+        _edges[x] += _edges[y];
+        block--;
         return true;
     }
 
-    bool same(int x, int y) { return find(x) == find(y); }
+    bool same(int x, int y) { return find(x) == find(y); } // 判断是否在同一连通块
 
-    bool F(int x) { // 判断连通块内是否存在自环
-        return f[find(x)];
-    }
-    int size(int x) { // 输出连通块中点的数量
-        return p[find(x)];
-    }
-    int E(int x) { // 输出连通块中边的数量
-        return e[find(x)];
-    }
+    int size(int x) { return _size[find(x)]; } // 返回所在连通块的大小
+
+    bool loop(int x) { return _loop[find(x)]; } // 判断连通块内是否存在自环
+
+    int edges(int x) { return _edges[find(x)]; } // 返回连通块中的边的数量
 };
+
 
 // 可撤销并查集（DSU With Rollback）
 struct DSU {

@@ -121,7 +121,7 @@ public:
     }
     template <class F>
     int findFirst(int l, int r, F& pred) {
-        return findFirst(l, r, pred, 1, 0, n);
+        return findFirst(l, r, pred, 1, 0, n - 1);
     }
 
     template <class F>
@@ -142,7 +142,7 @@ public:
     }
     template <class F>
     int findLast(int l, int r, F& pred) {
-        return findLast(l, r, pred, 1, 0, n);
+        return findLast(l, r, pred, 1, 0, n - 1);
     }
 
     // todo
@@ -195,7 +195,6 @@ struct Tag {
 };
 struct Info {
     ll sum = 0, len = 0;
-    Info() {}
     void apply(const Tag& t) {
         if (t.add) {
             sum += len * t.add;

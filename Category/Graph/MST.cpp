@@ -54,7 +54,7 @@ void solve() {
 // The node-index starts from 0
 
 
-// 无向边
+// Prim 无向边
 //
 void solve() {
     int n, m;
