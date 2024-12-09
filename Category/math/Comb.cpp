@@ -82,13 +82,21 @@ namespace Comb {
 };
 
 // 直接实现
-ll comb(int x, int y) {
+Mint comb(int x, int y) {
     if (y > x) {
         return 0;
     }
-    ll res = 1;
+    Mint res = 1;
     for (int i = 0; i < y; i++) {
         res = res * (x - i) / (i + 1);
     }
     return res;
+}
+
+Mint comb(ll n, ll m) {
+    Mint ans = 1;
+    for (ll i = 1, j = n - m + 1; i <= m; i++, j++) {
+        ans *= j * Mint(i).inv();
+    }
+    return ans;
 }

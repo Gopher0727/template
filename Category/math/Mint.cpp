@@ -92,4 +92,3 @@ using ModInt64 = ModIntBase<uint64_t, P>;
 
 using Mint = ModInt32<MOD>;
 // qpow 取模时，第一个参数应为 Mint 类型
-// 默认模数是 1e9+7，注意修改...
