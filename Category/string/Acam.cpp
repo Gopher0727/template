@@ -10,7 +10,7 @@
 
 // 从根到 node 的字符串，也是某个 words[i] 的前缀
 struct Node {
-    Node* son[26]{};
+    Node* son[26] {};
     Node* fail; // 当 cur.son[i] 不能匹配 target 中的某个字符时，cur.fail.son[i] 即为下一个待匹配节点（等于 root 则表示没有匹配）
     int len; // 从根到 node 的字符串的长度，也是 node 在 trie 中的深度
 

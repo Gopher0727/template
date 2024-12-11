@@ -12,9 +12,7 @@
 // 对于结构体的存储，vector 会进行初始化（int 为 0；string 为空；指针地址为 0，解引用无意义；array 也会进行初始化）
 
 /* random */
-mt19937_64 rnd{random_device{}()};
-// or
-mt19937_64 rd(chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count());
+mt19937_64 gen{random_device{}()};
 
 
 /* pdbtree */
