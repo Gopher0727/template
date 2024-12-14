@@ -74,3 +74,85 @@ void solve() {
     // query(root[l-1], root[r], 1, mx, k);
     // query(root[l-1], root[r], 1, mx, L, R);
 }
+
+
+// 主席树
+template <class T>
+class ChairmanTree {
+private:
+    struct Node {
+        int val = 0;
+        int ls = 0, rs = 0;
+    };
+
+    vector<int> root;
+    vector<Node> f;
+    int n = 0, len = 0, pos = 0;
+    map<T, int> key_val;
+    map<int, T> val_key;
+
+    int build(int l, int r) {
+        int root = ++pos;
+        if (l == r) {
+            return root;
+        }
+        int mid = l + (r - l) / 2;
+        f[root].ls = build(l, mid);
+        f[root].rs = build(mid + 1, r);
+        return root;
+    }
+
+public:
+    void init(int n, const vector<T>& arr) {
+        vector<T> line;
+        for (int i = 1; i <= n; ++i) {
+            line.push_back(arr[i]);
+        }
+        sort(line.begin(), line.end());
+        line.erase(unique(line.begin(), line.end()), line.end());
+        len = line.size();
+        for (int i = 0; i < line.size(); ++i) {
+            key_val[line[i]] = i + 1;
+            val_key[i + 1] = line[i];
+        }
+        this->n = n;
+        root.resize(n + 10);
+        f.resize((n + 10) << 5);
+        root[0] = build(1, len);
+        for (int i = 1; i <= n; ++i) {
+            root[i] = modify(key_val[arr[i]], 1, len, root[i - 1]);
+        }
+    }
+
+    int modify(int k, int l, int r, int rt) {
+        int nrt = ++pos;
+        f[nrt] = f[rt];
+        f[nrt].val += 1;
+        if (l == r) {
+            return nrt;
+        }
+        int mid = l + (r - l) / 2;
+        if (k <= mid) {
+            f[nrt].ls = modify(k, l, mid, f[rt].ls);
+        }
+        if (mid < k) {
+            f[nrt].rs = modify(k, mid + 1, r, f[rt].rs);
+        }
+        return nrt;
+    }
+
+    int query(int u, int v, int l, int r, int k) {
+        if (l == r) {
+            return l;
+        }
+        int mid = l + (r - l) / 2;
+        int x = f[f[v].ls].val - f[f[u].ls].val;
+        if (k <= x) {
+            return query(f[u].ls, f[v].ls, l, mid, k);
+        } else {
+            return query(f[u].rs, f[v].rs, mid + 1, r, k - x);
+        }
+    }
+    T query(int l, int r, int k) { return val_key[query(root[l - 1], root[r], 1, len, k)]; }
+};
+// 注意下标从 1 开始。

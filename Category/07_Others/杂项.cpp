@@ -57,7 +57,7 @@ vector<string> snakeWay(const vector<string>& g) {
     }
 }
 
-namespace Date {
+namespace Date { // 基姆拉尔森公式
     const int d[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     bool isLeap(int y) {

@@ -31,32 +31,3 @@
 
     OI中常用的自动机：
         字典树（Trie）、KMP自动机、AC自动机、后缀自动机（SAM）、广义后缀自动机、回文自动机、序列自动机
-
-
-# 字典树（前缀树、单词查找树）
-
-Trie 是一棵 “非典型” 的多叉树模型
-
-TrieNode 中并没有直接保存字符值的数据成员，而是通过字母映射表 next 和一个父节点预知所有子节点
-
-```cpp
-// 一般多叉树节点设计
-template <typename T>
-struct TreeNode {
-    T value; // 节点值
-    TreeNode* children[NUM]; // 指向子节点
-};
-
-// Trie 节点设计
-struct TrieNode {
-    bool isEnd; // 该节点是否是一个字符串的末尾
-    TrieNode* next[26]; // 子节点映射（假定26个小写英文字母）
-};
-```
-
-字典树应用：
-
-    · 检索字符串
-    · AC自动机（trie 是AC自动机的一部分）
-    · 维护异或极值 ———— 将数的二进制看作一个字符串，建构 01-trie
-    · 维护异或和
