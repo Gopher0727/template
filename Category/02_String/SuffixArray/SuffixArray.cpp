@@ -1,6 +1,9 @@
 ﻿// 求解 SA：（倍增，基数排序/桶排序）
 //    先把以每个位置开始的长度为 1 的子串排序，在此基础上再把长度为 2 的子串排序，以此类推，直到子串的末尾。
 //
+// 题目：
+// https://leetcode.cn/problems/count-beautiful-splits-in-an-array/
+
 struct suffixArray {
     int n;
     // sa —— 后缀数组（sa[i] 表示排序为 i 的后缀编号）
@@ -72,42 +75,45 @@ struct suffixArray {
 
 
 void solve() {
-    constexpr int K = 21;
-    std::vector st(K, std::vector<int>(l - 1));
-    st[0] = lc;
+    int n = nums.size();
+    suffixArray sa(nums);
+
+    static constexpr int K = 21;
+    vector st(K, vector<int>(n - 1));
+    st[0] = sa.lc;
     for (int j = 0; j < K - 1; j++) {
-        for (int i = 0; i + (2 << j) <= l - 1; i++) {
-            st[j + 1][i] = std::min(st[j][i], st[j][i + (1 << j)]);
+        for (int i = 0; i + (2 << j) <= n - 1; i++) {
+            st[j + 1][i] = min(st[j][i], st[j][i + (1 << j)]);
         }
     }
 
     auto rmq = [&](int l, int r) {
-        int k = std::__lg(r - l);
-        return std::min(st[k][l], st[k][r - (1 << k)]);
+        int k = __lg(r - l);
+        return min(st[k][l], st[k][r - (1 << k)]);
     };
 
     auto lcp = [&](int i, int j) {
         if (i == j || i == n || j == n) {
-            return std::min(n - i, n - j);
+            return min(n - i, n - j);
         }
-        int a = rk[i];
-        int b = rk[j];
+        int a = sa.rk[i];
+        int b = sa.rk[j];
         if (a > b) {
-            std::swap(a, b);
+            swap(a, b);
         }
-        return std::min({n - i, n - j, rmq(a, b)});
+        return min({n - i, n - j, rmq(a, b)});
     };
 
     auto lcs = [&](int i, int j) {
         if (i == j || i == 0 || j == 0) {
-            return std::min(i, j);
+            return min(i, j);
         }
-        int a = rk[n + n - i];
-        int b = rk[n + n - j];
+        int a = sa.rk[n + n - i];
+        int b = sa.rk[n + n - j];
         if (a > b) {
-            std::swap(a, b);
+            swap(a, b);
         }
-        return std::min({i, j, rmq(a, b)});
+        return min({i, j, rmq(a, b)});
     };
 }
 
