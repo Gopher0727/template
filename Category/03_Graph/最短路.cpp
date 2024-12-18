@@ -143,9 +143,7 @@ void solve() {
 // 对于 Bellman-Ford 的过程来说，只有上一次被松弛过的节点，所连接的边才可能引起下一次松弛，
 // 可以利用队列维护需要进行松弛的节点。
 //
-static constexpr int inf = INT_MAX / 2;
-
-void solve {
+void solve() {
     int n, m, s;
     cin >> n >> m >> s;
 
@@ -156,7 +154,8 @@ void solve {
         g[x].emplace_back(y, w);
     }
 
-    vector<int> inq(n + 1), cnt(n + 1), dis(n + 1, inf);
+    vector<int> inq(n + 1), cnt(n + 1);
+    vector<int> dis(n + 1, numeric_limits<int>::max() / 2);
     auto spfa = [&]() {
         queue<int> q;
         q.emplace(s);
@@ -173,7 +172,7 @@ void solve {
                     }
                     q.emplace(y);
                     inq[y] = 1;
-                    if (++cnt[y] > n) {
+                    if (++cnt[y] > n) { // 有负环
                         return false;
                     }
                 }

@@ -25,8 +25,7 @@ int TopoSort() {
         int u = q.front();
         res.push_back(u);
         q.pop();
-        for (int i = 0; i < g[u].size(); ++i) {
-            int v = g[u][i];
+        for (int& v : g[u]) {
             if (--inDeg[v] == 0) { // 若入度减为0，则入队
                 q.emplace(v);
             }
