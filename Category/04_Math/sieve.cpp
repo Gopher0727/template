@@ -23,7 +23,7 @@ void sieve(int n) {
 
 // 找到一个数的所有质因数
 map<int, int> priFac;
-auto sieve = [&](ll x) {
+auto decompose = [&](ll x) {
     for (int i = 2; i * 1ll * i <= x; ++i) {
         while (x % i == 0) {
             x /= i;
