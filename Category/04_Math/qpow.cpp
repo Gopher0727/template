@@ -27,23 +27,26 @@ vector<vector<ll>> multiply(vector<vector<ll>>& a, vector<vector<ll>>& b) { // �
         for (int j = 0; j < n; ++j) {
             for (int c = 0; c < k; ++c) {
                 res[i][j] += a[i][c] * b[c][j];
-                // res[i][j] %= MOD;
+                res[i][j] %= MOD;
             }
         }
     }
     return res;
 }
-vector<vector<ll>> qpow(vector<vector<ll>> a, ll b) {
+// a^n @ f，其中 @ 是矩阵乘法，f 为列向量
+vector<vector<ll>> qpow_mul(vector<vector<ll>> a, ll b, vector<vector<ll>> f = {}) {
     int n = a.size();
-    vector<vector<ll>> ans(n, vector<ll>(n));
-    for (int i = 0; i < n; ++i) {
-        ans[i][i] = 1;
+    if (f.empty()) {
+        f = vector(n, vector<ll>(n));
+        for (int i = 0; i < n; ++i) {
+            f[i][i] = 1;
+        }
     }
     for (; b; b >>= 1) {
         if (b & 1) {
-            ans = multiply(ans, a);
+            f = multiply(a, f);
         }
         a = multiply(a, a);
     }
-    return ans;
+    return f;
 }
