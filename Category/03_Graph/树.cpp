@@ -3,18 +3,17 @@ struct Tree {
     vector<vector<int>> g;
 
 public:
-    Tree(int n) : n(n), g(n + 1) {}
+    Tree(int n) : n(n), g(n) {}
 
     void addEdge(int x, int y) {
         g[x].push_back(y);
         g[y].push_back(x);
     }
 
-
     // 获取子树大小（包括当前节点并以当前节点为根）
     vector<int> subTreeSize(int x) {
-        vector<int> _size(n + 1, 1);
-        vector<int> vis(n + 1);
+        vector<int> _size(n, 1);
+        vector<int> vis(n);
         stack<pair<int, int>> stk;
         stk.emplace(x, -1); // 子节点，父节点
         while (!stk.empty()) {
@@ -38,6 +37,8 @@ public:
         return _size;
     }
 };
+// 默认：无向图，点下标从 0 开始
+
 /*
     获取子树大小（包括当前节点并以当前节点为根）
     递归写法：
