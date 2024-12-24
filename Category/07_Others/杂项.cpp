@@ -11,6 +11,10 @@
 // array 相当于普通数组，局部需要初始化； vector 嵌套 array 则不需要。
 // 对于结构体的存储，vector 会进行初始化（int 为 0；string 为空；指针地址为 0，解引用无意义；array 也会进行初始化）
 
+// 关联容器 (set, map, multiset, multimap)
+// 无序关联容器 (unordered_set, unordered_map, unordered_multiset, unordered_multimap):
+// 在这些容器中，erase只会让指向被删除元素的迭代器失效，其它迭代器仍然可以安全使用。
+
 /* random */
 mt19937_64 gen{random_device{}()};
 

@@ -49,6 +49,19 @@ void insertion_sort(int* a, int n) {
     }
 }
 
+void insertion_sort() {
+    std::cout << "\n" "用 `rotate` 实现插入排序，逐步运行:\n";
+
+    s = {'2', '4', '2', '0', '5', '9', '7', '3', '7', '1'};
+
+    for (auto i = s.begin(); i != s.end(); ++i) {
+        std::cout << "i = " << std::ranges::distance(s.begin(), i) << ": ";
+        std::ranges::rotate(std::ranges::upper_bound(s.begin(), i, *i), i, i + 1);
+        std::cout << s << '\n';
+    }
+    std::cout << (std::ranges::is_sorted(s) ? "已排序!" : "未排序.") << '\n';
+}
+
 // 折半插入排序
 void half_insertion_sort(int* a, int n) {
     if (n < 2) {
