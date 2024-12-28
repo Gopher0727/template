@@ -1,25 +1,44 @@
 template <typename T>
 struct Fenwick {
-    vector<T> f;
+    vector<T> tree;
 
-    Fenwick(int n = 0) : f(n, T {}) {}
-
-    void add(int id, T val) {
-        for (int i = id; i < f.size(); i += i & -i) {
-            f[i] += val;
+    Fenwick(int n = 0) : tree(n, T {}) {}
+    template <typename U>
+    Fenwick(const vector<U>& a) : Fenwick(a.size()) {
+        for (int i = 0; i < a.size(); ++i) {
+            add(i, a[i]);
         }
     }
 
-    T query(int id) {
-        T ans = 0;
-        for (int i = id; i > 0; i &= i - 1) {
-            ans += f[i];
+    void add(int k, const T& val) {
+        for (int i = k + 1; i <= tree.size(); i += i & -i) {
+            tree[i - 1] = tree[i - 1] + val;
+        }
+    }
+
+    T query(int k) { // 前 k 个元素之和
+        T ans {};
+        for (int i = k; i > 0; i &= i - 1) {
+            ans = ans + tree[i - 1];
         }
         return ans;
     }
+    T query(int l, int r) { return query(r) - query(l); }
 
-    T query(int l, int r) { return r < l ? 0 : query(r) - query(l - 1); }
+    int select(const T& k) { // 小于等于 k 的最大前缀长度
+        int x = 0, n = tree.size();
+        T cur {};
+        for (int i = 1 << std::__lg(n); i; i >>= 1) {
+            if (x + i <= n && cur + tree[x + i - 1] <= k) {
+                x += i;
+                cur = cur + tree[x - 1];
+            }
+        }
+        return x;
+    }
 };
+// Fenwick index is aligned with the corresponding array index.
+// The node index starts from 0
 
 
 
