@@ -9,9 +9,8 @@ public:
 
     Node(int l, int r) : l(l), r(r), mid(l + (r - l) / 2) {}
 };
-
-template <class Info, class Tag>
-class SegTree {
+template <class Info, class Tag, int N>
+class DynamicSegTree {
     using _Node = Node<Info, Tag>;
 
 private:
@@ -36,7 +35,7 @@ private:
     }
 
 public:
-    SegTree(int L = 0, int R = 1e9 + 10) { root = new _Node(L, R); }
+    DynamicSegTree(int L = 0, int R = N) { root = new _Node(L, R); }
 
     void modify(int L, int R, const Tag& v, _Node* node) {
         if (L <= node->l && node->r <= R) {
@@ -69,6 +68,7 @@ public:
         return res;
     }
     Info query(int L, int R) { return query(L, R, root); }
+    Info queryAll() { return query(0, N); }
 };
 struct Tag {
     ll add = 0;
@@ -94,3 +94,6 @@ Info operator+(const Info& a, const Info& b) {
     info.mx = max(a.mx, b.mx);
     return info;
 }
+
+static constexpr int N = 1E9 + 10;
+using SegTree = DynamicSegTree<Info, Tag, N>;
