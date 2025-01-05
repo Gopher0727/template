@@ -1,0 +1,149 @@
+{
+    "LeetCode": {
+        "scope": "python",
+        "prefix": "sol",
+        "body": [
+            "import random",
+            "from bisect import bisect_left, bisect_right",
+            "from collections import Counter, defaultdict, deque",
+            "from functools import cache, lru_cache, reduce",
+            "from heapq import heapify, heappop, heappush, heappushpop, nlargest, nsmallest",
+            "from itertools import accumulate, combinations, pairwise, permutations",
+            "from math import gcd, hypot, inf, lcm, sqrt",
+            "from operator import add, iand, ior, mul, xor",
+            "from string import ascii_letters, ascii_lowercase, ascii_uppercase",
+            "from timeit import timeit",
+            "from typing import Final, List",
+            "",
+            "from sortedcontainers import sortedlist as SL",
+            "",
+            "fmax = lambda x, y: x if x >= y else y",
+            "fmin = lambda x, y: y if x >= y else x",
+            "",
+            "MOD = 10**9 + 7",
+            "",
+            ""
+        ]
+    },
+    "acm": {
+        "scope": "python",
+        "prefix": "acm",
+        "body": [
+            "# Date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}  ${CURRENT_DAY_NAME}",
+            "",
+            "import sys",
+            "import typing",
+            "from math import gcd, hypot, inf, lcm, sqrt",
+            "",
+            "input = lambda: sys.stdin.readline().strip()",
+            "",
+            "I = lambda: input()",
+            "II = lambda: int(input())",
+            "FI = lambda: float(input())",
+            "LI = lambda: input().split()",
+            "LII = lambda: list(map(int, input().split()))",
+            "LFI = lambda: list(map(float, input().split()))",
+            "LGI = lambda: list(map(lambda x: int(x) - 1, input().split()))",
+            "",
+            "fmax = lambda x, y: x if x >= y else y",
+            "fmin = lambda x, y: y if x >= y else x",
+            "",
+            "",
+            "def solve():",
+            "    $0",
+            "    pass",
+            "",
+            "",
+            "if __name__ == \"__main__\":",
+            "    solve()",
+            ""
+        ]
+    },
+    "acms": {
+        "scope": "python",
+        "prefix": "acms",
+        "body": [
+            "# Date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}  ${CURRENT_DAY_NAME}",
+            "",
+            "import sys",
+            "import typing",
+            "from math import gcd, hypot, inf, lcm, sqrt",
+            "",
+            "input = lambda: sys.stdin.readline().strip()",
+            "",
+            "I = lambda: input()",
+            "II = lambda: int(input())",
+            "FI = lambda: float(input())",
+            "LI = lambda: input().split()",
+            "LII = lambda: list(map(int, input().split()))",
+            "LFI = lambda: list(map(float, input().split()))",
+            "LGI = lambda: list(map(lambda x: int(x) - 1, input().split()))",
+            "",
+            "fmax = lambda x, y: x if x >= y else y",
+            "fmin = lambda x, y: y if x >= y else x",
+            "",
+            "",
+            "def solve():",
+            "    $0",
+            "    pass",
+            "",
+            "",
+            "if __name__ == \"__main__\":",
+            "    for _ in range(II()):",
+            "        solve()",
+            ""
+        ]
+    },
+    "二分查找": {
+        "scope": "python",
+        "prefix": "binary_search",
+        "body": [
+            "def check(x: int):",
+            "    $0",
+            "    return True",
+            "",
+            "",
+            "lo, hi = 0, 10**9",
+            "while lo + 1 < hi:",
+            "    mid = lo + (hi - lo) // 2",
+            "",
+            "    if check(mid):",
+            "        lo = mid",
+            "    else:",
+            "        hi = mid",
+            ""
+        ]
+    },
+    "上下左右": {
+        "scope": "python",
+        "prefix": "dir",
+        "body": [
+            "dx = [1, 0, -1, 0]",
+            "dy = [0, 1, 0, -1]"
+        ]
+    },
+    "马": {
+        "scope": "python",
+        "prefix": "dir_horse",
+        "body": [
+            "dx = [1, 1, 2, 2, -1, -1, -2, -2]",
+            "dy = [2, -2, 1, -1, 2, -2, 1, -1]"
+        ]
+    },
+    "周围": {
+        "scope": "python",
+        "prefix": "dir_around",
+        "body": [
+            "dx = [1, 0, -1, 0, 1, 1, -1, -1]",
+            "dy = [0, 1, 0, -1, 1, -1, 1, -1]"
+        ]
+    },
+    "四角": {
+        "scope": "python",
+        "prefix": "dir_corner",
+        "body": [
+            "dx = [-1, -1, 1, 1]",
+            "dy = [1, -1, -1, 1]"
+        ]
+    },
+}

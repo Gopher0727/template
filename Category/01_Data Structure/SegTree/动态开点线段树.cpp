@@ -7,7 +7,7 @@ public:
     Info info;
     Tag tag;
 
-    Node(int l, int r) : l(l), r(r), mid(l + (r - l) / 2) {}
+    Node(int l, int r) : l(l), r(r), mid(l + (r - l) / 2) { info.len = r - l + 1; }
 };
 template <class Info, class Tag, int N>
 class DynamicSegTree {
@@ -72,6 +72,8 @@ public:
 };
 struct Tag {
     ll add = 0;
+    Tag() {}
+    Tag(ll v) : add(v) {}
     void apply(const Tag& t) {
         if (t.add) {
             add += t.add;

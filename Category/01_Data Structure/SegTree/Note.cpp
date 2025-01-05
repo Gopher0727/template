@@ -31,6 +31,8 @@
 //      https://leetcode.cn/problems/subarrays-distinct-element-sum-of-squares-ii/
 //      https://www.luogu.com.cn/problem/P1471
 //
+//
+//
 // 【多个更新操作复合】
 // = + max https://www.luogu.com.cn/problem/P1253
 //      代码 https://www.luogu.com.cn/record/138265877
@@ -60,6 +62,7 @@
 //      提出首项后，剩余的是固定的 1 + q^1 + q^2 + ... + q^(线段树区间长度-1)
 //      可以预处理 1 + q^1 + q^2 + ... 的前缀和
 //      线段树维护首项的和
+//
 // > 区间加等差数列（差分法）
 //      https://www.luogu.com.cn/problem/P1438
 //
@@ -81,7 +84,30 @@
 //
 //
 //
-// 势能线段树：区间开方、区间取模、区间 GCD 一个数，都是可以暴力更新的
+// 势能线段树：
+// 区间开方、区间取模、区间 GCD 一个数，都是可以暴力更新的
+//
+
+
+
+// 维护最大子段和
+//
+// https://leetcode.cn/problems/maximize-subarray-sum-after-removing-all-occurrences-of-one-element/
+//
+struct Info {
+    ll sum, lval, rval, ans;
+    Info() {}
+    Info(int v) : sum(v), lval(v), rval(v), ans(v) {}
+};
+Info operator+(const Info& p, const Info& q) {
+    Info info;
+    info.sum = p.sum + q.sum;
+    info.lval = max(p.lval, p.sum + q.lval);
+    info.rval = max(p.rval + q.sum, q.rval);
+    info.ans = max({p.ans, q.ans, p.rval + q.lval});
+    return info;
+}
+
 
 
 // 实现一个区间赋值

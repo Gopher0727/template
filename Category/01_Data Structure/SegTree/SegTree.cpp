@@ -187,6 +187,8 @@ public:
 
 struct Tag {
     ll add = 0;
+    Tag() {}
+    Tag(ll v) : add(v) {}
     void apply(const Tag& t) {
         if (t.add) {
             add += t.add;

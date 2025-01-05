@@ -1,0 +1,11 @@
+CompileFlags:
+  Add:
+    - -std=c++26
+    - -O2
+    - -pipe
+    - -Wno-vla # 禁用变量长度数组(VLA)的警告
+    - -g
+    - -DLOCAL
+    - -ID:/Code/OJ_Code/headers
+
+  # CompilationDatabase: build/
