@@ -1,0 +1,236 @@
+{
+    "LeetCode": {
+        "scope": "cpp",
+        "prefix": "sol",
+        "body": [
+            "#include <bits/stdc++.h>",
+            "",
+            "#include \"debug.h\"",
+            "",
+            "using namespace std;",
+            "using ll = long long;",
+            "",
+            "static constexpr int MOD = 1'000'000'007;",
+            "",
+            "$0",
+            "",
+            "int main() {",
+            "#ifdef LOCAL",
+            "    freopen(\"in\", \"r\", stdin);",
+            "    freopen(\"out\", \"w\", stdout);",
+            "#endif",
+            "",
+            "    Solution sol;",
+            "",
+            "    return 0;",
+            "}"
+        ]
+    },
+    "acm": {
+        "scope": "cpp",
+        "prefix": "acm",
+        "body": [
+            "// Date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}  ${CURRENT_DAY_NAME}",
+            "",
+            "#include <bits/stdc++.h>",
+            "",
+            "#ifdef LOCAL",
+            "#include \"debug.h\"",
+            "#endif",
+            "",
+            "using namespace std;",
+            "using ll = long long;",
+            "",
+            "void solve() {",
+            "    $0",
+            "}",
+            "",
+            "int main() {",
+            "    ios::sync_with_stdio(false);",
+            "    cin.tie(nullptr);",
+            "",
+            "#ifdef LOCAL",
+            "    freopen(\"in.txt\", \"r\", stdin);",
+            "    freopen(\"out.txt\", \"w\", stdout);",
+            "#endif",
+            "",
+            "    solve();",
+            "",
+            "    return 0;",
+            "}"
+        ]
+    },
+    "acms": {
+        "scope": "cpp",
+        "prefix": "acms",
+        "body": [
+            "// Date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}  ${CURRENT_DAY_NAME}",
+            "",
+            "#include <bits/stdc++.h>",
+            "",
+            "#ifdef LOCAL",
+            "#include \"debug.h\"",
+            "#endif",
+            "",
+            "using namespace std;",
+            "using ll = long long;",
+            "",
+            "void solve() {",
+            "    $0",
+            "}",
+            "",
+            "int main() {",
+            "    ios::sync_with_stdio(false);",
+            "    cin.tie(nullptr);",
+            "",
+            "#ifdef LOCAL",
+            "    freopen(\"in.txt\", \"r\", stdin);",
+            "    freopen(\"out.txt\", \"w\", stdout);",
+            "#endif",
+            "",
+            "    int T;",
+            "    cin >> T;",
+            "    while (T--) {",
+            "        solve();",
+            "    }",
+            "",
+            "    return 0;",
+            "}"
+        ]
+    },
+    "二分查找": {
+        "scope": "cpp",
+        "prefix": "binary_search",
+        "body": [
+            "auto check = [&](auto x) {",
+            "    $0",
+            "    return true;",
+            "};",
+            "",
+            "int lo = 0, hi = 1E9;",
+            "while (lo + 1 < hi) {",
+            "    auto mid = lo + (hi - lo) / 2;",
+            "",
+            "    if (check(mid)) {",
+            "",
+            "    } else {",
+            "        ",
+            "    }",
+            "}"
+        ]
+    },
+    "上下左右": {
+        "scope": "cpp",
+        "prefix": "dir",
+        "body": [
+            "static constexpr int dx[] = {1, 0, -1, 0};",
+            "static constexpr int dy[] = {0, 1, 0, -1};"
+        ]
+    },
+    "马": {
+        "scope": "cpp",
+        "prefix": "dir_horse",
+        "body": [
+            "static constexpr int dx[] = {1, 1, 2, 2, -1, -1, -2, -2};",
+            "static constexpr int dy[] = {2, -2, 1, -1, 2, -2, 1, -1};"
+        ]
+    },
+    "周围": {
+        "scope": "cpp",
+        "prefix": "dir_around",
+        "body": [
+            "static constexpr int dx[] = {1, 0, -1, 0, 1, 1, -1, -1};",
+            "static constexpr int dy[] = {0, 1, 0, -1, 1, -1, 1, -1};"
+        ]
+    },
+    "四角": {
+        "scope": "cpp",
+        "prefix": "dir_corner",
+        "body": [
+            "static constexpr int dx[] = {-1, -1, 1, 1};",
+            "static constexpr int dy[] = {1, -1, -1, 1};"
+        ]
+    },
+    "区间合并": {
+        "scope": "cpp",
+        "prefix": "intervalsMerge",
+        "body": [
+            "vector<pair<int, int>> ans;",
+            "for (auto& p : vec) {",
+            "    if (!ans.empty() && p.first <= ans.back().second) {",
+            "        ans.back().second = max(ans.back().second, p.second);",
+            "    } else {",
+            "        ans.emplace_back(p);",
+            "    }",
+            "}"
+        ]
+    },
+    "lambda递归": {
+        "scope": "cpp",
+        "prefix": "lambda",
+        "body": [
+            "auto $1 = [&](auto&& $1, ) {",
+            "    ",
+            "};",
+            "$1($1);"
+        ]
+    },
+    "lambda递归23版": {
+        "scope": "cpp",
+        "prefix": "lambda23",
+        "body": [
+            "auto $1 = [&](this auto&& $1, ) {",
+            "    ",
+            "};",
+            "$1();"
+        ]
+    },
+    "prefix": {
+        "scope": "cpp",
+        "prefix": "prefix",
+        "body": [
+            "vector<ll> pre(n + 1);",
+            "for (int i = 0; i < n; ++i) {",
+            "    pre[i + 1] = pre[i] + a[i];",
+            "}"
+        ]
+    },
+    "suffix": {
+        "scope": "cpp",
+        "prefix": "suffix",
+        "body": [
+            "vector<ll> suf(n + 1);",
+            "for (int i = n - 1; i >= 0; --i) {",
+            "    suf[i] = suf[i + 1] + a[i];",
+            "}"
+        ]
+    },
+    "init": {
+        "scope": "cpp",
+        "prefix": "init",
+        "body": [
+            "auto init = []() {",
+            "    $0",
+            "    return 0;",
+            "}();"
+        ]
+    },
+    "随机数生成": {
+        "scope": "cpp",
+        "prefix": "random",
+        "body": [
+            "mt19937_64 gen(chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count());",
+            "uniform_int_distribution<int> dis(8e8, 9e8);",
+            "auto rnd = dis(gen); // 固定值"
+        ]
+    },
+    "下标排序": {
+        "scope": "cpp",
+        "prefix": "order",
+        "body": [
+            "vector<int> ord(n);",
+            "ranges::iota(ord, 0);",
+            "ranges::sort(ord, [&]()-> bool {});"
+        ]
+    }
+}

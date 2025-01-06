@@ -1,0 +1,46 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "C++",
+            "command": "clang++",
+            "args": [
+                "-std=c++26",
+                // "-O2",
+                // "-pipe",
+                // "-Wno-vla # 禁用变量长度数组(VLA)的警告",
+                "-g",
+                "-DLOCAL",
+                "-I/home/Gopher/Code/Headers",
+                // "-Wconversion",
+                // "-Wall",
+                "-o",
+                "${workspaceFolder}/build/${fileBasenameNoExtension}",
+                "${file}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        },
+        {
+            "label": "printOutFile",
+            "type": "shell",
+            "command": "cat txt/out.txt && echo",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        }
+    ]
+}
