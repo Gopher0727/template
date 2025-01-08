@@ -3,3 +3,5 @@
 
 
 // 题目：
+// https://codeforces.com/contest/2049/problem/C    贪心，构造
+// https://codeforces.com/contest/1944/problem/C

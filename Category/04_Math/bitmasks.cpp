@@ -6,3 +6,6 @@ int Gosper(int num) {
     int y = (num ^ x) / lb >> 2;
     return x | y;
 }
+
+// 题目：
+// https://codeforces.com/contest/1918/problem/C
