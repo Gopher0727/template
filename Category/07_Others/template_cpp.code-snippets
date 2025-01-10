@@ -1,4 +1,13 @@
 {
+    "readFromFile": {
+        "scope": "cpp",
+        "prefix": "freopen",
+        "body": [
+            "#ifdef LOCAL",
+            "    freopen(\"in.txt\", \"r\", stdin);",
+            "#endif",
+        ]
+    },
     "LeetCode": {
         "scope": "cpp",
         "prefix": "sol",
@@ -6,6 +15,7 @@
             "#include <bits/stdc++.h>",
             "",
             "#include \"debug.h\"",
+            "#include \"headers.hpp\"",
             "",
             "using namespace std;",
             "using ll = long long;",

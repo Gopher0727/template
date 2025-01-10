@@ -1,0 +1,151 @@
+{
+    //* window
+    "window.commandCenter": false,
+    //* workspace
+    "security.workspace.trust.untrustedFiles": "open",
+    //* explorer
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmPasteNative": false,
+    //* update
+    "update.mode": "manual",
+    "update.enableWindowsBackgroundUpdates": false,
+    //* workbench
+    // "workbench.editor.enablePreview": false,
+    "workbench.tree.indent": 12,
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.startupEditor": "none",
+    "workbench.list.smoothScrolling": true,
+    "workbench.layoutControl.enabled": false,
+    //* extensions
+    "extensions.closeExtensionDetailsOnViewChange": true,
+    //* editor
+    "editor.fontSize": 15.5,
+    "editor.inlayHints.enabled": "on",
+    "editor.wordWrap": "on",
+    "editor.occurrencesHighlight": "singleFile",
+    // "editor.acceptSuggestionOnEnter": "off",
+    "editor.hover.delay": 100,
+    "editor.mouseWheelZoom": true,
+    "editor.smoothScrolling": true,
+    "editor.cursorBlinking": "smooth",
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "editor.formatOnSave": true,
+    "editor.minimap.enabled": false,
+    // "editor.minimap.autohide": true,
+    "editor.guides.bracketPairs": "active",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.snippetSuggestions": "top",
+    "editor.suggestSelection": "recentlyUsed",
+    "editor.fontLigatures": true,
+    "editor.wordBasedSuggestions": "currentDocument",
+    "editor.suggest.insertMode": "replace",
+    "editor.semanticHighlighting.enabled": true,
+    "editor.linkedEditing": true,
+    //* files
+    "files.autoSaveDelay": 100,
+    "files.autoSave": "afterDelay",
+    "files.associations": {
+        ".clangd": "yaml",
+        ".clang-format": "yaml",
+        "out": "plaintext",
+    },
+    //* Python
+    "python.terminal.focusAfterLaunch": true,
+    "python.analysis.autoFormatStrings": true,
+    "python.analysis.completeFunctionParens": true,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.inlayHints.pytestParameters": true,
+    "python.languageServer": "Pylance",
+    "python.analysis.autoIndent": true,
+    "python.REPL.enableREPLSmartSend": false,
+    "python.analysis.typeCheckingMode": "basic",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "always"
+        },
+    },
+    //* C/C++
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+    },
+    //* debug
+    "debug.allowBreakpointsEverywhere": true,
+    "debug.console.closeOnEnd": true,
+    "debug.showBreakpointsInOverviewRuler": true,
+    "debug.terminal.clearBeforeReusing": true,
+    //* terminal
+    "terminal.integrated.fontFamily": "CommitMono Nerd Font",
+    // "terminal.integrated.fontFamily": "Maple Mono SC NF",
+    "terminal.integrated.enableMultiLinePasteWarning": "never",
+    // "terminal.integrated.defaultProfile.windows": "Arch (WSL)",
+    "terminal.integrated.defaultProfile.linux": "fish",
+    "terminal.integrated.smoothScrolling": true,
+    "terminal.integrated.cursorStyle": "line",
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.fontSize": 15,
+    //* extensions
+    "extensions.autoCheckUpdates": false,
+    "extensions.ignoreRecommendations": true,
+    "extensions.autoUpdate": false,
+    //* better-comments
+    "better-comments.tags": [
+        {
+            "tag": "!",
+            "color": "#FF2D00",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false,
+        },
+        {
+            "tag": "?",
+            "color": "#3498DB",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "--",
+            "color": "#474747",
+            "strikethrough": true,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "todo",
+            "color": "#FF8C00",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "*",
+            "color": "#98C379",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        }
+    ],
+    //* scm
+    "scm.diffDecorations": "overview",
+    //* markdown
+    "markdown.extension.completion.enabled": true,
+    //* git
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.openRepositoryInParentFolders": "never",
+    //* other
+    "lldb.suppressUpdateNotifications": true,
+}

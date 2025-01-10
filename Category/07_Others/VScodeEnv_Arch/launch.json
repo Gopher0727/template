@@ -7,9 +7,8 @@
             "name": "Debug",
             "program": "${workspaceFolder}/build/${fileBasenameNoExtension}",
             "args": [],
-            "cwd": "${workspaceFolder}/src", // modified
+            "cwd": "${workspaceFolder}/src/Cpp", // modified
             "preLaunchTask": "C++",
-            "postDebugTask": "printOutFile", // modified
             "internalConsoleOptions": "neverOpen",
             "console": "integratedTerminal"
         }

@@ -22,3 +22,6 @@ else
     echo "This file type is not supported !!!"
 
 end
+
+# fish 中也可使用如下指令：
+# bash -c "./run.sh 1.py"

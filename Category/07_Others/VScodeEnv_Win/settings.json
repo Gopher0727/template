@@ -1,7 +1,7 @@
 {
-    "cph.general.saveLocation": "/home/Gopher/Code/.cph",
+    "cph.general.saveLocation": "D:/Code/OJ_Code/.cph",
     "cph.general.menuChoices": "cpp python",
-    "cph.language.cpp.Args": "-std=c++23 -O2 -I/home/Gopher/Code/Headers -DLOCAL",
+    "cph.language.cpp.Args": "-std=c++23 -O2 -ID:/Code/OJ_Code/headers -DLOCAL",
     "cph.language.python.Command": "pypy3.10",
     "cph.general.firstTime": false,
     "clangd.arguments": [
@@ -24,7 +24,7 @@
         "-Wno-vla", // 禁用变量长度数组(VLA)的警告
         "-g",
         "-DLOCAL",
-        "-I/home/Gopher/Code/Headers"
+        "-ID:/Code/OJ_Code/headers"
         // CompilationDatabase: build/
     ]
 }

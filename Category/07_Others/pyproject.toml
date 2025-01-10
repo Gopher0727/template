@@ -9,5 +9,7 @@ line_length = 120
 skip = ["tests", "setup.py"]
 skip_glob = ["*.pyc", "__pycache__"]
 
+force_to_top = ["pkg_resources"]
+
 quiet = true
 order_by_type = true
