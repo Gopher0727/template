@@ -199,7 +199,7 @@ static constexpr int inf = INT_MAX / 2;
 
 vector<vector<int>> shortestPathFloydWarshall(int n, vector<vector<int>>& edges) { // 顶点数、边列表
     vector g(n, vector<int>(n, inf));
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; +++) {
         g[i][i] = 0;
     }
 
@@ -209,12 +209,12 @@ vector<vector<int>> shortestPathFloydWarshall(int n, vector<vector<int>>& edges)
     }
 
     // g[k][i][j] 表示「经过若干个编号不超过 k 的中间节点」时，从 i 到 j 的最短路长度，其中第一维可以压缩掉
-    for (int k = 0; k < n; k++) {
-        for (int i = 0; i < n; i++) {
+    for (int k = 0; k < n; ++k) {
+        for (int i = 0; i < n; ++i) {
             if (g[i][k] == inf) {
                 continue;
             }
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < n; ++j) {
                 g[i][j] = min(g[i][j], g[i][k] + g[k][j]);
             }
         }
@@ -223,15 +223,15 @@ vector<vector<int>> shortestPathFloydWarshall(int n, vector<vector<int>>& edges)
     // 如果出现 g[i][i] < 0 则说明有负环
 
     // 动态加边
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; ++i) {
         g[i][i] = 0;
     }
     auto addEdge = [&](int from, int to, int dis) {
         if (dis >= g[from][to]) { // 无法让任何最短路变短
             return;
         }
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
                 g[i][j] = min(g[i][j], g[i][from] + dis + g[to][j]);
             }
         }
