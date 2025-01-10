@@ -17,7 +17,7 @@ private:
     }
 
 public:
-    OppositeHeap(int k) : k(k) {}
+    DualHeap() {}
 
     void addNum(T num) {
         if (maxHeap.empty() || num <= maxHeap.top()) {
@@ -27,15 +27,6 @@ public:
         }
         // 调整堆的大小
         adjust();
-    }
-
-    template <typename T>
-    T findMedian() {
-        if (maxHeap.size() > minHeap.size()) {
-            return maxHeap.top();
-        } else {
-            return (maxHeap.top() + minHeap.top()) / 2.0L;
-        }
     }
 
     void removeNum(T num) {
@@ -67,6 +58,15 @@ public:
         }
         // 重新平衡堆
         adjust();
+    }
+
+    template <typename U = double>
+    U findMedian() {
+        if (maxHeap.size() > minHeap.size()) {
+            return maxHeap.top();
+        } else {
+            return (maxHeap.top() + minHeap.top()) / 2.0L;
+        }
     }
 };
 
