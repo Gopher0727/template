@@ -23,7 +23,7 @@ namespace Sqrt {
     }
     // x * (x+1) / 2 > n，返回最小的 x
     ll mGet(ll n) {
-        ll x = std::sqrt(2.0L * n);
+        ll x = sqrt(2.0L * n);
         while (x * (x + 1) <= 2 * n) {
             x++;
         }
@@ -31,3 +31,7 @@ namespace Sqrt {
     }
 } // namespace Sqrt
 using namespace Sqrt;
+
+// 练习题：
+// https://codeforces.com/contest/1862/problem/D    1300
+// https://codeforces.com/contest/1857/problem/F    1600
