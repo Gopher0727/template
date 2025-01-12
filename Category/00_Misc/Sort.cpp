@@ -59,6 +59,27 @@ void half_insertion_sort(vector<int>& a) {
     }
 }
 
+// 希尔排序
+void shell_sort(vector<int>& a) {
+    // Marcin Ciura's gap sequence
+    vector<int> gaps = {701, 301, 132, 57, 23, 10, 4, 1};
+
+    // Start with the largest gap and work down to a gap of 1
+    for (int gap : gaps) {
+        if (gap >= a.size()) {
+            continue;
+        }
+        for (int i = gap; i < a.size(); ++i) {
+            int temp = a[i];
+            int j = i;
+            for (; j >= gap && a[j - gap] > temp; j -= gap) {
+                a[j] = a[j - gap];
+            }
+            a[j] = temp;
+        }
+    }
+}
+
 // 快速排序：找基准，分治
 int partition(vector<int>& a, int low, int high) {
     int pivot = a[high]; // 选择最后一个元素作为枢轴
@@ -83,59 +104,71 @@ void quick_sort(vector<int>& a, int low = 0, int high = -1) {
 }
 
 // 桶排序
-// todo
+void bucket_sort(vector<int>& a) {
+    vector<vector<int>> buckets(20); // 数据范围 0 ~ 199
+    for (int& v : a) {
+        buckets[v / 10].push_back(v);
+    }
 
-// 希尔排序
-// todo
+    for (auto& bucket : buckets) {
+        ranges::sort(bucket); // 桶内部排序
+    }
+
+    a.clear();
+    for (auto& bucket : buckets) {
+        for (int v : bucket) {
+            a.push_back(v);
+        }
+    }
+}
 
 // 计数排序：需要一个额外空间存储待排序数组中相应元素的个数，还需要计算前缀和解决元素重复的情况
-// todo
-const int N = 10'010;
-const int W = 10'010;
-vector<int> a(N), b(N), cnt(W);
-void counting_sort(int n, int w) {
-    for (int i = 0; i < n; ++i) {
-        cnt[a[i]]++;
+void counting_sort(vector<int>& a) {
+    int w = ranges::max(a);
+    vector<int> cnt(w + 1);
+    for (int& v : a) {
+        cnt[v]++;
     }
     for (int i = 1; i <= w; ++i) {
         cnt[i] += cnt[i - 1];
     }
-    for (int i = n - 1; i >= 0; --i) {
-        b[cnt[a[i]]--] = a[i];
+
+    int n = a.size();
+    vector<int> b(n);
+    for (int& v : a | views::reverse) {
+        b[--cnt[v]] = v;
     }
+    a = std::move(b);
 }
 
 // 基数排序
 // 计数排序辅助函数，用于基数排序
-void counting_sort_for_radix(vector<int>& arr, int exp) {
-    int n = arr.size();
-
+void counting_sort_for_radix(vector<int>& a, int exp) {
     const int N = 10;
     vector<int> cnt(N);
-    for (int i = 0; i < n; i++) {
-        cnt[(arr[i] / exp) % 10]++;
+    for (int& v : a) {
+        cnt[(v / exp) % 10]++;
     }
     for (int i = 1; i < N; i++) {
         cnt[i] += cnt[i - 1];
     }
 
-    vector<int> output(n);
+    int n = a.size();
+    vector<int> b(n);
     for (int i = n - 1; i >= 0; i--) {
-        output[cnt[(arr[i] / exp) % 10] - 1] = arr[i];
-        cnt[(arr[i] / exp) % 10]--;
+        b[--cnt[(a[i] / exp) % 10]] = a[i];
     }
-
-    arr = std::move(output);
+    a = std::move(b);
 }
-void radix_sort(vector<int>& arr) {
-    int max = ranges::max(arr);
+void radix_sort(vector<int>& a) {
+    int max = ranges::max(a);
     for (int exp = 1; max / exp > 0; exp *= 10) {
-        counting_sort_for_radix(arr, exp);
+        counting_sort_for_radix(a, exp);
     }
 }
 
 // 堆排序
-void heapify(std::vector<int>& a, int n, int i) {
+void heapify(vector<int>& a, int n, int i) {
     int idx = i;
     if (int L = 2 * i + 1; L < n && a[L] > a[idx]) {
         idx = L;
@@ -148,7 +181,7 @@ void heapify(std::vector<int>& a, int n, int i) {
         heapify(a, n, idx);
     }
 }
-void heapSort(std::vector<int>& a) {
+void heap_sort(vector<int>& a) {
     int n = a.size();
     for (int i = n / 2 - 1; i >= 0; --i) {
         heapify(a, n, i);
@@ -166,15 +199,14 @@ void solve() {
 
     for (int i = 0; i < 10; ++i) {
         vector<int> a(10);
-        for (int i = 0; i < a.size(); ++i) {
-            auto rnd = dis(gen);
-            a[i] = rnd;
+        for (int& v : a) {
+            v = dis(gen);
         }
         debug(a);
-        radix_sort(a);
+        counting_sort(a);
         debug(a);
-        if (is_sorted(a.begin(), a.end())) {
-            cout << "True\n";
+        if (ranges::is_sorted(a)) {
+            cout << "is_sorted: True\n";
         }
     }
 }

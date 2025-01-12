@@ -1,24 +1,10 @@
 // dijkstra
 // 求解 `非负权重加权有向图` 上 `单源最短路`
-
-/*
-struct Node {
-    int to, w;
-};
-
-void solve() {
-    int n, m, s;
-    cin >> n >> m >> s;
-
-    vector<vector<Node>> g(n);
-    for (int i = 0; i < m; ++i) {
-        int u, v, w;
-        cin >> u >> v >> w;
-        u--, v--;
-        g[u].emplace_back(v, w);
-    }
-}
-*/
+//
+//
+// 练习题：
+// https://leetcode.cn/problems/minimize-the-maximum-edge-weight-of-graph/    对dijkstra小小修改，也可以二分+dfs
+//
 
 // 堆优化 稀疏图
 vector<ll> dis(n + 1, LLONG_MAX / 2);
@@ -191,9 +177,12 @@ void solve() {
 
 // Floyd-Warshall
 // 求解图中任意两点之间的最短路径
-// 适用于任何图，不管有向无向，边权正负，但是最短路必须存在。（不能有负环）
+// 适用于任何图，不管有向无向，边权正负，但是最短路必须存在（不能有负环）。
 //
 // 时间复杂度 O(n^3) 空间复杂度 O(n^2)
+//
+// 练习题：
+// https://codeforces.com/contest/2057/problem/E2    2500
 //
 static constexpr int inf = INT_MAX / 2;
 
