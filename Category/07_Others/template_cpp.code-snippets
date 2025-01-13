@@ -1,13 +1,4 @@
 {
-    "readFromFile": {
-        "scope": "cpp",
-        "prefix": "freopen",
-        "body": [
-            "#ifdef LOCAL",
-            "    freopen(\"in.txt\", \"r\", stdin);",
-            "#endif",
-        ]
-    },
     "LeetCode": {
         "scope": "cpp",
         "prefix": "sol",
@@ -91,6 +82,32 @@
             "",
             "    return 0;",
             "}"
+        ]
+    },
+    "readFromFile": {
+        "scope": "cpp",
+        "prefix": "freopen",
+        "body": [
+            "#ifdef LOCAL",
+            "    freopen(\"in.txt\", \"r\", stdin);",
+            "#endif",
+        ]
+    },
+    "UDLR": {
+        "scope": "cpp",
+        "prefix": "UDLR",
+        "body": [
+            "void go(int& x, int& y, char ch) {",
+            "    if (ch == 'U') {",
+            "        x--;",
+            "    } else if (ch == 'D') {",
+            "        x++;",
+            "    } else if (ch == 'L') {",
+            "        y--;",
+            "    } else if (ch == 'R') {",
+            "        y++;",
+            "    }",
+            "}",
         ]
     },
     "二分查找": {
@@ -210,6 +227,15 @@
             "}();"
         ]
     },
+    "initWithVal": {
+        "scope": "cpp",
+        "prefix": "initWithVal",
+        "body": [
+            "auto $1 = [&]() {",
+            "    $0",
+            "}();"
+        ]
+    },
     "随机数生成": {
         "scope": "cpp",
         "prefix": "random",
@@ -225,7 +251,7 @@
         "body": [
             "vector<int> ord(n);",
             "ranges::iota(ord, 0);",
-            "ranges::sort(ord, [&]()-> bool {});"
+            "ranges::sort(ord, [&](int i, int j)-> bool {$0});"
         ]
     }
 }

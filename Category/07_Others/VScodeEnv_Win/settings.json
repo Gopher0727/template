@@ -1,9 +1,11 @@
 {
     "cph.general.saveLocation": "D:/Code/OJ_Code/.cph",
-    "cph.general.menuChoices": "cpp python",
+    // "cph.general.menuChoices": "cpp python",
+    "cph.general.defaultLanguage": "cpp",
     "cph.language.cpp.Args": "-std=c++23 -O2 -ID:/Code/OJ_Code/headers -DLOCAL",
     "cph.language.python.Command": "pypy3.10",
     "cph.general.firstTime": false,
+    // "cph.general.useShortCodeForcesName": true,
     "clangd.arguments": [
         "--log=verbose",
         "--pretty",
