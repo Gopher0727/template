@@ -25,7 +25,7 @@
             "fmax = lambda x, y: x if x >= y else y",
             "fmin = lambda x, y: y if x >= y else x",
             "",
-            "MOD = 10**9 + 7",
+            "MOD: Final = 10**9 + 7",
             "",
             ""
         ]

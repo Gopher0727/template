@@ -1,6 +1,13 @@
 // DP
 
 
+// 入门 DP
+//
+// > [打家劫舍](https://leetcode.cn/problems/house-robber/)
+//   [删除并获得点数](https://leetcode.cn/problems/delete-and-earn/)
+//
+// > 最大子数组(子段)和
+
 
 // 背包 DP
 /*
@@ -14,6 +21,7 @@
 
 
 Problems：
+> https://codeforces.com/contest/1862/problem/F    1800
 > https://atcoder.jp/contests/abc383/tasks/abc383_f
 
 */

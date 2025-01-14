@@ -11,8 +11,6 @@
             "using namespace std;",
             "using ll = long long;",
             "",
-            "static constexpr int MOD = 1'000'000'007;",
-            "",
             "$0",
             "",
             "int main() {",
@@ -83,6 +81,16 @@
             "    return 0;",
             "}"
         ]
+    },
+    "MOD_1'000'000'007": {
+        "scope": "cpp",
+        "prefix": "MOD_1'000'000'007",
+        "body": "static constexpr int MOD = 1'000'000'007;"
+    },
+    "MOD_9998244353": {
+        "scope": "cpp",
+        "prefix": "MOD_998244353",
+        "body": "static constexpr int MOD = 998244353;"
     },
     "readFromFile": {
         "scope": "cpp",
