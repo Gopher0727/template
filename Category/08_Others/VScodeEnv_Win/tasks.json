@@ -10,13 +10,14 @@
                 // "-O2",
                 // "-pipe",
                 // "-Wno-vla # 禁用变量长度数组(VLA)的警告",
+                // "-fdiagnostics-color=always",
                 "-g",
                 "-DLOCAL",
-                "-I/home/Gopher/Code/Headers",
+                "-ID:/Code/OJ_Code/headers",
                 // "-Wconversion",
                 // "-Wall",
                 "-o",
-                "${workspaceFolder}/build/${fileBasenameNoExtension}",
+                "${workspaceFolder}/build/${fileBasenameNoExtension}.exe",
                 "${file}"
             ],
             "group": {

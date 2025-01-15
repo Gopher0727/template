@@ -1,4 +1,3 @@
-```cpp []
 template <typename T = int32_t, typename... Args>
 T query(Args... args) {
     cout << "? ";
@@ -13,9 +12,9 @@ void respond(Args... args) {
     cout << "! ";
     ((cout << args << ' '), ...) << endl;
 }
-```
 
-```py []
+
+// Python:
 def query(*args):
     print("?", *args, flush=True)
     return II()
@@ -23,4 +22,3 @@ def query(*args):
 
 def respond(*args):
     print("!", *args, flush=True)
-```

@@ -22,7 +22,7 @@ struct CtNode {
 
     CtNode(int _id, int _val) : id(_id), val(_val), lr {nullptr, nullptr} {}
 };
-CtNode* buildCartesianTree(const vector<int>& a) {
+auto buildCartesianTree(const vector<int>& a) {
     if (a.empty()) {
         return nullptr;
     }
@@ -44,7 +44,7 @@ CtNode* buildCartesianTree(const vector<int>& a) {
 }
 
 // 非指针版，返回每个节点的左右儿子的编号
-vector<pair<int, int>> buildCartesianTree2(const vector<int>& a) {
+auto buildCartesianTree2(const vector<int>& a) {
     vector<pair<int, int>> lr(a.size(), {-1, -1});
     vector<int> s;
     for (int i = 0; i < a.size(); ++i) {
