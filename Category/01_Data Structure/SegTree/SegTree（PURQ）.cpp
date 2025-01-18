@@ -53,8 +53,8 @@ public:
 
     Info queryAll() { return tree[1]; }
 
-    template <class F>
-    int findFirst(int L, int R, F& pred, int o, int l, int r) {
+    // todo
+    int findFirst(int L, int R, auto&& pred, int o, int l, int r) {
         if (l > R || r < L || !pred(tree[o])) {
             return -1;
         }
@@ -68,13 +68,11 @@ public:
         }
         return idx;
     }
-    template <class F>
-    int findFirst(int l, int r, F& pred) {
+    int findFirst(int l, int r, auto&& pred) {
         return findFirst(l, r, pred, 1, 0, n - 1);
     }
 
-    template <class F>
-    int findLast(int L, int R, F& pred, int o, int l, int r) {
+    int findLast(int L, int R, auto&& pred, int o, int l, int r) {
         if (l > R || r < L || !pred(tree[o])) {
             return -1;
         }
@@ -88,8 +86,7 @@ public:
         }
         return idx;
     }
-    template <class F>
-    int findLast(int l, int r, F& pred) {
+    int findLast(int l, int r, auto&& pred) {
         return findLast(l, r, pred, 1, 0, n - 1);
     }
 };

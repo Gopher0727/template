@@ -103,8 +103,8 @@ public:
 
     Info queryAll() { return tree[1]; }
 
-    template <class F>
-    int findFirst(int L, int R, F& pred, int o, int l, int r) {
+    // todo
+    int findFirst(int L, int R, auto&& pred, int o, int l, int r) {
         if (l > R || r < L || !pred(tree[o])) {
             return -1;
         }
@@ -119,13 +119,9 @@ public:
         }
         return idx;
     }
-    template <class F>
-    int findFirst(int l, int r, F& pred) {
-        return findFirst(l, r, pred, 1, 0, n - 1);
-    }
+    int findFirst(int l, int r, auto&& pred) { return findFirst(l, r, pred, 1, 0, n - 1); }
 
-    template <class F>
-    int findLast(int L, int R, F& pred, int o, int l, int r) {
+    int findLast(int L, int R, auto&& pred, int o, int l, int r) {
         if (l > R || r < L || !pred(tree[o])) {
             return -1;
         }
@@ -140,49 +136,7 @@ public:
         }
         return idx;
     }
-    template <class F>
-    int findLast(int l, int r, F& pred) {
-        return findLast(l, r, pred, 1, 0, n - 1);
-    }
-
-    // todo
-    void maintainL(int o, int l, int r, int pre) {
-        if (tree[o].difl > 0 && tree[o].maxlowl < pre) {
-            return;
-        }
-        if (l == r) {
-            tree[o].max = tree[o].maxlowl;
-            tree[o].maxl = tree[o].maxr = l;
-            tree[o].maxlowl = tree[o].maxlowr = -inf;
-            return;
-        }
-        int m = (l + r) / 2;
-        push(o);
-        maintainL(o << 1, l, m, pre);
-        pre = max(pre, tree[o << 1].max);
-        maintainL(o << 1 | 1, m + 1, r, pre);
-        pull(o);
-    }
-    void maintainL() { maintainL(1, 0, n - 1, -1); }
-
-    void maintainR(int o, int l, int r, int suf) {
-        if (tree[o].difr > 0 && tree[o].maxlowr < suf) {
-            return;
-        }
-        if (l == r) {
-            tree[o].max = tree[o].maxlowl;
-            tree[o].maxl = tree[o].maxr = l;
-            tree[o].maxlowl = tree[o].maxlowr = -inf;
-            return;
-        }
-        int m = (l + r) / 2;
-        push(o);
-        maintainR(o << 1 | 1, m + 1, r, suf);
-        suf = max(suf, tree[o << 1 | 1].max);
-        maintainR(o << 1, l, m, suf);
-        pull(o);
-    }
-    void maintainR() { maintainR(1, 0, n - 1, -1); }
+    int findLast(int l, int r, auto&& pred) { return findLast(l, r, pred, 1, 0, n - 1); }
 };
 
 struct Tag {

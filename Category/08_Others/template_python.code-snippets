@@ -14,7 +14,7 @@
             "from operator import add, iand, ior, mul, xor",
             "from string import ascii_letters, ascii_lowercase, ascii_uppercase",
             "from timeit import timeit",
-            "from typing import Final, List",
+            "from typing import List",
             "",
             "# from pkg_resources import working_set",
             "from more_itertools import all_equal, combination_index, convolve, distinct_combinations, distinct_permutations, distribute, divide, factor, intersperse, is_sorted, locate, longest_common_prefix, minmax, nth, nth_combination, nth_permutation, partition, permutation_index, powerset, powerset_of_sets, repeat_each, repeat_last, rlocate, sieve, sliced, sliding_window, substrings, substrings_indexes, take, totient, unzip, windowed",
@@ -24,8 +24,6 @@
             "",
             "fmax = lambda x, y: x if x >= y else y",
             "fmin = lambda x, y: y if x >= y else x",
-            "",
-            "MOD: Final = 10**9 + 7",
             "",
             ""
         ]
@@ -37,8 +35,6 @@
             "# Date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}  ${CURRENT_DAY_NAME}",
             "",
             "import sys",
-            "import typing",
-            "from math import gcd, hypot, inf, lcm, sqrt",
             "",
             "input = lambda: sys.stdin.readline().strip()",
             "",
@@ -71,8 +67,6 @@
             "# Date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}  ${CURRENT_DAY_NAME}",
             "",
             "import sys",
-            "import typing",
-            "from math import gcd, hypot, inf, lcm, sqrt",
             "",
             "input = lambda: sys.stdin.readline().strip()",
             "",
@@ -99,11 +93,21 @@
             ""
         ]
     },
+    "MOD_1'000'000'007": {
+        "scope": "python",
+        "prefix": "MOD_1'000'000'007",
+        "body": "MOD = 1_000_000_007"
+    },
+    "MOD_9998244353": {
+        "scope": "python",
+        "prefix": "MOD_998244353",
+        "body": "MOD = 998244353"
+    },
     "二分查找": {
         "scope": "python",
         "prefix": "binary_search",
         "body": [
-            "def check(x: int):",
+            "def check(x: int) -> bool:",
             "    $0",
             "    return True",
             "",

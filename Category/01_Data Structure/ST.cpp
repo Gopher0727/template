@@ -1,11 +1,12 @@
+template <typename T>
 class ST { // 用于解决可重复贡献问题，需要空间较大
 private:
     int n, len;
-    function<int(int, int)> Op; // max, min, gcd, 按位 &, 按位 | -> [](int a, int b) { return max(a, b); }
-    vector<vector<int>> st;
+    function<T(T, T)> Op; // max, min, gcd, 按位 &, 按位 | -> [](int a, int b) { return max(a, b); }
+    vector<vector<T>> st;
 
 public:
-    explicit ST(int n, function<int(int, int)> Op) : n(n), len(__lg(n)), Op(Op), st(n, vector<int>(len + 1)) {}
+    explicit ST(int n, auto&& Op) : n(n), len(__lg(n)), Op(Op), st(n, vector<T>(len + 1)) {}
 
     void init(const vector<int>& vec) {
         for (int i = 0; i < n; ++i) {

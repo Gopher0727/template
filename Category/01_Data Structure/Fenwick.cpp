@@ -16,7 +16,7 @@ struct Fenwick {
         }
     }
 
-    T query(int k) { // 前 k 个元素之和
+    T query(int k) { // Sum of the first k elements
         T ans {};
         for (int i = k; i > 0; i &= i - 1) {
             ans = ans + tree[i - 1];
@@ -25,7 +25,7 @@ struct Fenwick {
     }
     T query(int l, int r) { return query(r) - query(l); }
 
-    int select(const T& k) { // 小于等于 k 的最大前缀长度
+    int select(const T& k) { // The length of the longest prefix that No sum of its prefix greater than k
         int x = 0, n = tree.size();
         T cur {};
         for (int i = 1 << std::__lg(n); i; i >>= 1) {

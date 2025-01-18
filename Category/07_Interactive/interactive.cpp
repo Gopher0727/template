@@ -15,6 +15,8 @@ void respond(Args... args) {
 
 
 // Python:
+/*
+
 def query(*args):
     print("?", *args, flush=True)
     return II()
@@ -22,3 +24,5 @@ def query(*args):
 
 def respond(*args):
     print("!", *args, flush=True)
+
+*/

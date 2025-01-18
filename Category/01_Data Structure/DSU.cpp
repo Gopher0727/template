@@ -1,4 +1,10 @@
-// 无向图
+// 并查集 （适用于无向图）
+//
+// 只有路径压缩的并查集复杂度是 O(nlogn) 的，这也是大多数情况下的实现方案
+// 只有启发式合并（按深度合并）的并查集的复杂度也是 O(nlogn) 的，适用于可持久化的场景
+//
+// Link：
+// [RMQ 标准算法和线性树上并查集](https://ljt12138.blog.uoj.ac/blog/4874)
 
 struct DSU { // Implement (union by size) + (path compression)
     vector<int> pa, _size;

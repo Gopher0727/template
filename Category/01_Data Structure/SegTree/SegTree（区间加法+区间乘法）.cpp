@@ -3,14 +3,13 @@ struct Info {
     int l, r;
 };
 
-// 处理区间加法和区间乘法
 class SegTree {
 private:
     int n, m;
     vector<Info> t;
 
-    void pull(ll o) { t[o].sum = t[o << 1].sum + t[o << 1 | 1].sum; }
-    void push(ll o) {
+    void pull(int o) { t[o].sum = t[o << 1].sum + t[o << 1 | 1].sum; }
+    void push(int o) {
         t[o << 1].sum = t[o << 1].sum * t[o].mul + t[o].add * (t[o << 1].r - t[o << 1].l + 1);
         t[o << 1 | 1].sum = t[o << 1 | 1].sum * t[o].mul + t[o].add * (t[o << 1 | 1].r - t[o << 1 | 1].l + 1);
 
@@ -26,21 +25,21 @@ private:
 public:
     SegTree() {}
     SegTree(const vector<int>& vec, int m) : n(vec.size()), m(m), t(4 * n) {
-        function<void(ll, ll, ll)> build = [&](ll o, ll l, ll r) -> void {
+        auto build = [&](auto&& self, ll o, ll l, ll r) -> void {
             t[o].l = l, t[o].r = r;
             if (l == r) {
                 t[o].sum += vec[l] % m;
                 return;
             }
-            ll mid = l + (r - l) / 2;
-            build(o << 1, l, mid);
-            build(o << 1 | 1, mid + 1, r);
+            int mid = l + (r - l) / 2;
+            self(self, o << 1, l, mid);
+            self(self, o << 1 | 1, mid + 1, r);
             pull(o);
         };
-        build(1, 1, n);
+        build(build, 1, 1, n);
     }
 
-    void lazyMul(ll o, ll l, ll r, ll k) {
+    void lazyMul(int o, int l, int r, ll k) {
         if (l <= t[o].l && t[o].r <= r) {
             t[o].add *= k;
             t[o].mul *= k;
@@ -48,7 +47,7 @@ public:
             return;
         }
         push(o);
-        ll mid = t[o].l + (t[o].r - t[o].l) / 2;
+        int mid = t[o].l + (t[o].r - t[o].l) / 2;
         if (l <= mid) {
             lazyMul(o << 1, l, r, k);
         }
@@ -57,7 +56,8 @@ public:
         }
         pull(o);
     }
-    void lazyAdd(ll o, ll l, ll r, ll k) {
+
+    void lazyAdd(int o, int l, int r, ll k) {
         if (l <= t[o].l && t[o].r <= r) {
             t[o].add += k;
             t[o].sum += k * (t[o].r - t[o].l + 1);
@@ -74,7 +74,7 @@ public:
         pull(o);
     }
 
-    ll query(ll o, ll l, ll r) {
+    ll query(int o, int l, int r) {
         if (l <= t[o].l && t[o].r <= r) {
             return t[o].sum;
         }
