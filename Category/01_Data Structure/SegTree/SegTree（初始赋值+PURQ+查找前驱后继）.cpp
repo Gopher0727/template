@@ -1,16 +1,29 @@
+static constexpr ll inf = 9e18;
+
 template <class Info>
 class SegTree {
-    const int n;
-    vector<Info> tree;
+private:
+    int n;
+    vector<Info> info;
 
-    void pull(int o) { tree[o] = tree[o << 1] + tree[o << 1 | 1]; }
+    void pull(int o) { info[o] = info[o << 1] + info[o << 1 | 1]; }
 
 public:
-    SegTree(int n) : n(n), tree(4 << __lg(n)) {}
-    SegTree(const vector<Info>& init) : SegTree(init.size()) {
-         auto build = [&](auto&& self, int o, int l, int r) -> void {
+    SegTree() : n(0) {}
+    SegTree(int n, Info v = Info {}) { init(vector(n, v)); }
+    template <typename T>
+    SegTree(const vector<T>& _init) {
+        init(_init);
+    }
+
+    template <typename T>
+    void init(vector<T> _init) {
+        n = _init.size();
+        info.assign(4 << std::__lg(n), Info {});
+
+        auto build = [&](auto&& self, int o, int l, int r) -> void {
             if (l == r) {
-                tree[o] = init[l];
+                info[o] = _init[l];
                 return;
             }
             int m = l + (r - l) / 2;
@@ -21,9 +34,10 @@ public:
         build(build, 1, 0, n - 1);
     }
 
+public:
     void modify(int id, const Info& info, int o, int l, int r) {
         if (l == r) {
-            tree[o] = info;
+            info[o] = info;
             return;
         }
         int m = l + (r - l) / 2;
@@ -38,7 +52,7 @@ public:
 
     Info query(int L, int R, int o, int l, int r) {
         if (L <= l && r <= R) {
-            return tree[o];
+            return info[o];
         }
         int m = l + (r - l) / 2;
         if (R <= m) {
@@ -51,11 +65,10 @@ public:
     }
     Info query(int L, int R) { return query(L, R, 1, 0, n - 1); }
 
-    Info queryAll() { return tree[1]; }
+    Info queryAll() { return info[1]; }
 
-    // todo
     int findFirst(int L, int R, auto&& pred, int o, int l, int r) {
-        if (l > R || r < L || !pred(tree[o])) {
+        if (l > R || r < L || !pred(info[o])) {
             return -1;
         }
         if (l == r) {
@@ -68,12 +81,10 @@ public:
         }
         return idx;
     }
-    int findFirst(int l, int r, auto&& pred) {
-        return findFirst(l, r, pred, 1, 0, n - 1);
-    }
+    int findFirst(int l, int r, auto&& pred) { return findFirst(l, r, pred, 1, 0, n - 1); }
 
     int findLast(int L, int R, auto&& pred, int o, int l, int r) {
-        if (l > R || r < L || !pred(tree[o])) {
+        if (l > R || r < L || !pred(info[o])) {
             return -1;
         }
         if (l == r) {
@@ -86,15 +97,14 @@ public:
         }
         return idx;
     }
-    int findLast(int l, int r, auto&& pred) {
-        return findLast(l, r, pred, 1, 0, n - 1);
-    }
+    int findLast(int l, int r, auto&& pred) { return findLast(l, r, pred, 1, 0, n - 1); }
 };
-struct Info {
-    //
-};
-Info operator+(const Info& p, const Info& q) {
-    Info info;
 
+struct Info {
+    ll mx = 0;
+};
+Info operator+(const Info& a, const Info& b) {
+    Info info;
+    info.mx = max(a.mx, b.mx);
     return info;
 }

@@ -1,14 +1,20 @@
-// 自动扩容类
+// Problems：
+//
+// https://leetcode.cn/problems/count-the-number-of-arrays-with-k-matching-adjacent-elements/
+
+// 自动扩容类（Mint）
 //
 struct Combinatorics {
     int n;
-    std::vector<Mint> _fac, _invfac, _inv;
+    vector<Mint> _fac, _invfac, _inv;
 
     Combinatorics() : n {0}, _fac {1}, _invfac {1}, _inv {0} {}
     Combinatorics(int n) : Combinatorics() { init(n); }
 
     void init(int m) {
-        if (m <= n) return;
+        if (m <= n) {
+            return;
+        }
         _fac.resize(m + 1);
         _invfac.resize(m + 1);
         _inv.resize(m + 1);
@@ -25,26 +31,43 @@ struct Combinatorics {
     }
 
     Mint fac(int m) {
-        if (m > n) init(2 * m);
+        if (m > n) {
+            init(2 * m);
+        }
         return _fac[m];
     }
     Mint invfac(int m) {
-        if (m > n) init(2 * m);
+        if (m > n) {
+            init(2 * m);
+        }
         return _invfac[m];
     }
     Mint inv(int m) {
-        if (m > n) init(2 * m);
+        if (m > n) {
+            init(2 * m);
+        }
         return _inv[m];
     }
     Mint comb(int n, int m) {
-        if (n < m || m < 0) return 0;
+        if (n < m || m < 0) {
+            return 0;
+        }
         return fac(n) * invfac(m) * invfac(n - m);
     }
     Mint perm(int n, int m) {
-        if (n < m || m < 0) return 0;
+        if (n < m || m < 0) {
+            return 0;
+        }
         return fac(n) * invfac(n - m);
     }
+    Mint catalan(int n) {
+        if (n <= 0) {
+            return 0;
+        }
+        return comb(2 * n, n) - comb(2 * n, n - 1);
+    }
 } C;
+
 
 // 预处理
 //
@@ -80,30 +103,52 @@ namespace Comb {
     }();
 
     ll comb(int n, int m) {
-        return n < m ? 0 : F[n] * INV_F[m] % MOD * INV_F[n - m] % MOD;
+        return n < m || m < 0 ? 0 : F[n] * INV_F[m] % MOD * INV_F[n - m] % MOD;
+    }
+    ll perm(int n, int m) {
+        return n < m || m < 0 ? 0 : F[n] * INV_F[n - m] % MOD;
+    }
+    ll catalan(int n) {
+        return n < 0 ? 0 : comb(2 * n, n) - comb(2 * n, n - 1);
     }
 };
+using namespace Comb;
 
-// 直接实现
-Mint comb(int x, int y) {
-    if (y > x) {
-        return 0;
+
+// 操作次数较少，直接实现
+//
+namespace Comb {
+    // 小范围，不取模
+    ll comb_not_MOD(int n, int m) {
+        if (n < m || m < 0) {
+            return 0;
+        }
+        ll ans = 1;
+        for (int i = 0; i < m; i++) {
+            ans = ans * (n - i) / (i + 1);
+        }
+        return ans;
     }
-    Mint res = 1;
-    for (int i = 0; i < y; i++) {
-        res = res * (x - i) / (i + 1);
+
+    ll qpow(ll a, ll b, int p) {
+        ll res = 1;
+        a = (a % p + p) % p;
+        for (; b; b >>= 1, a = a * a % p) {
+            if (b & 1) {
+                res = a * res % p;
+            }
+        }
+        return res;
     }
-    return res;
-}
-
-Mint comb(ll n, ll m) {
-    Mint ans = 1;
-    for (ll i = 1, j = n - m + 1; i <= m; i++, j++) {
-        ans *= j * Mint(i).inv();
+    ll comb(int n, int m) {
+        if (n < m || m < 0) {
+            return 0;
+        }
+        ll ans = 1;
+        for (int i = 1, j = n - m + 1; i <= m; i++, j++) {
+            ans = ans * j % MOD * qpow(i, MOD - 2, MOD) % MOD;
+        }
+        return ans;
     }
-    return ans;
-}
-
-
-// 练习题：
-// https://leetcode.cn/problems/count-the-number-of-arrays-with-k-matching-adjacent-elements/
+}; // namespace Comb
+using namespace Comb;

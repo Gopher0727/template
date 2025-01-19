@@ -4,30 +4,30 @@ template <class Info, class Tag>
 class SegTree {
 private:
     int n;
-    vector<Info> tree;
+    vector<Info> info;
     vector<Tag> tag;
 
-    void apply(int o, const Tag& t) { tag[o].apply(t), tree[o].apply(t); }
+    void apply(int o, const Tag& t) { tag[o].apply(t), info[o].apply(t); }
     void push(int o) { apply(o << 1, tag[o]), apply(o << 1 | 1, tag[o]), tag[o] = Tag(); }
-    void pull(int o) { tree[o] = tree[o << 1] + tree[o << 1 | 1]; }
+    void pull(int o) { info[o] = info[o << 1] + info[o << 1 | 1]; }
 
 public:
     SegTree() : n(0) {}
-    SegTree(int n_, Info v_ = Info()) { init(vector(n_, v_)); }
+    SegTree(int n, Info v = Info{}) { init(vector(n, v)); }
     template <class T>
-    SegTree(vector<T>& init_) {
-        init(init_);
+    SegTree(vector<T>& _init) {
+        init(_init);
     }
 
     template <class T>
-    void init(const vector<T>& init_) {
-        n = init_.size();
-        tree.assign(4 << __lg(n), Info());
+    void init(const vector<T>& _init) {
+        n = _init.size();
+        info.assign(4 << __lg(n), Info{});
         tag.assign(4 << __lg(n), Tag());
 
         auto build = [&](auto&& self, int o, int l, int r) -> void {
             if (l == r) {
-                tree[o] = init_[l];
+                info[o] = _init[l];
                 return;
             }
             int m = l + (r - l) / 2;
@@ -41,7 +41,7 @@ public:
 public:
     void modify(int id, const Info& info, int o, int l, int r) {
         if (l == r) {
-            tree[o] = info;
+            info[o] = info;
             return;
         }
         push(o);
@@ -74,7 +74,7 @@ public:
 
     Info query(int id, int o, int l, int r) {
         if (l == r) {
-            return tree[o];
+            return info[o];
         }
         push(o);
         int m = l + (r - l) / 2;
@@ -87,7 +87,7 @@ public:
 
     Info query(int L, int R, int o, int l, int r) {
         if (L <= l && r <= R) {
-            return tree[o];
+            return info[o];
         }
         push(o);
         int m = l + (r - l) / 2;
@@ -101,11 +101,10 @@ public:
     }
     Info query(int L, int R) { return query(L, R, 1, 0, n - 1); }
 
-    Info queryAll() { return tree[1]; }
+    Info queryAll() { return info[1]; }
 
-    // todo
     int findFirst(int L, int R, auto&& pred, int o, int l, int r) {
-        if (l > R || r < L || !pred(tree[o])) {
+        if (l > R || r < L || !pred(info[o])) {
             return -1;
         }
         if (l == r) {
@@ -122,7 +121,7 @@ public:
     int findFirst(int l, int r, auto&& pred) { return findFirst(l, r, pred, 1, 0, n - 1); }
 
     int findLast(int L, int R, auto&& pred, int o, int l, int r) {
-        if (l > R || r < L || !pred(tree[o])) {
+        if (l > R || r < L || !pred(info[o])) {
             return -1;
         }
         if (l == r) {

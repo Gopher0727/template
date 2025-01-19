@@ -6,29 +6,29 @@ struct Info {
 class SegTree {
 private:
     int n, m;
-    vector<Info> t;
+    vector<Info> info;
 
-    void pull(int o) { t[o].sum = t[o << 1].sum + t[o << 1 | 1].sum; }
+    void pull(int o) { info[o].sum = info[o << 1].sum + info[o << 1 | 1].sum; }
     void push(int o) {
-        t[o << 1].sum = t[o << 1].sum * t[o].mul + t[o].add * (t[o << 1].r - t[o << 1].l + 1);
-        t[o << 1 | 1].sum = t[o << 1 | 1].sum * t[o].mul + t[o].add * (t[o << 1 | 1].r - t[o << 1 | 1].l + 1);
+        info[o << 1].sum = info[o << 1].sum * info[o].mul + info[o].add * (info[o << 1].r - info[o << 1].l + 1);
+        info[o << 1 | 1].sum = info[o << 1 | 1].sum * info[o].mul + info[o].add * (info[o << 1 | 1].r - info[o << 1 | 1].l + 1);
 
-        t[o << 1].mul = t[o << 1].mul * t[o].mul % m;
-        t[o << 1 | 1].mul = t[o << 1 | 1].mul * t[o].mul % m;
+        info[o << 1].mul = info[o << 1].mul * info[o].mul % m;
+        info[o << 1 | 1].mul = info[o << 1 | 1].mul * info[o].mul % m;
 
-        t[o << 1].add = t[o << 1].add * t[o].mul + t[o].add;
-        t[o << 1 | 1].add = t[o << 1 | 1].add * t[o].mul + t[o].add;
+        info[o << 1].add = info[o << 1].add * info[o].mul + info[o].add;
+        info[o << 1 | 1].add = info[o << 1 | 1].add * info[o].mul + info[o].add;
 
-        t[o].add = 0, t[o].mul = 1;
+        info[o].add = 0, info[o].mul = 1;
     }
 
 public:
     SegTree() {}
-    SegTree(const vector<int>& vec, int m) : n(vec.size()), m(m), t(4 * n) {
+    SegTree(const vector<int>& _init, int m) : n(_init.size()), m(m), info(4 * n) {
         auto build = [&](auto&& self, ll o, ll l, ll r) -> void {
-            t[o].l = l, t[o].r = r;
+            info[o].l = l, info[o].r = r;
             if (l == r) {
-                t[o].sum += vec[l] % m;
+                info[o].sum += _init[l] % m;
                 return;
             }
             int mid = l + (r - l) / 2;
@@ -40,14 +40,14 @@ public:
     }
 
     void lazyMul(int o, int l, int r, ll k) {
-        if (l <= t[o].l && t[o].r <= r) {
-            t[o].add *= k;
-            t[o].mul *= k;
-            t[o].sum *= k;
+        if (l <= info[o].l && info[o].r <= r) {
+            info[o].add *= k;
+            info[o].mul *= k;
+            info[o].sum *= k;
             return;
         }
         push(o);
-        int mid = t[o].l + (t[o].r - t[o].l) / 2;
+        int mid = info[o].l + (info[o].r - info[o].l) / 2;
         if (l <= mid) {
             lazyMul(o << 1, l, r, k);
         }
@@ -58,13 +58,13 @@ public:
     }
 
     void lazyAdd(int o, int l, int r, ll k) {
-        if (l <= t[o].l && t[o].r <= r) {
-            t[o].add += k;
-            t[o].sum += k * (t[o].r - t[o].l + 1);
+        if (l <= info[o].l && info[o].r <= r) {
+            info[o].add += k;
+            info[o].sum += k * (info[o].r - info[o].l + 1);
             return;
         }
         push(o);
-        ll mid = t[o].l + (t[o].r - t[o].l) / 2;
+        ll mid = info[o].l + (info[o].r - info[o].l) / 2;
         if (l <= mid) {
             lazyAdd(o << 1, l, r, k);
         }
@@ -75,11 +75,11 @@ public:
     }
 
     ll query(int o, int l, int r) {
-        if (l <= t[o].l && t[o].r <= r) {
-            return t[o].sum;
+        if (l <= info[o].l && info[o].r <= r) {
+            return info[o].sum;
         }
         push(o);
-        ll val = 0, mid = t[o].l + (t[o].r - t[o].l) / 2;
+        ll val = 0, mid = info[o].l + (info[o].r - info[o].l) / 2;
         if (l <= mid) {
             val += query(o << 1, l, r);
         }

@@ -29,6 +29,8 @@ class Combinatorics:
         return self.f[n] * self.g[m] * self.g[n - m] % MOD
 
     def catalan(self, n):
+        if n <= 0:
+            return 0
         return (self.comb(2 * n, n) - self.comb(2 * n, n - 1)) % MOD
 
 
