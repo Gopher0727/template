@@ -1,6 +1,9 @@
 // Problems：
 //
-// https://leetcode.cn/problems/count-the-number-of-arrays-with-k-matching-adjacent-elements/
+// [F. Multiplicative Arrays](https://codeforces.com/contest/2060/problem/F)    DP
+//
+// [统计恰好有 K 个相等相邻元素的数组数目](https://leetcode.cn/problems/count-the-number-of-arrays-with-k-matching-adjacent-elements/)
+//
 
 // 自动扩容类（Mint）
 //
@@ -130,6 +133,17 @@ namespace Comb {
         return ans;
     }
 
+
+    // 求连续一组数的逆元
+    vector<int> inv;
+    auto Inv = [](int n = 2E5, int p = MOD) {
+        inv.resize(n + 1);
+        inv[1] = 1;
+        for (int i = 2; i <= n; ++i) {
+            inv[i] = p - inv[p % i] * 1ll * (p / i) % p;
+        }
+        return inv;
+    }();
     ll qpow(ll a, ll b, int p) {
         ll res = 1;
         a = (a % p + p) % p;
@@ -146,9 +160,14 @@ namespace Comb {
         }
         ll ans = 1;
         for (int i = 1, j = n - m + 1; i <= m; i++, j++) {
-            ans = ans * j % MOD * qpow(i, MOD - 2, MOD) % MOD;
+            // ans = ans * j % MOD * qpow(i, MOD - 2, MOD) % MOD;
+            ans = ans * j % MOD * inv[i] % MOD;
         }
         return ans;
     }
 }; // namespace Comb
 using namespace Comb;
+
+
+// 逆元：
+// https://www.cnblogs.com/zjp-shadow/p/7773566.html

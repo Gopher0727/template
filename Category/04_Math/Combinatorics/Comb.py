@@ -1,4 +1,6 @@
 class Combinatorics:
+    __slots__ = "f", "g"
+
     def __init__(self, N) -> None:
         N += 1
         self.f = [1] * N

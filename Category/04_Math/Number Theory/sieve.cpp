@@ -15,24 +15,25 @@ void sieve(int n) {
     factors.resize(n + 1);
     for (int i = 1; i <= n; ++i) {
         for (int j = i; j <= n; j += i) {
-            factors[j].emplace_back(i);
+            factors[j].push_back(i);
         }
     }
 }
 
 
 // 找到一个数的所有质因数
-map<int, int> priFac;
-auto decompose = [&](ll x) {
+auto factorize = [&](ll x) {
+    map<int, int> res;
     for (int i = 2; i * 1ll * i <= x; ++i) {
         while (x % i == 0) {
             x /= i;
-            priFac[i]++;
+            res[i]++;
         }
     }
     if (x > 1) {
-        priFac[x]++;
+        res[x]++;
     }
+    return res;
 };
 
 
@@ -46,7 +47,7 @@ void sieve(int n) {
         if (!isPrime[i]) {
             continue;
         }
-        primes.emplace_back(i);
+        primes.push_back(i);
         for (auto j = i * 1ll * i; j <= n; j += i) {
             isPrime[j] = 0;
         }
@@ -63,7 +64,7 @@ void sieve(int n) {
     isPrime[0] = isPrime[1] = 0;
     for (int i = 2; i <= n; ++i) {
         if (isPrime[i]) {
-            primes.emplace_back(i);
+            primes.push_back(i);
         }
         for (int& p : primes) {
             if (i * p > n) {

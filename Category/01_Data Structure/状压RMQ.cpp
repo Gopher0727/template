@@ -2,8 +2,7 @@
 //
 // 序列的长度 n 满足 log_2 n <= 64
 
-template<class T,
-    class Cmp = std::less<T>>
+template <class T, class Cmp = std::less<T>>
 struct RMQ {
     const Cmp cmp = Cmp();
     static constexpr unsigned B = 64;
@@ -13,10 +12,8 @@ struct RMQ {
     vector<T> pre, suf, ini;
     vector<u64> stk;
     RMQ() {}
-    RMQ(const std::vector<T> &v) {
-        init(v);
-    }
-    void init(const std::vector<T> &v) {
+    RMQ(const std::vector<T>& v) { init(v); }
+    void init(const std::vector<T>& v) {
         n = v.size();
         pre = suf = ini = v;
         stk.resize(n);
@@ -59,7 +56,7 @@ struct RMQ {
                 stk[j] = s;
             }
         }
-    } 
+    }
     T operator()(int l, int r) {
         if (l / B != (r - 1) / B) {
             T ans = std::min(suf[l], pre[r - 1], cmp);

@@ -39,6 +39,8 @@ bool isprime(ll n) {
     }
     return true;
 }
+
+
 vector<ll> factorize(ll n) {
     vector<ll> p;
     auto f = [&](auto&& f, ll n) {

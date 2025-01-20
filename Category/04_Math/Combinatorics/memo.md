@@ -9,6 +9,23 @@ D(n) 表示 n 个元素的错排，易得 D(1) = 0, D(2) = 1, D(3) = 2, D(4) = 9
 
 $D(n) = n!\sum_{k=0}^{n}\frac{(-1)^k}{k!}$
 
+
+# 组合数恒等式
+
+## Hockey-stick identity
+
+$\overset{n}{\underset{i=r}{\sum}}\binom{i}{r} = \binom{n+1}{r+1}$ $(n \ge r)$
+
+
+## 范德蒙恒等式
+
+$\sum{\binom{n}{i} \cdot \binom{m}{i}} = \binom{n+m}{k}$
+
+
+<!-- [小红的数组回文值](https://ac.nowcoder.com/acm/contest/89860/F)    利用公式减少一层枚举 -->
+
+
+
 # 斯特林数
 
 ## 第一类斯特林数
@@ -45,8 +62,9 @@ auto init = [] {
 > 递推式： $f(n) = \overset{n-1}{\underset{k=0}{\sum}}f(k)f(n-1-k)$ 或者 $f(n)=\frac{f(n-1)\cdot(4n-2)}{n+1}$。
 >
 > 已知一个栈（无穷大）的进栈序列，有多少种不同的出栈序列？
-> n 个节点的无标号二叉树有多少种？
+> n 个节点的无标号二叉树有多少种形态？
 > 一个凸 n 边形，每次连接两个顶点可以将其划分成三角形，有多少种不同的剖分方法？
+> n 对括号的合法括号匹配的数量。
 
 
 ```cpp
@@ -64,5 +82,4 @@ int Catalan[] {
     16796
 };
 ```
-
 

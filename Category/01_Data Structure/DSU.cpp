@@ -5,10 +5,17 @@
 //
 // Link：
 // [RMQ 标准算法和线性树上并查集](https://ljt12138.blog.uoj.ac/blog/4874)
+//
+// Problems:
+// 【E. Graph Composition】(https://codeforces.com/contest/2060/problem/E)
+//
+// 【隐匿社交网络】(https://ac.nowcoder.com/acm/contest/100253/D)    按位放进桶里，再用并查集合并桶里的数字
+//
+//
 
 struct DSU { // Implement (union by size) + (path compression)
     vector<int> pa, _size;
-    int block; // 记录连通块的数量
+    int block;
 
     DSU(int n) : pa(n), _size(n, 1), block(n) { iota(pa.begin(), pa.end(), 0); }
 
@@ -26,10 +33,10 @@ struct DSU { // Implement (union by size) + (path compression)
         return root;
     }
 
-    void merge(int x, int y) {
+    auto merge(int x, int y) {
         int px = find(x), py = find(y);
         if (px == py) {
-            return;
+            return false;
         }
         if (_size[px] > _size[py]) {
             swap(px, py);
@@ -37,6 +44,7 @@ struct DSU { // Implement (union by size) + (path compression)
         pa[px] = py;
         _size[py] += _size[px];
         block--;
+        return true;
     }
 
     bool same(int x, int y) { return find(x) == find(y); }
@@ -51,7 +59,7 @@ struct DSU { // Implement (union by size) + (path compression)
     vector<int> _size;
     vector<int> _edges;
     vector<int> _loop;
-    int block; // 记录连通块的数量
+    int block;
 
     DSU(int n) {
         pa.resize(n + 1);
