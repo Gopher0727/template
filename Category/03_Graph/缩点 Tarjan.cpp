@@ -71,12 +71,68 @@ void solve() {
 }
 
 
-// 强连通分量（SCC, Strongly Connected Components）缩点
+// （有向图）强连通分量（SCC, Strongly Connected Components）缩点
 //
-// 有向有环图 --> 有向无环图（拓扑图）
+// 有向有环图 --> 有向无环图（DAG、拓扑图）
 //     1> 缩点之后，观察新图中点的入度、出度情况去构造答案
 //     2> 缩点之后，重建拓扑图，递推
 //
+struct SCC {
+    int n, now, cnt;
+    vector<vector<int>> ver;
+    vector<int> dfn, low, col, S;
+
+    SCC(int n) : n(n), ver(n + 1), low(n + 1) {
+        dfn.resize(n + 1, -1);
+        col.resize(n + 1, -1);
+        now = cnt = 0;
+    }
+    void add(int x, int y) {
+        ver[x].push_back(y);
+    }
+    void tarjan(int x) {
+        dfn[x] = low[x] = now++;
+        S.push_back(x);
+        for (auto y : ver[x]) {
+            if (dfn[y] == -1) {
+                tarjan(y);
+                low[x] = min(low[x], low[y]);
+            } else if (col[y] == -1) {
+                low[x] = min(low[x], dfn[y]);
+            }
+        }
+        if (dfn[x] == low[x]) {
+            int pre;
+            cnt++;
+            do {
+                pre = S.back();
+                col[pre] = cnt;
+                S.pop_back();
+            } while (pre != x);
+        }
+    }
+    auto work() { // [cnt 新图的顶点数量]
+        for (int i = 1; i <= n; i++) { // 避免图不连通
+            if (dfn[i] == -1) {
+                tarjan(i);
+            }
+        }
+
+        vector<int> siz(cnt + 1); // siz 每个 scc 中点的数量
+        vector<vector<int>> adj(cnt + 1);
+        for (int i = 1; i <= n; i++) {
+            siz[col[i]]++;
+            for (auto j : ver[i]) {
+                int x = col[i], y = col[j];
+                if (x != y) {
+                    adj[x].push_back(y);
+                }
+            }
+        }
+        return {cnt, adj, col, siz};
+    }
+};
+
 struct SCC {
     int n;
     vector<vector<int>> adj;
@@ -134,27 +190,39 @@ struct SCC {
 };
 
 
-struct SCC {
+// （无向图）割边与割边缩点
+//
+// 求解图中全部割边、划分边双（颜色相同的点位于同一个边双连通分量中）  O(N+M)
+// > 对于一个边双，删去任意边后依旧联通；
+// > 对于边双中的任意两点，一定存在两条不相交的路径连接这两个点（路径上可以有公共点，但是没有公共边）。
+struct EBCC {
     int n, now, cnt;
     vector<vector<int>> ver;
     vector<int> dfn, low, col, S;
+    set<array<int, 2>> bridge;
 
-    SCC(int n) : n(n), ver(n + 1), low(n + 1) {
+    EDCC(int n) : n(n), ver(n + 1), low(n + 1) {
         dfn.resize(n + 1, -1);
         col.resize(n + 1, -1);
         now = cnt = 0;
     }
     void add(int x, int y) {
         ver[x].push_back(y);
+        ver[y].push_back(x);
     }
-    void tarjan(int x) {
+    void tarjan(int x, int pa) {
         dfn[x] = low[x] = now++;
         S.push_back(x);
         for (auto y : ver[x]) {
+            if (y == pa) {
+                continue;
+            }
             if (dfn[y] == -1) {
-                tarjan(y);
+                bridge.emplace(x, y);
+                tarjan(y, x);
                 low[x] = min(low[x], low[y]);
-            } else if (col[y] == -1) {
+            } else if (col[y] == -1 && dfn(y) < dfn(x)) {
+                bridge.emplace(x, y);
                 low[x] = min(low[x], dfn[y]);
             }
         }
@@ -168,10 +236,10 @@ struct SCC {
             } while (pre != x);
         }
     }
-    auto work() { // [cnt 新图的顶点数量]
+    auto work() { // [cnt 新图的顶点数量, bridge 全部割边]
         for (int i = 1; i <= n; i++) { // 避免图不连通
             if (dfn[i] == -1) {
-                tarjan(i);
+                tarjan(i, 0);
             }
         }
 
@@ -190,10 +258,7 @@ struct SCC {
     }
 };
 
-
-// EBCC
 set<pair<int, int>> E;
-
 struct EBCC {
     int n;
     vector<vector<int>> adj;
@@ -278,53 +343,89 @@ struct EBCC {
     }
 };
 
-// 2-Sat
-struct TwoSat {
+
+// （无向图）割点与割点缩点
+//
+// 求解图中全部割点、划分点双（颜色相同的点位于同一个点双连通分量中）  O(N+M)
+// > 每一个割点至少属于两个点双
+struct VBCC {
     int n;
-    vector<vector<int>> e;
-    vector<bool> ans;
-    TwoSat(int n) : n(n), e(2 * n), ans(n) {}
-    void add(int u, bool f, int v, bool g) {
-        e[2 * u + !f].push_back(2 * v + g);
-        e[2 * v + !g].push_back(2 * u + f);
+    vector<vector<int>> ver, col;
+    vector<int> dfn, low, S;
+    int now, cnt;
+    vector<bool> point; // 记录是否为割点
+
+    VBCC(int n) : n(n) {
+        ver.resize(n + 1);
+        dfn.resize(n + 1);
+        low.resize(n + 1);
+        col.resize(2 * n + 1);
+        point.resize(n + 1);
+        S.clear();
+        cnt = now = 0;
     }
-    bool work() {
-        vector<int> id(2 * n, -1), dfn(2 * n, -1), low(2 * n, -1);
-        vector<int> stk;
-        int now = 0, cnt = 0;
-        auto tarjan = [&](auto self, int u) -> void {
-            stk.push_back(u);
-            dfn[u] = low[u] = now++;
-            for (auto v : e[u]) {
-                if (dfn[v] == -1) {
-                    self(self, v);
-                    low[u] = min(low[u], low[v]);
-                } else if (id[v] == -1) {
-                    low[u] = min(low[u], dfn[v]);
+
+    void add(int x, int y) {
+        if (x == y) return; // 手动去除重边
+        ver[x].push_back(y);
+        ver[y].push_back(x);
+    }
+
+    void tarjan(int x, int root) {
+        low[x] = dfn[x] = now++;
+        S.push_back(x);
+        if (x == root && !ver[x].size()) { // 特判孤立点
+            ++cnt;
+            col[cnt].push_back(x);
+            return;
+        }
+        int flag = 0;
+        for (auto y : ver[x]) {
+            if (!dfn[y]) {
+                tarjan(y, root);
+                low[x] = min(low[x], low[y]);
+                if (dfn[x] <= low[y]) {
+                    flag++;
+                    if (x != root || flag > 1) {
+                        point[x] = true; // 标记为割点
+                    }
+                    int pre = 0;
+                    cnt++;
+                    do {
+                        pre = S.back();
+                        col[cnt].push_back(pre);
+                        S.pop_back();
+                    } while (pre != y);
+                    col[cnt].push_back(x);
+                }
+            } else {
+                low[x] = min(low[x], dfn[y]);
+            }
+        }
+    }
+
+    pair<int, vector<vector<int>>> rebuild() { // [新图的顶点数量, 新图]
+        work();
+        vector<vector<int>> adj(cnt + 1);
+        for (int i = 1; i <= cnt; i++) {
+            if (!col[i].size()) { // 注意，孤立点也是 VBCC
+                continue;
+            }
+            for (auto j : col[i]) {
+                if (point[j]) { // 如果 j 是割点
+                    adj[i].push_back(point[j]);
+                    adj[point[j]].push_back(i);
                 }
             }
-            if (dfn[u] == low[u]) {
-                int v;
-                do {
-                    v = stk.back();
-                    stk.pop_back();
-                    id[v] = cnt;
-                } while (v != u);
-                ++cnt;
-            }
-        };
-        for (int i = 0; i < 2 * n; ++i) {
-            if (dfn[i] == -1) {
-                tarjan(tarjan, i);
-            }
         }
-        for (int i = 0; i < n; ++i) {
-            if (id[2 * i] == id[2 * i + 1]) return false;
-            ans[i] = id[2 * i] > id[2 * i + 1];
-        }
-        return true;
+        return {cnt, adj};
     }
-    vector<bool> answer() {
-        return ans;
+
+    void work() {
+        for (int i = 1; i <= n; ++i) { // 避免图不连通
+            if (!dfn[i]) {
+                tarjan(i, i);
+            }
+        }
     }
 };

@@ -1,16 +1,37 @@
-// DP
+/*----------------------------------------- 入门 DP -----------------------------------------
 
+爬楼梯：
+> 【爬楼梯】(https://leetcode.cn/problems/climbing-stairs/)
+> 【使用最小花费爬楼梯】(https://leetcode.cn/problems/min-cost-climbing-stairs/)
+> 【组合总和 IV】(https://leetcode.cn/problems/combination-sum-iv/)
+> 【统计构造好字符串的方案数】(https://leetcode.cn/problems/count-ways-to-build-good-strings/)
+    · 从"可能得到的字符串长度"进行优化
+> 【统计打字方案数】(https://leetcode.cn/problems/count-number-of-texts/)
 
-// 入门 DP
-//
-// > [打家劫舍](https://leetcode.cn/problems/house-robber/)
-//   [删除并获得点数](https://leetcode.cn/problems/delete-and-earn/)
-//
-// > 最大子数组(子段)和
+打家劫舍：
+> 【打家劫舍】(https://leetcode.cn/problems/house-robber/)
+> 【删除并获得点数】(https://leetcode.cn/problems/delete-and-earn/)
+> 【统计放置房子的方案数】(https://leetcode.cn/problems/count-number-of-ways-to-place-houses/)
+> 【打家劫舍 II】(https://leetcode.cn/problems/house-robber-ii/)
+> 【施咒的最大伤害】(https://leetcode.cn/problems/maximum-total-damage-with-spell-casting/)
 
+最大子数组(子段)和：
+    1> Kadane 算法：定义状态 f[i] 表示以 a[i] 结尾的最大子数组和，不和 i 左边拼起来就是 f[i] = a[i]，
+       反之就是 f[i] = f[i-1] + a[i]，取最大值就得到了状态转移方程 f[i] = max(f[i−1], 0) + a[i]，答案为 max(f)。
+    2> 前缀和：用前缀和减去最小前缀和
+*/
 
-// 背包 DP
-/*
+/*----------------------------------------- 线性 DP -----------------------------------------
+
+最长公共子序列（LCS）
+最长递增子序列（LIS）
+
+Problems:
+> https://codeforces.com/contest/2061/problem/C
+
+*/
+
+/*----------------------------------------- 背包 DP -----------------------------------------
 
 01背包：
 下标从0开始，外层枚举物品，内层枚举背包容量
@@ -26,19 +47,19 @@ Problems：
 
 */
 
+/*----------------------------------------- 区间 DP -----------------------------------------
 
-
-// 区间 DP
-/*
 
 枚举区间长度（从小区间到大区间），注意初始化
 
 */
 
+/*----------------------------------------- 树形 DP -----------------------------------------
 
+*/
 
-// 数位 DP
-//
+/*----------------------------------------- 数位 DP -----------------------------------------
+
 vector memo(m, vector<int>(1 << 10, -1));
 auto dfs = [&](auto&& dfs, int i, int mask, bool isLimit, bool isNum) -> int {
     if (i == m) {
@@ -65,10 +86,9 @@ auto dfs = [&](auto&& dfs, int i, int mask, bool isLimit, bool isNum) -> int {
 };
 return dfs(dfs, 0, 0, true, false);
 
+*/
 
-
-// 划分型 DP
-/*
+/*----------------------------------------- 划分型 DP -----------------------------------------
 
 > 判定能否划分
 > 最优划分
@@ -78,5 +98,3 @@ return dfs(dfs, 0, 0, true, false);
 一般定义 `f[i][j]` 表示将长为 j 的前缀 a[:j] 分成 i 个连续子数组所得到的最优解。
 
 */
-
-

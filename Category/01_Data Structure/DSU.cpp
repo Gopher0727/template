@@ -4,7 +4,7 @@
 // 只有启发式合并（按深度合并）的并查集的复杂度也是 O(nlogn) 的，适用于可持久化的场景
 //
 // Link：
-// [RMQ 标准算法和线性树上并查集](https://ljt12138.blog.uoj.ac/blog/4874)
+// 【RMQ 标准算法和线性树上并查集】(https://ljt12138.blog.uoj.ac/blog/4874)
 //
 // Problems:
 // 【E. Graph Composition】(https://codeforces.com/contest/2060/problem/E)
