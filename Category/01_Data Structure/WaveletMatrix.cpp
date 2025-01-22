@@ -1,3 +1,5 @@
+// 小波矩阵树（WaveletMatrix）
+//
 // 高效查询静态区间第 K 大、第 K 小、区间某个数的频次、区间在某个值域中的最值
 //
 // https://kopricky.github.io/code/DataStructure_Advanced/wavelet_matrix.html

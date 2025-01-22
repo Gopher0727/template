@@ -111,7 +111,7 @@
             "italic": false
         },
         {
-            "tag": "--",
+            "tag": "~",
             "color": "#474747",
             "strikethrough": true,
             "underline": false,
@@ -148,4 +148,5 @@
     "git.openRepositoryInParentFolders": "never",
     //* other
     "lldb.suppressUpdateNotifications": true,
+    "workbench.colorTheme": "Catppuccin Mocha",
 }

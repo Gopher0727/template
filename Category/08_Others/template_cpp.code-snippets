@@ -92,14 +92,33 @@
         "prefix": "MOD_998244353",
         "body": "static constexpr int MOD = 998244353;"
     },
+    "inf": {
+        "scope": "cpp",
+        "prefix": "inf",
+        "body": "static constexpr int inf = numeric_limits<int>::max() / 2;"
+    },
     "readFromFile": {
         "scope": "cpp",
         "prefix": "freopen",
         "body": [
             "#ifdef LOCAL",
-            "    freopen(\"in.txt\", \"r\", stdin);",
+            "    // freopen(\"in.txt\", \"r\", stdin);",
+            "    // freopen(\"out.txt\", \"w\", stdout);",
             "#endif",
         ]
+    },
+    "Heap": {
+        "scope": "cpp",
+        "prefix": "Heap",
+        "body": [
+            "namespace Heap {",
+            "    template <typename T>",
+            "    using MaxHeap = priority_queue<T>;",
+            "    template <typename T>",
+            "    using MinHeap = priority_queue<T, vector<T>, greater<>>;",
+            "} // namespace Heap",
+            "using namespace Heap;",
+        ],
     },
     "UDLR": {
         "scope": "cpp",
@@ -189,7 +208,7 @@
         "scope": "cpp",
         "prefix": "lambda",
         "body": [
-            "auto $1 = [&](auto&& $1, ) {",
+            "auto $1 = [&](auto&& $1, $0) {",
             "    ",
             "};",
             "$1($1);"
@@ -199,7 +218,7 @@
         "scope": "cpp",
         "prefix": "lambda23",
         "body": [
-            "auto $1 = [&](this auto&& $1, ) {",
+            "auto $1 = [&](this auto&& $1, $0) {",
             "    ",
             "};",
             "$1();"
@@ -259,7 +278,7 @@
         "body": [
             "vector<int> ord(n);",
             "ranges::iota(ord, 0);",
-            "ranges::sort(ord, [&](int i, int j)-> bool {$0});"
+            "ranges::sort(ord, [&](int i, int j)-> bool { return $0 ;});"
         ]
     }
 }

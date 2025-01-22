@@ -2,6 +2,10 @@
 
 # Attention
 
+## 凡是求方案数的问题一定要初始化。
+
+## 对于相邻元素差的绝对值之和，考虑能否通过排序简化。
+
 ## 线段树
 
     能通过分治解决不带修改的版本，那么可以用线段树维护带修改的版本
@@ -29,9 +33,7 @@
 */
 
 
-// priority_queue 是`大顶堆`
-
-// set 与 multiset 中的删除:
+// multiset 中的删除:
 // multiset 的 extract 是去掉一个元素，元素不存在则无操作，返回值为 node_type。
 // multiset 的 erase 的数值删除用法，会把相同的值都删掉，返回值为 size_type，返回一个指向被删除元素的下一个元素的迭代器。
 
@@ -63,7 +65,3 @@ __gnu_pbds::tree<PII, __gnu_pbds::null_type, less<PII>, __gnu_pbds::rb_tree_tag,
 #define functor(func) ([&](auto&&... val) noexcept(noexcept(func(std::forward<decltype(val)>(val)...))) -> decltype(auto) { return func(std::forward<decltype(val)>(val)...); })
 #define expr(ret, ...) ([&](__VA_ARGS__) { return (ret); })
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// 凡是求方案数的问题一定要初始化。
-//
-// 对于相邻元素差的绝对值之和，考虑能否通过排序简化。
