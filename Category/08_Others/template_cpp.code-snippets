@@ -107,19 +107,6 @@
             "#endif",
         ]
     },
-    "Heap": {
-        "scope": "cpp",
-        "prefix": "Heap",
-        "body": [
-            "namespace Heap {",
-            "    template <typename T>",
-            "    using MaxHeap = priority_queue<T>;",
-            "    template <typename T>",
-            "    using MinHeap = priority_queue<T, vector<T>, greater<>>;",
-            "} // namespace Heap",
-            "using namespace Heap;",
-        ],
-    },
     "UDLR": {
         "scope": "cpp",
         "prefix": "UDLR",

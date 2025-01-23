@@ -1,28 +1,29 @@
 struct PAM {
     static constexpr int ALPHABET_SIZE = 26;
     struct Node {
-        int len;
-        int link;
-        int cnt;
-        std::array<int, ALPHABET_SIZE> next;
-        Node() : len{}, link{}, cnt{}, next{} {}
+        int len {};
+        int link {};
+        int cnt {};
+        std::array<int, ALPHABET_SIZE> next {};
     };
     std::vector<Node> t;
     int suff;
     std::string s;
-    PAM() {
-        init();
-    }
+
+    PAM() { init(); }
+
     void init() {
         t.assign(2, Node());
         t[0].len = -1;
         suff = 1;
         s.clear();
     }
+
     int newNode() {
         t.emplace_back();
         return t.size() - 1;
     }
+
     bool add(char c) {
         int pos = s.size();
         s += c;
@@ -59,16 +60,12 @@ struct PAM {
         t[num].cnt = 1 + t[t[num].link].cnt;
         return true;
     }
-    int next(int p, int x) {
-        return t[p].next[x];
-    }
-    int link(int p) {
-        return t[p].link;
-    }
-    int len(int p) {
-        return t[p].len;
-    }
-    int size() {
-        return t.size();
-    }
+
+    int next(int p, int x) { return t[p].next[x]; }
+
+    int link(int p) { return t[p].link; }
+
+    int len(int p) { return t[p].len; }
+
+    int size() { return t.size(); }
 };

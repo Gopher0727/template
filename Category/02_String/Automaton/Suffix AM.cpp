@@ -1,24 +1,25 @@
 struct SAM {
     static constexpr int ALPHABET_SIZE = 26;
     struct Node {
-        int len;
-        int link;
-        std::array<int, ALPHABET_SIZE> next;
-        Node() : len{}, link{}, next{} {}
+        int len {};
+        int link {};
+        array<int, ALPHABET_SIZE> next {};
     };
-    std::vector<Node> t;
-    SAM() {
-        init();
-    }
+    vector<Node> t;
+
+    SAM() { init(); }
+
     void init() {
         t.assign(2, Node());
         t[0].next.fill(1);
         t[0].len = -1;
     }
+
     int newNode() {
         t.emplace_back();
         return t.size() - 1;
     }
+
     int extend(int p, int c) {
         if (t[p].next[c]) {
             int q = t[p].next[c];
@@ -45,27 +46,15 @@ struct SAM {
         t[cur].link = extend(p, c);
         return cur;
     }
-    int extend(int p, char c, char offset = 'a') {
-        return extend(p, c - offset);
-    }
-    
-    int next(int p, int x) {
-        return t[p].next[x];
-    }
-    
-    int next(int p, char c, char offset = 'a') {
-        return next(p, c - 'a');
-    }
-    
-    int link(int p) {
-        return t[p].link;
-    }
-    
-    int len(int p) {
-        return t[p].len;
-    }
-    
-    int size() {
-        return t.size();
-    }
+    int extend(int p, char c, char offset = 'a') { return extend(p, c - offset); }
+
+    int next(int p, int x) { return t[p].next[x]; }
+
+    int next(int p, char c, char offset = 'a') { return next(p, c - 'a'); }
+
+    int link(int p) { return t[p].link; }
+
+    int len(int p) { return t[p].len; }
+
+    int size() { return t.size(); }
 };

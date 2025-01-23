@@ -8,16 +8,13 @@
 
 // 堆优化 稀疏图
 vector<ll> dis(n + 1, LLONG_MAX / 2);
-auto dijkstra = [&](int s = 0) {
-    dis[s] = 0;
-
-    using PLL = pair<ll, ll>;
-    priority_queue<PLL, vector<PLL>, greater<>> pq;
+auto dijkstra = [&](int s = 0) -> void {
+    priority_queue<pair<ll, ll>, vector<pair<ll, ll>>, greater<>> pq;
     pq.emplace(0, s); // dis[k], k
+    dis[s] = 0;
     while (!pq.empty()) {
         auto [d, cur] = pq.top();
         pq.pop();
-
         if (d > dis[cur]) {
             continue;
         }
@@ -28,9 +25,8 @@ auto dijkstra = [&](int s = 0) {
             }
         }
     }
-    return 0;
-}();
-// The node-index starts from 0
+};
+
 
 // 朴素 稠密图
 vector<ll> dis(n + 1, LLONG_MAX / 2);

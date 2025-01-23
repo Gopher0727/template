@@ -1,12 +1,11 @@
-// Aho–Corasick Automaton (ACAM) / Deterministic Finite Automaton (DFA)
+// AC 自动机    Aho–Corasick Automaton (ACAM) / Deterministic Finite Automaton (DFA)
+
+// 如果我们既知道前缀信息（trie），又知道后缀信息（fail），就可以做字符串匹配：
+// 前缀的后缀就是子串，只要遍历到所有前缀，对每个前缀做「后缀匹配」，就完成了字符串匹配（统计子串出现次数）
 
 // 可视化：
 // https://wiomoc.github.io/aho-corasick-viz/
 
-/*
-    如果我们既知道前缀信息（trie），又知道后缀信息（fail），就可以做字符串匹配：
-    前缀的后缀就是子串，只要遍历到所有前缀，对每个前缀做「后缀匹配」，就完成了字符串匹配（统计子串出现次数）
-*/
 
 // 从根到 node 的字符串，也是某个 words[i] 的前缀
 struct Node {
@@ -61,6 +60,7 @@ struct AhoCorasick {
     }
 };
 
+
 // 0x3f template
 static constexpr int nodeSize = 26;
 
@@ -100,7 +100,6 @@ public:
     }
 
     ~acam() {
-        // Free memory
         queue<acamNode*> q;
         q.push(root);
         while (!q.empty()) {
@@ -259,22 +258,18 @@ public:
 };
 
 
-
 // jiangly template
-struct AhoCorasick {
+struct ACAM {
     static constexpr int ALPHABET = 26;
     struct Node {
-        int len;
-        int link;
-        std::array<int, ALPHABET> next;
-        Node() : len{0}, link{0}, next{} {}
+        int len = 0;
+        int link = 0;
+        array<int, ALPHABET> next {};
     };
 
-    std::vector<Node> t;
+    vector<Node> t;
 
-    AhoCorasick() {
-        init();
-    }
+    ACAM() { init(); }
 
     void init() {
         t.assign(2, Node());
@@ -287,7 +282,7 @@ struct AhoCorasick {
         return t.size() - 1;
     }
 
-    int add(const std::string &a) {
+    int add(const string& a) {
         int p = 1;
         for (auto c : a) {
             int x = c - 'a';
@@ -301,7 +296,7 @@ struct AhoCorasick {
     }
 
     void work() {
-        std::queue<int> q;
+        queue<int> q;
         q.push(1);
 
         while (!q.empty()) {
@@ -319,19 +314,11 @@ struct AhoCorasick {
         }
     }
 
-    int next(int p, int x) {
-        return t[p].next[x];
-    }
+    int next(int p, int x) { return t[p].next[x]; }
 
-    int link(int p) {
-        return t[p].link;
-    }
+    int link(int p) { return t[p].link; }
 
-    int len(int p) {
-        return t[p].len;
-    }
+    int len(int p) { return t[p].len; }
 
-    int size() {
-        return t.size();
-    }
+    int size() { return t.size(); }
 };

@@ -19,32 +19,35 @@
 
 
 // 指针版，构建笛卡尔树并返回根节点指针
-struct CtNode {
+class CtNode {
     int id, val;
     CtNode* lr[2];
 
+public:
     CtNode(int _id, int _val) : id(_id), val(_val), lr {nullptr, nullptr} {}
-};
-CtNode* buildCartesianTree(const vector<int>& a) {
-    if (a.empty()) {
-        return nullptr;
-    }
-    vector<CtNode*> s;
-    for (int i = 0; i < a.size(); ++i) {
-        CtNode* o = new CtNode(i, a[i]);
-        while (!s.empty()) {
-            CtNode* top = s.back();
-            if (top->val < o->val) {
-                top->lr[1] = o;
-                break;
-            }
-            o->lr[0] = top;
-            s.pop_back();
+    ~CtNode() { delete lr[0], delete lr[1]; }
+
+    CtNode* build(const vector<int>& a) {
+        if (a.empty()) {
+            return nullptr;
         }
-        s.push_back(o);
+        vector<CtNode*> s;
+        for (int i = 0; i < a.size(); ++i) {
+            CtNode* o = new CtNode(i, a[i]);
+            while (!s.empty()) {
+                CtNode* top = s.back();
+                if (top->val < o->val) {
+                    top->lr[1] = o;
+                    break;
+                }
+                o->lr[0] = top;
+                s.pop_back();
+            }
+            s.push_back(o);
+        }
+        return s.empty() ? nullptr : s[0];
     }
-    return s.empty() ? nullptr : s[0];
-}
+};
 
 
 // 非指针版，返回每个节点的左右儿子的编号及根节点编号
