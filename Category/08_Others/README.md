@@ -2,7 +2,7 @@
 
 ## 代码框架
 
-![](img/Document environment.png)
+![Document_environment](img/Document_environment.png)
 
 可以单独创建 test.cpp 文件用于测试数据，源文件可以直接复制粘贴并提交。配合 cph 插件（debug 信息不影响结果输出）和 LeetCode 竞赛助手（需要修改一下原插件的代码以适合本地代码，可以做成 Tampermonkey 脚本）会很方便。
 
