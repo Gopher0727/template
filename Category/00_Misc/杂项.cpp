@@ -65,3 +65,10 @@ __gnu_pbds::tree<PII, __gnu_pbds::null_type, less<PII>, __gnu_pbds::rb_tree_tag,
 #define functor(func) ([&](auto&&... val) noexcept(noexcept(func(std::forward<decltype(val)>(val)...))) -> decltype(auto) { return func(std::forward<decltype(val)>(val)...); })
 #define expr(ret, ...) ([&](__VA_ARGS__) { return (ret); })
 
+
+namespace Heap {
+    template <typename T>
+    using MaxHeap = priority_queue<T>;
+    template <typename T>
+    using MinHeap = priority_queue<T, vector<T>, greater<T>>;
+} // namespace Heap

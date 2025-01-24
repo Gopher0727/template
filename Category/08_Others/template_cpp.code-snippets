@@ -4,20 +4,14 @@
         "prefix": "sol",
         "body": [
             "#include <bits/stdc++.h>",
-            "",
+            "#ifdef LOCAL",
+            "#include \"LeetCode.hpp\"",
             "#include \"debug.h\"",
-            "#include \"headers.hpp\"",
-            "",
-            "using namespace std;",
+            "#else",
+            "#define debug(...) void(0)",
+            "#endif",
             "using ll = long long;",
-            "",
-            "$0",
-            "",
-            "int main() {",
-            "    Solution sol;",
-            "",
-            "    return 0;",
-            "}"
+            "\n",
         ]
     },
     "acm": {
@@ -95,7 +89,7 @@
     "inf": {
         "scope": "cpp",
         "prefix": "inf",
-        "body": "static constexpr int inf = numeric_limits<int>::max() / 2;"
+        "body": "static constexpr $0 inf = numeric_limits<$0>::max() / 2;"
     },
     "readFromFile": {
         "scope": "cpp",

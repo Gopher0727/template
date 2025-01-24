@@ -72,6 +72,28 @@ class Solution:
 
 最长公共子序列（LCS）：
     一般定义 f[i][j] 表示对 s[:i]，t[:j] 的求解结果。
+
+class Solution:
+    def longestCommonSubsequence(self, s: str, t: str) -> int:
+        n, m = len(s), len(t)
+        f = [[0] * (m + 1) for _ in range(n + 1)]
+        for i, x in enumerate(s):
+            for j, y in enumerate(t):
+                f[i + 1][j + 1] = f[i][j] + 1 if s[i] == t[j] else max(f[i][j + 1], f[i + 1][j])
+        return f[n][m]
+
+
+        # 空间优化
+        f = [0] * (len(t) + 1)
+        for x in s:
+            pre = 0
+            for j, y in enumerate(t):
+                tmp = f[j + 1]
+                f[j + 1] = pre + 1 if x == y else max(f[j + 1], f[j])
+                pre = tmp
+        return f[-1]
+
+
 扩展：给定字符串 s 和 t，在 s 的任意位置插入一个字母，插入后，s 最多有多少个子序列等于 t？
 
 最长递增子序列（LIS）：
@@ -139,10 +161,13 @@ Problems：
 
 /*---------------------------------------------- 树形 DP ----------------------------------------------
 
-//// 换根 DP
-
 Problems:
 > 【收集所有金币可获得的最大积分】(https://leetcode.cn/problems/maximum-points-after-collecting-coins-from-all-nodes/)
+
+
+//// 换根 DP
+
+
 
 
 */
@@ -182,11 +207,22 @@ return dfs(dfs, 0, 0, true, false);
 //// 划分型 DP
 
 > 判定能否划分
-> 最优划分
-一般定义 f[i] 表示长为 i 的前缀 a[:i] 在题目约束下，分割出的最少（最多）子数组的个数（或者定义成分割方案数）。
-枚举最后一个子数组的左端点，从 `f[i−1][L]` 转移到 `f[i][j]`，并考虑 a[L:j] 对最优解的影响。。
-将数组分成（恰好/至多）k 个连续子数组，计算与这些子数组有关的最优值。
-一般定义 `f[i][j]` 表示将长为 j 的前缀 a[:j] 分成 i 个连续子数组所得到的最优解。
+
+    一般定义 f[i] 表示长为 i 的前缀 a[:i] 能否划分。
+    枚举最后一个子数组的左端点 L，从 f[L] 转移到 f[i]，并考虑 a[L:i] 是否满足要求。
+
+> 最优划分：计算最少（最多）可以划分出多少段、最优划分得分等。
+
+    一般定义 f[i] 表示长为 i 的前缀 a[:i] 在题目约束下，分割出的最少（最多）子数组的个数（或者定义成分割方案数）。
+    枚举最后一个子数组的左端点 L，从 f[L] 转移到 f[i]，并考虑 a[L:i] 对最优解的影响。
+
+> 约束划分个数：将数组分成（恰好/至多）k 个连续子数组，计算与这些子数组有关的最优值
+
+    一般定义 f[i][j] 表示将长为 j 的前缀 a[:j] 分成 i 个连续子数组所得到的最优解。
+    枚举最后一个子数组的左端点 L，从 f[i-1][L] 转移到 f[i][j]，并考虑 a[L:j] 对最优解的影响。
+
+> 不相交区间
+
 
 
 //// 状态机 DP

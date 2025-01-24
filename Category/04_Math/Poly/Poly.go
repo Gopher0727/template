@@ -1,11 +1,3 @@
-package copypasta
-
-import (
-	"math/big"
-	"math/bits"
-	"slices"
-)
-
 /* NTT: number-theoretic transform 快速数论变换
 https://en.wikipedia.org/wiki/Discrete_Fourier_transform_(general)#Number-theoretic_transform
 从傅里叶变换到 998244353 https://www.bilibili.com/read/cv2289955/

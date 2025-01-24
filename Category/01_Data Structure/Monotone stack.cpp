@@ -11,12 +11,15 @@
 // Link：
 // 【图解单调栈】(https://leetcode.cn/problems/next-greater-node-in-linked-list/solutions/2217563/tu-jie-dan-diao-zhan-liang-chong-fang-fa-v9ab/)
 //
+// Problems:
+// https://codeforces.com/contest/1919/problem/D    2100
+//
 
 static constexpr int inf = numeric_limits<int>::max() / 2;
 
 auto monotoneStack(vector<int>& a) {
     // 求左侧严格小于 a[i] 的最近位置 left[i]，这样 a[i] 就是区间 [left[i]+1, i] 内最小的元素（之一）
-    // 如果改成求左侧小于等于，那么 a[i] 就是区间 [left[i]+1,i] 内唯一的最小元素
+    // 如果改成求左侧小于等于，那么 a[i] 就是区间 [left[i]+1, i] 内唯一的最小元素
     // 不存在时 left[i] = -1
     {
         int n = a.size();
@@ -24,7 +27,7 @@ auto monotoneStack(vector<int>& a) {
         stack<int> stk;
         stk.push(-1); // 栈底哨兵
         for (int i = 0; i < n; ++i) {
-            while (!stk.empty() && a[stk.top()] >= a[i]) {
+            while (stk.size() > 1 && a[stk.top()] >= a[i]) {
                 stk.pop();
             }
             left[i] = stk.top();
@@ -33,7 +36,7 @@ auto monotoneStack(vector<int>& a) {
     }
 
     // 求右侧严格小于 a[i] 的最近位置 right[i]，这样 a[i] 就是区间 [i, right[i]-1] 内最小的元素（之一）
-    // 如果改成求右侧小于等于，那么 a[i] 就是区间 [i,right[i]-1] 内唯一的最小元素
+    // 如果改成求右侧小于等于，那么 a[i] 就是区间 [i, right[i]-1] 内唯一的最小元素
     // 不存在时 right[i] = n
     {
         int n = a.size();
@@ -41,7 +44,7 @@ auto monotoneStack(vector<int>& a) {
         stack<int> stk;
         stk.push(n);
         for (int i = n - 1; i >= 0; --i) {
-            while (!stk.empty() && a[stk.top()] >= a[i]) {
+            while (stk.size() > 1 && a[stk.top()] >= a[i]) {
                 stk.pop();
             }
             right[i] = stk.top();
@@ -57,7 +60,7 @@ auto monotoneStack(vector<int>& a) {
         stack<int> stk;
         stk.push(-1);
         for (int i = 0; i < n; ++i) {
-            while (!stk.empty() && a[i] <= a[stk.top()]) {
+            while (stk.size() > 1 && a[i] <= a[stk.top()]) {
                 right[stk.top()] = i;
                 stk.pop();
             }
