@@ -1,103 +1,3 @@
-/* NTT: number-theoretic transform 快速数论变换
-https://en.wikipedia.org/wiki/Discrete_Fourier_transform_(general)#Number-theoretic_transform
-从傅里叶变换到 998244353 https://www.bilibili.com/read/cv2289955/
-硬核理解快速数论变换 https://www.bilibili.com/video/BV1eT411M7Fp/
-
-NTT 和 FFT 类似，下面的实现在 FFT 代码的基础上稍微修改了下
-https://oi-wiki.org/math/poly/ntt/
-包含应用及习题 https://cp-algorithms.com/algebra/fft.html#toc-tgt-6
-常用素数及原根 http://blog.miskcoo.com/2014/07/fft-prime-table
-2281701377 =  17*2^27+1, g = 3, invG = 760567126
-1004535809 = 479*2^21+1, g = 3, invG = 334845270
- 998244353 = 119*2^23+1, g = 3, invG = 332748118
- 167772161 =   5*2^25+1, g = 3, invG = 55924054
-P-1 包含大量因子 2，便于分治
-
-模数任意的解决方案 http://blog.miskcoo.com/2015/04/polynomial-multiplication-and-fast-fourier-transform
-任意模数 NTT https://www.luogu.com.cn/problem/P4245
-
-NTT vs FFT：对于模板题 https://www.luogu.com.cn/problem/P3803 NTT=1.98s(750ms) FFT=3.63s(1.36s) 括号内是最后一个 case 的运行时间
-
-卡常技巧
-A modulo multiplication method that is 2x faster than compiler implementation https://codeforces.com/blog/entry/111566
-*/
-
-/* 多项式全家桶
-【推荐】https://www.luogu.com.cn/blog/command-block/ntt-yu-duo-xiang-shi-quan-jia-tong
-https://blog.orzsiyuan.com/search/%E5%A4%9A%E9%A1%B9%E5%BC%8F/2/
-模板 https://blog.orzsiyuan.com/archives/Polynomial-Template/
-jiangly 模板 https://atcoder.jp/contests/arc163/submissions/45737810
-https://blog.csdn.net/weixin_43973966/article/details/88996932
-https://cp-algorithms.com/algebra/polynomial.html
-http://blog.miskcoo.com/2015/05/polynomial-inverse
-http://blog.miskcoo.com/2015/05/polynomial-division
-http://blog.miskcoo.com/2015/05/polynomial-multipoint-eval-and-interpolation
-关于优化形式幂级数计算的 Newton 法的常数 http://negiizhao.blog.uoj.ac/blog/4671
-todo 卡常板子 https://judge.yosupo.jp/submission/65290
-
-从拉插到快速插值求值 https://www.luogu.com.cn/blog/command-block/zong-la-cha-dao-kuai-su-cha-zhi-qiu-zhi
-浅谈多项式复合和拉格朗日反演 https://www.luogu.com.cn/blog/your-alpha1022/qian-tan-duo-xiang-shi-fu-ge-hu-la-ge-lang-ri-fan-yan
-快速阶乘算法 https://www.luogu.com.cn/problem/P5282
-调和级数求和 https://www.luogu.com.cn/problem/P5702
-
-具体的题目见下面的生成函数部分
-*/
-
-/* 分治 FFT
-todo 半在线卷积小记 https://www.luogu.com.cn/blog/command-block/ban-zai-xian-juan-ji-xiao-ji
-CDQ FFT 半在线卷积的O(nlog^2/loglogn)算法 https://www.qaq-am.com/cdqFFT/
-模板题 https://www.luogu.com.cn/problem/P4721
-https://atcoder.jp/contests/abc267/tasks/abc267_h
-*/
-
-/* GF: generating function 生成函数/母函数/多项式计数
-https://en.wikipedia.org/wiki/Generating_function
-todo generatingfunctionology https://www2.math.upenn.edu/~wilf/gfologyLinked2.pdf
-
-普通生成函数 OGF
-指数生成函数 EGF 入门题 https://codeforces.com/problemset/problem/891/E 3000
-狄利克雷生成函数 DGFs
-todo 【推荐】https://www.luogu.com.cn/blog/command-block/sheng-cheng-han-shuo-za-tan
- 【推荐】数数入门 https://www.luogu.com.cn/blog/CJL/conut-ru-men
- https://www.bilibili.com/video/BV1Zg411T7Eq
-https://oi-wiki.org/math/gen-func/intro/
-OGF 展开方式 https://oi-wiki.org/math/gen-func/ogf/#_5
-【数学理论】浅谈 OI 中常用的一些生成函数运算的合法与正确性 https://rqy.moe/Math/gf_correct/ https://www.luogu.com.cn/blog/lx-2003/gf-correct
-一些常见数列的生成函数推导 https://www.luogu.com.cn/blog/nederland/girl-friend
-狄利克雷相关（含 DGFs）https://www.luogu.com.cn/blog/command-block/gcd-juan-ji-xiao-ji
-狄利克雷生成函数浅谈 https://www.luogu.com.cn/blog/gxy001/di-li-ke-lei-sheng-cheng-han-shuo-qian-tan
-生成函数在背包问题中的应用 https://zykykyk.github.io/post/%E7%94%9F%E6%88%90%E5%87%BD%E6%95%B0%E5%9C%A8%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/
-生成函数的背包计数问题 https://www.cnblogs.com/ErkkiErkko/p/10838697.html
-OGFs, EGFs, differentiation and Taylor shifts https://codeforces.com/blog/entry/99646
-A problem collection of ODE and differential technique https://codeforces.com/blog/entry/76447
-Optimal Algorithm on Polynomial Composite Set Power Series https://codeforces.com/blog/entry/92183
-On linear recurrences and the math behind them https://codeforces.com/blog/entry/100158
-载谭 Binomial Sum：多项式复合、插值与泰勒展开 https://www.luogu.com.cn/blog/EntropyIncreaser/zai-tan-binomial-sum-duo-xiang-shi-fu-ge-cha-zhi-yu-tai-lei-zhan-kai
-How to composite (some) polynomials faster? https://codeforces.com/blog/entry/126124
-
-炫酷反演魔术 https://www.luogu.com.cn/blog/command-block/xuan-ku-fan-yan-mo-shu
-反演魔术：反演原理及二项式反演 http://blog.miskcoo.com/2015/12/inversion-magic-binomial-inversion
-
-Min-Max容斥
-https://www.luogu.com.cn/blog/Troverld/Min-Max-Inclusion-and-Exclusion
-https://www.luogu.com.cn/blog/command-block/min-max-rong-chi-xiao-ji
-https://lnrbhaw.github.io/2019/01/05/Min-Max%E5%AE%B9%E6%96%A5%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/
-
-拉格朗日反演 扩展拉格朗日反演
-证明 https://www.cnblogs.com/judge/p/10652738.html
-多项式拉格朗日反演与复合逆 https://blog.csdn.net/C20190102/article/details/107279319
-点双连通图计数 https://www.luogu.com.cn/problem/P5827
-边双连通图计数 https://www.luogu.com.cn/problem/P5828
-
-todo 多项式题单 https://www.luogu.com.cn/training/1008
-https://codeforces.com/problemset/problem/958/F3
-todo https://codeforces.com/contest/438/problem/E
-todo https://leetcode.cn/contest/hust_1024_2023/problems/kzxnaX/
- https://leetcode.cn/circle/discuss/NEDYEC/
- https://oi-wiki.org/math/combinatorics/partition/#%E4%BA%94%E8%BE%B9%E5%BD%A2%E6%95%B0%E5%AE%9A%E7%90%86
- https://leetcode.cn/circle/discuss/Qvv72W/view/DJalmi/
-*/
-
 const P = 998244353
 
 func nttPow(x, n int) (res int) {
@@ -111,7 +11,7 @@ func nttPow(x, n int) (res int) {
 	return
 }
 
-var omega, omegaInv [31]int // 多开一点空间
+var omega, omegaInv [31]int
 
 func init() {
 	const g, invG = 3, 332748118
@@ -128,8 +28,6 @@ type ntt struct {
 
 func newNTT(n int) ntt { return ntt{n, nttPow(n, P-2)} }
 
-// 注：下面 swap 的代码，另一种写法是初始化每个 i 对应的 j https://blog.csdn.net/Flag_z/article/details/99163939
-// 由于不是性能瓶颈，实测对性能影响不大
 func (t ntt) transform(a, omega []int) {
 	for i, j := 0, 0; i < t.n; i++ {
 		if i > j {
@@ -177,14 +75,6 @@ func (a poly) resize(n int) poly {
 	return b
 }
 
-// 计算 A(x) 和 B(x) 的卷积 (convolution)
-// c[k] = ∑a[i]*b[k-i], i=0..k
-// 如果求 ∑a[i]*b[i]，可以把 b 反转后再求卷积
-// 入参出参都是次项从低到高的系数
-// 模板题 https://judge.yosupo.jp/problem/convolution_mod
-//       https://www.luogu.com.cn/problem/P3803
-//       https://www.luogu.com.cn/problem/P1919
-//       https://atcoder.jp/contests/practice2/tasks/practice2_f
 func (a poly) conv(b poly) poly {
 	n, m := len(a), len(b)
 	limit := 1 << bits.Len(uint(n+m-1))
@@ -200,8 +90,6 @@ func (a poly) conv(b poly) poly {
 	return A[:n+m-1]
 }
 
-// 计算多个多项式的卷积
-// 入参出参都是次项从低到高的系数
 func polyConvNTTs(coefs []poly) poly {
 	n := len(coefs)
 	if n == 1 {
@@ -289,8 +177,8 @@ func (a poly) derivative() poly {
 func (a poly) integral() poly {
 	n := len(a)
 	s := make(poly, n)
-	s[0] = 0 // C
-	// 线性求逆元，详见 math.go 中的 initAllInv
+	s[0] = 0
+
 	inv := make([]int, n)
 	inv[1] = 1
 	for i := 2; i < n; i++ {
@@ -302,10 +190,6 @@ func (a poly) integral() poly {
 	return s
 }
 
-// 多项式乘法逆 (mod x^n, 下同)
-// 参考 https://blog.orzsiyuan.com/archives/Polynomial-Inversion/
-// https://oi-wiki.org/math/poly/inv/
-// 模板题 https://www.luogu.com.cn/problem/P4238
 func (a poly) inv() poly {
 	n := len(a)
 	m := 1 << bits.Len(uint(n))
@@ -328,10 +212,6 @@ func (a poly) inv() poly {
 	return invA[:n]
 }
 
-// 多项式除法
-// https://blog.orzsiyuan.com/archives/Polynomial-Division-and-Modulo/
-// https://oi-wiki.org/math/poly/div-mod/
-// 模板题 https://www.luogu.com.cn/problem/P4512
 func (a poly) div(b poly) poly {
 	k := len(a) - len(b) + 1
 	if k <= 0 {
@@ -342,7 +222,6 @@ func (a poly) div(b poly) poly {
 	return A.conv(B.inv())[:k].reverse()
 }
 
-// 多项式取模
 func (a poly) mod(b poly) poly {
 	m := len(b)
 	return a[:m-1].sub(a.div(b).conv(b)[:m-1])
@@ -355,11 +234,6 @@ func (a poly) divmod(b poly) (quo, rem poly) {
 	return
 }
 
-// 多项式开根
-// 参考 https://blog.orzsiyuan.com/archives/Polynomial-Square-Root/
-// https://oi-wiki.org/math/poly/sqrt/
-// 模板题 https://www.luogu.com.cn/problem/P5205
-// 模板题（二次剩余）https://www.luogu.com.cn/problem/P5277
 func (a poly) sqrt() poly {
 	const inv2 = (P + 1) / 2
 	n := len(a)
@@ -369,9 +243,7 @@ func (a poly) sqrt() poly {
 	rt[0] = 1
 	if a[0] != 1 {
 		rt[0] = int(new(big.Int).ModSqrt(big.NewInt(int64(a[0])), big.NewInt(P)).Int64())
-		//if 2*rt[0] > P { // P5277 需要
-		//	rt[0] = P - rt[0]
-		//}
+
 	}
 	for l := 2; l <= m; l <<= 1 {
 		ll := l << 1
@@ -391,10 +263,6 @@ func (a poly) sqrt() poly {
 	return rt[:n]
 }
 
-// 多项式对数函数
-// https://blog.orzsiyuan.com/archives/Polynomial-Natural-Logarithm/
-// https://oi-wiki.org/math/poly/ln-exp/
-// 模板题 https://www.luogu.com.cn/problem/P4725
 func (a poly) ln() poly {
 	if a[0] != 1 {
 		panic(a[0])
@@ -402,10 +270,6 @@ func (a poly) ln() poly {
 	return a.derivative().conv(a.inv())[:len(a)].integral()
 }
 
-// 多项式指数函数
-// https://blog.orzsiyuan.com/archives/Polynomial-Exponential/
-// https://oi-wiki.org/math/poly/ln-exp/
-// 模板题 https://www.luogu.com.cn/problem/P4726
 func (a poly) exp() poly {
 	if a[0] != 0 {
 		panic(a[0])
@@ -426,11 +290,6 @@ func (a poly) exp() poly {
 	return e[:n]
 }
 
-// 多项式幂函数
-// https://blog.orzsiyuan.com/archives/Polynomial-Power/
-// https://oi-wiki.org/math/poly/ln-exp/#_5
-// 模板题 https://www.luogu.com.cn/problem/P5245
-// 模板题（a[0] != 1）https://www.luogu.com.cn/problem/P5273
 func (a poly) pow(k int) poly {
 	n := len(a)
 	if k >= n && a[0] == 0 {
@@ -447,22 +306,17 @@ func (a poly) pow(k int) poly {
 	if shift*k >= n {
 		return make(poly, n)
 	}
-	a = a.rsh(shift)         // a[0] != 0
-	a.mul(nttPow(a[0], P-2)) // a[0] == 1
+	a = a.rsh(shift)
+	a.mul(nttPow(a[0], P-2))
 	return a.ln().mul(k).exp().mul(nttPow(a[0], k1)).lsh(shift * k)
 }
 
-// 多项式三角函数
-// 模意义下的单位根 i = w4 = g^((P-1)/4), 其中 g 为 P 的原根
-// https://blog.orzsiyuan.com/archives/Polynomial-Trigonometric-Function/
-// https://oi-wiki.org/math/poly/tri-func/
-// 模板题 https://www.luogu.com.cn/problem/P5264
 func (a poly) sincos() (sin, cos poly) {
 	if a[0] != 0 {
 		panic(a[0])
 	}
-	const i = 911660635    // pow(g, (P-1)/4)
-	const inv2i = 43291859 // pow(2*i, P-2)
+	const i = 911660635
+	const inv2i = 43291859
 	const inv2 = (P + 1) / 2
 	e := a.mul(i).exp()
 	invE := e.inv()
@@ -476,9 +330,6 @@ func (a poly) tan() poly {
 	return sin.conv(cos.inv())
 }
 
-// 多项式反三角函数
-// https://oi-wiki.org/math/poly/inv-tri-func/
-// 模板题 https://www.luogu.com.cn/problem/P5265
 func (a poly) asin() poly {
 	if a[0] != 0 {
 		panic(a[0])
@@ -503,6 +354,15 @@ func (a poly) atan() poly {
 	return a.derivative().conv(b.inv())[:n].integral()
 }
 
-// 多项式复合逆
-// todo https://blog.csdn.net/weixin_43973966/article/details/88998646
-// todo 模板题 https://www.luogu.com.cn/problem/P5809
+func solve() {
+	var n int
+	Fscan(in, &n)
+
+	a := make(poly, n)
+	for i := range a {
+		Fscan(in, &a[i])
+	}
+	for _, v := range a.ln() {
+		Fprint(out, v, " ")
+	}
+}
