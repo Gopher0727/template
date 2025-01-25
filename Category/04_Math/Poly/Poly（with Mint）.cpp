@@ -441,3 +441,18 @@ Poly get(int n, int m) {
     }
     return f + fm;
 }
+
+void solve() {
+    int n;
+    cin >> n;
+
+    vector<Mint> a(n);
+    for (auto& v : a) {
+        cin >> v;
+    }
+
+    Poly p(a);
+    for (auto& v : p.inv(n)) {
+        cout << v << " ";
+    }
+}

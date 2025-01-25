@@ -63,13 +63,16 @@ void idft(vector<int>& a) {
         a[i] = 1ll * a[i] * inv % P;
     }
 }
+
 struct Poly {
     vector<int> a;
 
 public:
     Poly() {}
     Poly(int a0) {
-        if (a0) a = {a0};
+        if (a0) {
+            a = {a0};
+        }
     }
     Poly(const vector<int>& a1) : a(a1) {
         while (!a.empty() && !a.back()) {
@@ -139,7 +142,7 @@ public:
     Poly& operator*=(Poly b) { return (*this) = (*this) * b; }
 
 public:
-    Poly deriv() const {
+    Poly derivative() const {
         if (a.empty()) {
             return Poly();
         }
@@ -149,7 +152,7 @@ public:
         }
         return Poly(res);
     }
-    Poly integr() const {
+    Poly integral() const {
         if (a.empty()) {
             return Poly();
         }
@@ -168,7 +171,7 @@ public:
         }
         return x.modxk(m);
     }
-    Poly log(int m) const { return (deriv() * inv(m)).integr().modxk(m); }
+    Poly log(int m) const { return (derivative() * inv(m)).integral().modxk(m); }
     Poly exp(int m) const {
         Poly x(1);
         int k = 1;
