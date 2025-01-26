@@ -1,4 +1,4 @@
-// 离散对数
+// 离散对数（BSGS，BabyStepGiantStep）
 //
 // 以 O(sqrt(p)) 的复杂度求解 a^x = b (mod p)。
 // 其中标准 BSGS 算法不能计算 a 与 p 互质的情况，而 exbsgs 则可以。
@@ -57,6 +57,7 @@ namespace BSGS {
     }
 
     ll exbsgs(ll a, ll b, ll p) {
+        a %= p, b %= p;
         if (b == 1 || p == 1) {
             return 0;
         }

@@ -180,17 +180,13 @@ void solve() {
 // 练习题：
 // https://codeforces.com/contest/2057/problem/E2    2500
 //
-static constexpr int inf = INT_MAX / 2;
-
-vector<vector<int>> shortestPathFloydWarshall(int n, vector<vector<int>>& edges) { // 顶点数、边列表
+auto FloydWarshall(int n, vector<array<int, 3>>& edges) { // 顶点数、边列表
     vector g(n, vector<int>(n, inf));
-    for (int i = 0; i < n; +++) {
+    for (int i = 0; i < n; ++i) {
         g[i][i] = 0;
     }
-
-    for (const auto& e : edges) {
-        int v = e[0], w = e[1], dis = e[2];
-        g[v][w] = g[w][v] = min(g[v][w], dis);
+    for (const auto& [u, v, d] : edges) {
+        g[u][v] = g[v][u] = min(g[u][v], d);
     }
 
     // g[k][i][j] 表示「经过若干个编号不超过 k 的中间节点」时，从 i 到 j 的最短路长度，其中第一维可以压缩掉
@@ -207,19 +203,18 @@ vector<vector<int>> shortestPathFloydWarshall(int n, vector<vector<int>>& edges)
 
     // 如果出现 g[i][i] < 0 则说明有负环
 
-    // 动态加边
-    for (int i = 0; i < n; ++i) {
-        g[i][i] = 0;
-    }
-    auto addEdge = [&](int from, int to, int dis) {
-        if (dis >= g[from][to]) { // 无法让任何最短路变短
-            return;
-        }
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < n; ++j) {
-                g[i][j] = min(g[i][j], g[i][from] + dis + g[to][j]);
-            }
-        }
-    };
     return g;
+}
+
+// 动态加边
+auto addEdge(int from, int to, int dis, vector<vector<int>>& g) {
+    int n = g.size();
+    if (dis >= g[from][to]) { // 无法让任何最短路变短
+        return;
+    }
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            g[i][j] = min(g[i][j], g[i][from] + dis + g[to][j]);
+        }
+    }
 }

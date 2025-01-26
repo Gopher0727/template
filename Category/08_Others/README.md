@@ -9,3 +9,5 @@
 在 LeetCode.hpp 文件中，加入了 LeetCode 常用的结构体定义，并在最后附上 `using namespace std;` ~~源文件能省一行是一行~~
 
 如果感觉头文件过多，不想在 OJ 上附加太多除了 Class 之外的东西，可以改成下面的代码块并在 LeetCode.hpp 文件中附加 #include "debug.h"，这样本地能用，但提交到 OJ 上需要删掉 debug 信息。
+
+也可以直接在对应文件中创建 main 函数并放在宏定义下，调试会方便很多。
