@@ -7,14 +7,14 @@
 //
 // 基于链表实现的珂朵莉树
 
-using ll = long long;
+using i64 = long long;
 
 struct Block {
     Block *next; // 链表下一节点
     int l, r; // 区间范围
-    ll val; // 区间上的值
+    i64 val; // 区间上的值
 
-    Block(Block *next, int l, int r, ll val): next(next), l(l), r(r), val(val) {}
+    Block(Block *next, int l, int r, i64 val): next(next), l(l), r(r), val(val) {}
     bool operator<(const Block &b) const { return val < b.val; }
 } *root;
 
@@ -47,7 +47,7 @@ void prepare(int l, int r) {
 
 
 // 合并区间
-void merge(int l, int r, ll val) {
+void merge(int l, int r, i64 val) {
     prepare(l, r);
     lb->r = r; // 将区间 [lb.l, lb.r] 修改成 [lb.l, r]
     lb->val = val;
@@ -59,14 +59,14 @@ void merge(int l, int r, ll val) {
 // 遍历统计 [l,r] 即可。
 
 // 区间更新
-void add(ll val) {
+void add(i64 val) {
     for (Block* b = lb; b != rb; b = b->next) {
         b->val += val;
     }
 }
 
 // 区间第 k 小
-ll kth(int k) {
+i64 kth(int k) {
     vector<Block> blocks;
     for (Block* b = lb; b != rb; b = b->next) blocks.emplace_back(*b);
     sort(blocks.begin(), blocks.end());
@@ -84,7 +84,7 @@ ll kth(int k) {
 }
 
 // 乘法快速幂，带取模
-ll qpow(ll a, ll b, ll p, ll res = 1) {
+i64 qpow(i64 a, i64 b, i64 p, i64 res = 1) {
     a = (a % p + p) % p;
     for (; b; b >>= 1, a = a * a % p) {
         if (b & 1) {
@@ -94,10 +94,10 @@ ll qpow(ll a, ll b, ll p, ll res = 1) {
     return res;
 }
 
-ll pow_sum(int n, ll mod) {
-    ll sum = 0;
+i64 pow_sum(int n, i64 mod) {
+    i64 sum = 0;
     for (Block* b = lb; b != rb; b = b->next) {
-        sum += ll(b->r - b->l + 1) * qpow(b->val, n, mod);
+        sum += i64(b->r - b->l + 1) * qpow(b->val, n, mod);
     }
     return sum % mod;
 }

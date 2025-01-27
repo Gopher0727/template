@@ -6,7 +6,7 @@ struct BigInt {
 
 public:
     BigInt() : sign(1) {}
-    BigInt(ll v) { *this = v; }
+    BigInt(i64 v) { *this = v; }
     BigInt(const string& s) { read(s); }
 
 private:
@@ -40,14 +40,14 @@ private:
     }
 
     static vector<int> convert_base(const vector<int>& a, int old_digits, int new_digits) {
-        vector<ll> p(max(old_digits, new_digits) + 1);
+        vector<i64> p(max(old_digits, new_digits) + 1);
         p[0] = 1;
         for (int i = 1; i < (int) p.size(); ++i) {
             p[i] = p[i - 1] * 10;
         }
 
         vector<int> res;
-        ll cur = 0;
+        i64 cur = 0;
         int cur_digits = 0;
         for (int i = 0; i < (int) a.size(); ++i) {
             cur += a[i] * p[cur_digits];
@@ -89,7 +89,7 @@ public:
         }
         int m = 0;
         for (int i = a.size() - 1; i >= 0; --i) {
-            m = (a[i] + m * (ll) base) % v;
+            m = (a[i] + m * (i64) base) % v;
         }
         return m * sign;
     }
@@ -99,7 +99,7 @@ public:
             if (i == (int) a.size()) {
                 a.push_back(0);
             }
-            ll cur = a[i] * (ll) v + carry;
+            i64 cur = a[i] * (i64) v + carry;
             carry = (int) (cur / base);
             a[i] = (int) (cur % base);
         }
@@ -108,7 +108,7 @@ public:
     void operator/=(int v) {
         check(v);
         for (int i = (int) a.size() - 1, rem = 0; i >= 0; --i) {
-            ll cur = a[i] + rem * 1ll * base;
+            i64 cur = a[i] + rem * 1ll * base;
             a[i] = (int) (cur / v);
             rem = (int) (cur % v);
         }
@@ -155,8 +155,8 @@ public:
     BigInt operator*(const BigInt& v) const {
         vector<int> a6 = convert_base(this->a, base_digits, 6);
         vector<int> b6 = convert_base(v.a, base_digits, 6);
-        vector<ll> a(a6.begin(), a6.end());
-        vector<ll> b(b6.begin(), b6.end());
+        vector<i64> a(a6.begin(), a6.end());
+        vector<i64> b(b6.begin(), b6.end());
         while (a.size() < b.size()) {
             a.push_back(0);
         }
@@ -167,11 +167,11 @@ public:
             a.push_back(0), b.push_back(0);
         }
 
-        vector<ll> c = karatsubaMultiply(a, b);
+        vector<i64> c = karatsubaMultiply(a, b);
         BigInt res;
         res.sign = sign * v.sign;
         for (int i = 0, carry = 0; i < (int) c.size(); ++i) {
-            ll cur = c[i] + carry;
+            i64 cur = c[i] + carry;
             res.a.push_back((int) (cur % 1000000));
             carry = (int) (cur / 1000000);
         }
@@ -189,7 +189,7 @@ public:
     void operator%=(const BigInt& v) { *this = *this % v; }
 
     // Assignment operator
-    void operator=(ll v) {
+    void operator=(i64 v) {
         a.clear();
         sign = 1;
         if (v < 0) {
@@ -276,7 +276,7 @@ public:
             r += a.a[i];
             int s1 = r.a.size() <= b.a.size() ? 0 : r.a[b.a.size()];
             int s2 = r.a.size() <= b.a.size() - 1 ? 0 : r.a[b.a.size() - 1];
-            int d = ((ll) base * s1 + s2) / b.a.back();
+            int d = ((i64) base * s1 + s2) / b.a.back();
             r -= b * d;
             while (r < 0) {
                 r += b, --d;
@@ -290,9 +290,9 @@ public:
         return make_pair(q, r / norm);
     }
 
-    static vector<ll> karatsubaMultiply(const vector<ll>& a, const vector<ll>& b) {
+    static vector<i64> karatsubaMultiply(const vector<i64>& a, const vector<i64>& b) {
         int n = a.size();
-        vector<ll> res(n + n);
+        vector<i64> res(n + n);
         if (n <= 32) {
             for (int i = 0; i < n; ++i) {
                 for (int j = 0; j < n; j++) {
@@ -303,16 +303,16 @@ public:
         }
 
         int k = n >> 1;
-        vector<ll> a1(a.begin(), a.begin() + k), a2(a.begin() + k, a.end());
-        vector<ll> b1(b.begin(), b.begin() + k), b2(b.begin() + k, b.end());
-        vector<ll> a1b1 = karatsubaMultiply(a1, b1);
-        vector<ll> a2b2 = karatsubaMultiply(a2, b2);
+        vector<i64> a1(a.begin(), a.begin() + k), a2(a.begin() + k, a.end());
+        vector<i64> b1(b.begin(), b.begin() + k), b2(b.begin() + k, b.end());
+        vector<i64> a1b1 = karatsubaMultiply(a1, b1);
+        vector<i64> a2b2 = karatsubaMultiply(a2, b2);
         for (int i = 0; i < k; ++i) {
             a2[i] += a1[i];
             b2[i] += b1[i];
         }
 
-        vector<ll> r = karatsubaMultiply(a2, b2);
+        vector<i64> r = karatsubaMultiply(a2, b2);
         for (int i = 0; i < (int) a1b1.size(); ++i) {
             r[i] -= a1b1[i];
             res[i] += a1b1[i];

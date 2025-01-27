@@ -16,11 +16,13 @@
 
 vector<array<int, 2>> nodes(n);
 int clk = 0;
-auto dfs = [&](auto&& dfs, int x = 0) -> void {
+auto dfs = [&](auto&& dfs, int x = 0, int pa = -1) -> void {
     nodes[x][0] = clk;
     for (int y : g[x]) {
-        dfs(dfs, y);
+        if (y != pa) {
+            dfs(dfs, y, x);
+        }
     }
-    nodes[x][1] = clk;
+    nodes[x][1] = ++clk;
 };
 dfs(dfs);

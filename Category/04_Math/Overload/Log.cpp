@@ -2,7 +2,7 @@ namespace Log {
     // a^t >= b
     int log_a(int a, int b) {
         int t = 0;
-        ll v = 1;
+        i64 v = 1;
         while (v < b) {
             v *= a;
             t++;

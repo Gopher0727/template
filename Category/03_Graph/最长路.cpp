@@ -5,7 +5,7 @@ struct DAG {
     int n;
     vector<vector<pair<int, int>>> g;
     vector<int> deg;
-    vector<ll> dis;
+    vector<i64> dis;
 
 public:
     DAG(int n) : n(n), g(n + 1), deg(n + 1), dis(n + 1, -1E18) {}

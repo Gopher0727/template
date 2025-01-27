@@ -24,10 +24,10 @@ bool cmp(int u, int v) {
 
 // Point with int64
 struct Point {
-    ll x;
-    ll y;
+    i64 x;
+    i64 y;
     Point() : x {0}, y {0} {}
-    Point(ll x_, ll y_) : x {x_}, y {y_} {}
+    Point(i64 x_, i64 y_) : x {x_}, y {y_} {}
 };
 Point operator+(Point a, Point b) {
     return Point(a.x + b.x, a.y + b.y);
@@ -68,7 +68,7 @@ const double inf = INFINITY;
 
 // Point with complex
 //
-using Point = complex<ll>;
+using Point = complex<i64>;
 #define x real
 #define y imag
 auto dot(const Point& a, const Point& b) {

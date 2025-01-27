@@ -1,5 +1,5 @@
 struct Info {
-    ll sum = 0, add = 0, mul = 1;
+    i64 sum = 0, add = 0, mul = 1;
     int l, r;
 };
 
@@ -25,7 +25,7 @@ private:
 public:
     SegTree() {}
     SegTree(const vector<int>& _init, int m) : n(_init.size()), m(m), info(4 * n) {
-        auto build = [&](auto&& self, ll o, ll l, ll r) -> void {
+        auto build = [&](auto&& self, i64 o, i64 l, i64 r) -> void {
             info[o].l = l, info[o].r = r;
             if (l == r) {
                 info[o].sum += _init[l] % m;
@@ -39,7 +39,7 @@ public:
         build(build, 1, 1, n);
     }
 
-    void lazyMul(int o, int l, int r, ll k) {
+    void lazyMul(int o, int l, int r, i64 k) {
         if (l <= info[o].l && info[o].r <= r) {
             info[o].add *= k;
             info[o].mul *= k;
@@ -57,14 +57,14 @@ public:
         pull(o);
     }
 
-    void lazyAdd(int o, int l, int r, ll k) {
+    void lazyAdd(int o, int l, int r, i64 k) {
         if (l <= info[o].l && info[o].r <= r) {
             info[o].add += k;
             info[o].sum += k * (info[o].r - info[o].l + 1);
             return;
         }
         push(o);
-        ll mid = info[o].l + (info[o].r - info[o].l) / 2;
+        i64 mid = info[o].l + (info[o].r - info[o].l) / 2;
         if (l <= mid) {
             lazyAdd(o << 1, l, r, k);
         }
@@ -74,12 +74,12 @@ public:
         pull(o);
     }
 
-    ll query(int o, int l, int r) {
+    i64 query(int o, int l, int r) {
         if (l <= info[o].l && info[o].r <= r) {
             return info[o].sum;
         }
         push(o);
-        ll val = 0, mid = info[o].l + (info[o].r - info[o].l) / 2;
+        i64 val = 0, mid = info[o].l + (info[o].r - info[o].l) / 2;
         if (l <= mid) {
             val += query(o << 1, l, r);
         }

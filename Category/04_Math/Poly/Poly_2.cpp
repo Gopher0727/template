@@ -281,7 +281,7 @@ auto inv(const vector<vector<int>>& a) {
         dft(g);
         for (int i = 0; i < 4 * m; i++) {
             for (int j = 0; j < 4 * C; j++) {
-                g[i][j] = ll(g[i][j]) * (2 + ll(P - a0[i][j]) * g[i][j] % P) % P;
+                g[i][j] = i64(g[i][j]) * (2 + i64(P - a0[i][j]) * g[i][j] % P) % P;
             }
         }
         idft(g);

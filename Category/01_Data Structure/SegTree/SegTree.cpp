@@ -1,4 +1,4 @@
-static constexpr ll inf = 9e18;
+static constexpr i64 inf = 9e18;
 
 template <class Info, class Tag>
 class SegTree {
@@ -139,9 +139,9 @@ public:
 };
 
 struct Tag {
-    ll add = 0;
+    i64 add = 0;
     Tag() {}
-    Tag(ll v) : add(v) {}
+    Tag(i64 v) : add(v) {}
     void apply(const Tag& t) {
         if (t.add) {
             add += t.add;
@@ -149,7 +149,7 @@ struct Tag {
     }
 };
 struct Info {
-    ll sum = 0, len = 0;
+    i64 sum = 0, len = 0;
     void apply(const Tag& t) {
         if (t.add) {
             sum += len * t.add;

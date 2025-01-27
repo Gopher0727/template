@@ -292,7 +292,7 @@ namespace SplayTree {
         Node* l = nullptr;
         Node* r = nullptr;
         int cnt = 0;
-        ll sum = 0;
+        i64 sum = 0;
     };
 
     Node* add(Node* t, int l, int r, int p, int v) {
@@ -335,7 +335,7 @@ namespace SplayTree {
         return res;
     }
 
-    std::pair<int, ll> get(Node* t, int l, int r, int x, int y) {
+    std::pair<int, i64> get(Node* t, int l, int r, int x, int y) {
         if (l >= y || r <= x || !t) {
             return {0, 0LL};
         }

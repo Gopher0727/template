@@ -1,9 +1,9 @@
 // 素数测试与因式分解（Miller-Rabin & Pollard-Rho）
-ll mul(ll a, ll b, ll m) {
+i64 mul(i64 a, i64 b, i64 m) {
     return static_cast<__int128>(a) * b % m;
 }
-ll qpow(ll a, ll b, ll m) {
-    ll res = 1 % m;
+i64 qpow(i64 a, i64 b, i64 m) {
+    i64 res = 1 % m;
     for (; b; b >>= 1, a = mul(a, a, m)) {
         if (b & 1) {
             res = mul(res, a, m);
@@ -11,17 +11,17 @@ ll qpow(ll a, ll b, ll m) {
     }
     return res;
 }
-bool isprime(ll n) {
+bool isprime(i64 n) {
     if (n < 2) {
         return false;
     }
     int s = __builtin_ctzll(n - 1);
-    ll d = (n - 1) >> s;
+    i64 d = (n - 1) >> s;
     for (auto a : {2, 3, 5, 7, 11, 13, 17, 19, 23}) {
         if (a == n) {
             return true;
         }
-        ll x = qpow(a, d, n);
+        i64 x = qpow(a, d, n);
         if (x == 1 || x == n - 1) {
             continue;
         }
@@ -41,9 +41,9 @@ bool isprime(ll n) {
 }
 
 
-vector<ll> factorize(ll n) {
-    vector<ll> p;
-    auto f = [&](auto&& f, ll n) {
+vector<i64> factorize(i64 n) {
+    vector<i64> p;
+    auto f = [&](auto&& f, i64 n) {
         if (n <= 10000) {
             for (int i = 2; i * i <= n; ++i) {
                 for (; n % i == 0; n /= i) {
@@ -59,14 +59,14 @@ vector<ll> factorize(ll n) {
             p.push_back(n);
             return;
         }
-        auto g = [&](ll x) {
+        auto g = [&](i64 x) {
             return (mul(x, x, n) + 1) % n;
         };
-        ll x0 = 2;
+        i64 x0 = 2;
         while (true) {
-            ll x = x0, y = x0, d = 1;
-            ll p = 1, lam = 0;
-            ll v = 1;
+            i64 x = x0, y = x0, d = 1;
+            i64 p = 1, lam = 0;
+            i64 v = 1;
             while (d == 1) {
                 y = g(y);
                 ++lam;

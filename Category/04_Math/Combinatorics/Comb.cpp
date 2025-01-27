@@ -75,8 +75,8 @@ struct Combinatorics {
 // 预处理
 //
 namespace Comb {
-    ll qpow(ll a, ll b, int p) {
-        ll res = 1;
+    i64 qpow(i64 a, i64 b, int p) {
+        i64 res = 1;
         a = (a % p + p) % p;
         for (; b; b >>= 1, a = a * a % p) {
             if (b & 1) {
@@ -88,7 +88,7 @@ namespace Comb {
 
     const int MX = 2e5 + 1;
 
-    vector<ll> F, INV_F;
+    vector<i64> F, INV_F;
     auto init = [] {
         F.resize(MX); // F[i] = i!
         INV_F.resize(MX); // INV_F[i] = i!^-1
@@ -105,13 +105,13 @@ namespace Comb {
         return 0;
     }();
 
-    ll comb(int n, int m) {
+    i64 comb(int n, int m) {
         return n < m || m < 0 ? 0 : F[n] * INV_F[m] % MOD * INV_F[n - m] % MOD;
     }
-    ll perm(int n, int m) {
+    i64 perm(int n, int m) {
         return n < m || m < 0 ? 0 : F[n] * INV_F[n - m] % MOD;
     }
-    ll catalan(int n) {
+    i64 catalan(int n) {
         return n < 0 ? 0 : comb(2 * n, n) - comb(2 * n, n - 1);
     }
 };
@@ -122,11 +122,11 @@ using namespace Comb;
 //
 namespace Comb {
     // 小范围，不取模
-    ll comb_not_MOD(int n, int m) {
+    i64 comb_not_MOD(int n, int m) {
         if (n < m || m < 0) {
             return 0;
         }
-        ll ans = 1;
+        i64 ans = 1;
         for (int i = 0; i < m; i++) {
             ans = ans * (n - i) / (i + 1);
         }
@@ -144,8 +144,8 @@ namespace Comb {
         }
         return inv;
     }();
-    ll qpow(ll a, ll b, int p) {
-        ll res = 1;
+    i64 qpow(i64 a, i64 b, int p) {
+        i64 res = 1;
         a = (a % p + p) % p;
         for (; b; b >>= 1, a = a * a % p) {
             if (b & 1) {
@@ -154,11 +154,11 @@ namespace Comb {
         }
         return res;
     }
-    ll comb(int n, int m) {
+    i64 comb(int n, int m) {
         if (n < m || m < 0) {
             return 0;
         }
-        ll ans = 1;
+        i64 ans = 1;
         for (int i = 1, j = n - m + 1; i <= m; i++, j++) {
             // ans = ans * j % MOD * qpow(i, MOD - 2, MOD) % MOD;
             ans = ans * j % MOD * inv[i] % MOD;

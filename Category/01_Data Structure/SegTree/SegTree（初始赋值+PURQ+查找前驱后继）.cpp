@@ -1,4 +1,4 @@
-static constexpr ll inf = 9e18;
+static constexpr i64 inf = 9e18;
 
 template <class Info>
 class SegTree {
@@ -101,7 +101,7 @@ public:
 };
 
 struct Info {
-    ll mx = 0;
+    i64 mx = 0;
 };
 Info operator+(const Info& a, const Info& b) {
     Info info;

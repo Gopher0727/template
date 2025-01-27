@@ -28,7 +28,7 @@ public:
         }
     }
 
-    Mint solve(ll k) {
+    Mint solve(i64 k) {
         if (k <= n + 2) {
             return y[k];
         }

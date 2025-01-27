@@ -1,13 +1,15 @@
+// Problems:
+// https://codeforces.com/contest/2062/problem/C
+//
 namespace hashing {
-
-    using ll = std::int64_t;
-    using ull = std::uint64_t;
-    static const ull FIXED_RANDOM = std::chrono::steady_clock::now().time_since_epoch().count();
+    using i64 = std::int64_t;
+    using u64 = std::uint64_t;
+    static const u64 FIXED_RANDOM = std::chrono::steady_clock::now().time_since_epoch().count();
 
 #if USE_AES
     std::mt19937 rd(FIXED_RANDOM);
-    const __m128i KEY1 {(ll) rd(), (ll) rd()};
-    const __m128i KEY2 {(ll) rd(), (ll) rd()};
+    const __m128i KEY1 {(i64) rd(), (i64) rd()};
+    const __m128i KEY2 {(i64) rd(), (i64) rd()};
 #endif
 
     template <class T, class D = void>
@@ -15,7 +17,7 @@ namespace hashing {
 
     // https://www.boost.org/doc/libs/1_55_0/doc/html/hash/combine.html
     template <class T>
-    inline void hash_combine(ull& seed, const T& v) {
+    inline void hash_combine(u64& seed, const T& v) {
         custom_hash<T> hasher;
         seed ^= hasher(v) + 0x9e3779b97f4a7c15 + (seed << 12) + (seed >> 4);
     }
@@ -23,11 +25,11 @@ namespace hashing {
     // http://xorshift.di.unimi.it/splitmix64.c
     template <class T>
     struct custom_hash<T, typename std::enable_if<std::is_integral<T>::value>::type> {
-        ull operator()(T _x) const {
-            ull x = _x;
+        u64 operator()(T _x) const {
+            u64 x = _x;
 #if USE_AES
             // implementation defined till C++17, defined from C++20
-            __m128i m {ll(ull(x) * 0xbf58476d1ce4e5b9ULL), (ll) FIXED_RANDOM};
+            __m128i m {i64(u64(x) * 0xbf58476d1ce4e5b9ULL), (i64) FIXED_RANDOM};
             __m128i y = _mm_aesenc_si128(m, KEY1);
             __m128i z = _mm_aesenc_si128(y, KEY2);
             return z[0];
@@ -42,8 +44,8 @@ namespace hashing {
 
     template <class T>
     struct custom_hash<T, std::void_t<decltype(std::begin(std::declval<T>()))>> {
-        ull operator()(const T& a) const {
-            ull value = FIXED_RANDOM;
+        u64 operator()(const T& a) const {
+            u64 value = FIXED_RANDOM;
             for (auto& x : a) hash_combine(value, x);
             return value;
         }
@@ -51,8 +53,8 @@ namespace hashing {
 
     template <class... T>
     struct custom_hash<std::tuple<T...>> {
-        ull operator()(const std::tuple<T...>& a) const {
-            ull value = FIXED_RANDOM;
+        u64 operator()(const std::tuple<T...>& a) const {
+            u64 value = FIXED_RANDOM;
             std::apply([&value](T const&... args) { (hash_combine(value, args), ...); }, a);
             return value;
         }
@@ -60,8 +62,8 @@ namespace hashing {
 
     template <class T, class U>
     struct custom_hash<std::pair<T, U>> {
-        ull operator()(const std::pair<T, U>& a) const {
-            ull value = FIXED_RANDOM;
+        u64 operator()(const std::pair<T, U>& a) const {
+            u64 value = FIXED_RANDOM;
             hash_combine(value, a.first);
             hash_combine(value, a.second);
             return value;

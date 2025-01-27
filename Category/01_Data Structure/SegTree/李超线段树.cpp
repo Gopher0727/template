@@ -111,10 +111,10 @@ int main() {
     }
 
     for (int i = 1; i <= n; ++i) {
-        ll ans = query(root, i) + eps;
-        ll res = -inf;
+        i64 ans = query(root, i) + eps;
+        i64 res = -inf;
         for (int j = 1; j <= m; ++j) {
-            res = max(res, (ll) (A[j].k * i + A[j].b + eps));
+            res = max(res, (i64) (A[j].k * i + A[j].b + eps));
         }
         if (res != ans) {
             cout << ans << " " << res << "\n";

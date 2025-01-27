@@ -71,9 +71,9 @@ public:
     Info queryAll() { return query(0, N); }
 };
 struct Tag {
-    ll add = 0;
+    i64 add = 0;
     Tag() {}
-    Tag(ll v) : add(v) {}
+    Tag(i64 v) : add(v) {}
     void apply(const Tag& t) {
         if (t.add) {
             add += t.add;
@@ -81,7 +81,7 @@ struct Tag {
     }
 };
 struct Info {
-    ll sum = 0, len = 0, mx = 0;
+    i64 sum = 0, len = 0, mx = 0;
     void apply(const Tag& t) {
         if (t.add) {
             sum += len * t.add;

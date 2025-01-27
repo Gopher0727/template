@@ -1,7 +1,7 @@
 namespace Sqrt {
     // x * x <= n，返回最大的 x
-    ll mSqrt(ll n) {
-        ll x = sqrt(n);
+    i64 mSqrt(i64 n) {
+        i64 x = sqrt(n);
         while (x * x > n) {
             x--;
         }
@@ -11,8 +11,8 @@ namespace Sqrt {
         return x;
     }
     // x * (x+1) / 2 >= n，返回最小的 x
-    ll mget(ll n) {
-        ll x = sqrt(2.0L * n);
+    i64 mget(i64 n) {
+        i64 x = sqrt(2.0L * n);
         while (x * (x + 1) / 2 < n) {
             x++;
         }
@@ -22,8 +22,8 @@ namespace Sqrt {
         return x;
     }
     // x * (x+1) / 2 > n，返回最小的 x
-    ll mGet(ll n) {
-        ll x = sqrt(2.0L * n);
+    i64 mGet(i64 n) {
+        i64 x = sqrt(2.0L * n);
         while (x * (x + 1) <= 2 * n) {
             x++;
         }

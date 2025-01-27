@@ -4,71 +4,62 @@
 //     1> T 的根节点是一个割点，当且仅当根节点有两个或更多的子节点
 //     2> T 的非根节点 u 是一个割点，当且仅当 u 存在一个子节点 v，且 v 和它的后代都没有回退边连向 u 的祖先
 //
-// 有向边按访问情况分为 4 类：
-//     1> 树边（访问节点走过的边）
-//     2> 返祖边（指向祖先的边）
-//     3> 横叉边（右子树指向左子树的边）
-//     4> 前向边（指向子树中节点的边，无用边）
-// 返祖边与树边必然成环，横叉边可能与树边成环。
-//
 // dfn[x]：时间戳，节点 x 第一次被访问的顺序
 // low[x]：追溯值，从节点 x 出发，所能访问到的最早时间戳
 //
-// Link: https://www.bilibili.com/video/BV1SY411M7Tv
-//
-void solve() {
-    int n, m;
-    cin >> n >> m;
 
-    vector<vector<int>> g(n + 1);
-    for (int i = 1; i <= m; ++i) {
-        int u, v;
-        cin >> u >> v;
-        g[u].push_back(v);
-        g[v].push_back(u);
+struct Cut {
+    int n;
+    vector<vector<int>> g;
+    vector<int> isCut;
+    vector<int> low, dfn;
+    int clk, root;
+
+    Cut() {}
+    Cut(int n) { init(n); }
+
+    void init(int n) {
+        this->n = n;
+        g.assign(n, {});
+        isCut.assign(n, 0);
+        low.assign(n, 0);
+        dfn.assign(n, 0);
+        clk = 0;
     }
 
-    vector<int> low(n + 1), dfn(n + 1);
-    vector<int> isCut(n + 1);
-    int cnt = 0, root;
-    auto tarjan = [&](auto&& self, int u, int pa) -> void {
-        low[u] = dfn[u] = ++cnt;
+    void addEdge(int u, int v) { g[u].push_back(v); }
+
+    void work() {
+        for (int i = 0; i < n; ++i) {
+            root = i;
+            if (dfn[i] == 0) {
+                tarjan(i, -1);
+            }
+        }
+    }
+
+private:
+    void tarjan(int u, int pa) {
+        low[u] = dfn[u] = ++clk;
         int child = 0;
         for (int v : g[u]) {
             if (dfn[v] == 0) {
                 child++;
-                self(self, v, u);
+                tarjan(v, u);
                 low[u] = min(low[u], low[v]);
-                if (low[v] >= dfn[u] && u != root) {
+                // 求割边去掉等于的情况即可
+                if (u != root && dfn[u] <= low[v]) {
                     isCut[u] = 1;
                 }
             } else if (dfn[v] < dfn[u] && v != pa) {
                 low[u] = min(low[u], dfn[v]);
             }
-            if (u == root && child >= 2) {
-                isCut[root] = 1;
-            }
         }
-    };
-
-    for (root = 1; root <= n; ++root) {
-        if (!dfn[root]) {
-            tarjan(tarjan, root, -1);
+        if (u == root && child >= 2) {
+            isCut[u] = 1;
         }
     }
-
-    vector<int> ans;
-    for (int i = 1; i <= n; ++i) {
-        if (isCut[i]) {
-            ans.push_back(i);
-        }
-    }
-
-    cout << ans.size() << "\n";
-    for (int node : ans) {
-        cout << node << " ";
-    }
-}
+};
 
 
 // （有向图）强连通分量（SCC, Strongly Connected Components）缩点
@@ -78,23 +69,31 @@ void solve() {
 //     2> 缩点之后，重建拓扑图，递推
 //
 struct SCC {
-    int n, now, cnt;
-    vector<vector<int>> ver;
-    vector<int> dfn, low, col, S;
+    int n;
+    vector<vector<int>> g;
+    vector<int> dfn, low, col;
+    vector<int> S;
+    int clk, cnt;
 
-    SCC(int n) : n(n), ver(n + 1), low(n + 1) {
-        dfn.resize(n + 1, -1);
-        col.resize(n + 1, -1);
-        now = cnt = 0;
+    SCC(int n) { init(n); }
+
+    void init(int n) {
+        this->n = n;
+        g.resize(n);
+        low.resize(n);
+        dfn.resize(n);
+        col.resize(n, -1);
+        clk = 0;
+        cnt = 0;
     }
-    void add(int x, int y) {
-        ver[x].push_back(y);
-    }
+
+    void addEdge(int x, int y) { g[x].push_back(y); }
+
     void tarjan(int x) {
-        dfn[x] = low[x] = now++;
+        dfn[x] = low[x] = ++clk;
         S.push_back(x);
-        for (auto y : ver[x]) {
-            if (dfn[y] == -1) {
+        for (auto y : g[x]) {
+            if (dfn[y] == 0) {
                 tarjan(y);
                 low[x] = min(low[x], low[y]);
             } else if (col[y] == -1) {
@@ -111,9 +110,10 @@ struct SCC {
             } while (pre != x);
         }
     }
+
     auto work() { // [cnt 新图的顶点数量]
         for (int i = 1; i <= n; i++) { // 避免图不连通
-            if (dfn[i] == -1) {
+            if (dfn[i] == 0) {
                 tarjan(i);
             }
         }
@@ -122,45 +122,47 @@ struct SCC {
         vector<vector<int>> adj(cnt + 1);
         for (int i = 1; i <= n; i++) {
             siz[col[i]]++;
-            for (auto j : ver[i]) {
+            for (auto j : g[i]) {
                 int x = col[i], y = col[j];
                 if (x != y) {
                     adj[x].push_back(y);
                 }
             }
         }
-        return {cnt, adj, col, siz};
+        return tuple {cnt, adj, col, siz};
     }
 };
 
+
 struct SCC {
     int n;
-    vector<vector<int>> adj;
-    vector<int> stk;
+    vector<vector<int>> g;
     vector<int> dfn, low, bel;
-    int cur, cnt;
+    vector<int> stk;
+    int clk, cnt;
 
     SCC() {}
     SCC(int n) { init(n); }
 
     void init(int n) {
         this->n = n;
-        adj.assign(n, {});
-        dfn.assign(n, -1);
+        g.assign(n, {});
+        dfn.assign(n);
         low.resize(n);
         bel.assign(n, -1);
         stk.clear();
-        cur = cnt = 0;
+        clk = 0;
+        cnt = 0;
     }
 
-    void addEdge(int u, int v) { adj[u].push_back(v); }
+    void addEdge(int u, int v) { g[u].push_back(v); }
 
     void dfs(int x) {
-        dfn[x] = low[x] = cur++;
+        dfn[x] = low[x] = ++clk;
         stk.push_back(x);
 
-        for (auto y : adj[x]) {
-            if (dfn[y] == -1) {
+        for (auto y : g[x]) {
+            if (dfn[y] == 0) {
                 dfs(y);
                 low[x] = min(low[x], low[y]);
             } else if (bel[y] == -1) {
@@ -181,7 +183,7 @@ struct SCC {
 
     vector<int> work() {
         for (int i = 0; i < n; i++) {
-            if (dfn[i] == -1) {
+            if (dfn[i] == 0) {
                 dfs(i);
             }
         }
@@ -197,23 +199,25 @@ struct SCC {
 // > 对于边双中的任意两点，一定存在两条不相交的路径连接这两个点（路径上可以有公共点，但是没有公共边）。
 struct EBCC {
     int n, now, cnt;
-    vector<vector<int>> ver;
+    vector<vector<int>> g;
     vector<int> dfn, low, col, S;
     set<array<int, 2>> bridge;
 
-    EDCC(int n) : n(n), ver(n + 1), low(n + 1) {
+    EDCC(int n) : n(n), g(n + 1), low(n + 1) {
         dfn.resize(n + 1, -1);
         col.resize(n + 1, -1);
         now = cnt = 0;
     }
+
     void add(int x, int y) {
-        ver[x].push_back(y);
-        ver[y].push_back(x);
+        g[x].push_back(y);
+        g[y].push_back(x);
     }
+
     void tarjan(int x, int pa) {
         dfn[x] = low[x] = now++;
         S.push_back(x);
-        for (auto y : ver[x]) {
+        for (auto y : g[x]) {
             if (y == pa) {
                 continue;
             }
@@ -236,6 +240,7 @@ struct EBCC {
             } while (pre != x);
         }
     }
+
     auto work() { // [cnt 新图的顶点数量, bridge 全部割边]
         for (int i = 1; i <= n; i++) { // 避免图不连通
             if (dfn[i] == -1) {
@@ -247,7 +252,7 @@ struct EBCC {
         vector<vector<int>> adj(cnt + 1);
         for (int i = 1; i <= n; i++) {
             siz[col[i]]++;
-            for (auto j : ver[i]) {
+            for (auto j : g[i]) {
                 int x = col[i], y = col[j];
                 if (x != y) {
                     adj[x].push_back(y);
@@ -324,6 +329,7 @@ struct EBCC {
         vector<int> siz;
         vector<int> cnte;
     };
+
     Graph compress() {
         Graph g;
         g.n = cnt;
@@ -350,13 +356,13 @@ struct EBCC {
 // > 每一个割点至少属于两个点双
 struct VBCC {
     int n;
-    vector<vector<int>> ver, col;
+    vector<vector<int>> g, col;
     vector<int> dfn, low, S;
     int now, cnt;
     vector<bool> point; // 记录是否为割点
 
     VBCC(int n) : n(n) {
-        ver.resize(n + 1);
+        g.resize(n + 1);
         dfn.resize(n + 1);
         low.resize(n + 1);
         col.resize(2 * n + 1);
@@ -367,20 +373,20 @@ struct VBCC {
 
     void add(int x, int y) {
         if (x == y) return; // 手动去除重边
-        ver[x].push_back(y);
-        ver[y].push_back(x);
+        g[x].push_back(y);
+        g[y].push_back(x);
     }
 
     void tarjan(int x, int root) {
         low[x] = dfn[x] = now++;
         S.push_back(x);
-        if (x == root && !ver[x].size()) { // 特判孤立点
+        if (x == root && !g[x].size()) { // 特判孤立点
             ++cnt;
             col[cnt].push_back(x);
             return;
         }
         int flag = 0;
-        for (auto y : ver[x]) {
+        for (auto y : g[x]) {
             if (!dfn[y]) {
                 tarjan(y, root);
                 low[x] = min(low[x], low[y]);

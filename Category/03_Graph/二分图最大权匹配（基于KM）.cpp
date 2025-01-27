@@ -3,11 +3,11 @@ int main() {
     int n1, n2, m;
     cin >> n1 >> n2 >> m;
 
-    vector<vector<int>> ver(n1 + 1);
+    vector<vector<int>> g(n1 + 1);
     for (int i = 1; i <= m; ++i) {
         int x, y;
         cin >> x >> y;
-        ver[x].push_back(y); // 只需要建立单向边
+        g[x].push_back(y); // 只需要建立单向边
     }
 
     int ans = 0;
@@ -15,7 +15,7 @@ int main() {
     for (int i = 1; i <= n1; ++i) {
         vector<int> vis(n2 + 1);
         auto dfs = [&](auto self, int x) -> bool {
-            for (auto y : ver[x]) {
+            for (auto y : g[x]) {
                 if (vis[y]) continue;
                 vis[y] = 1;
                 if (!match[y] || self(self, match[y])) {

@@ -95,7 +95,7 @@
 // https://leetcode.cn/problems/maximize-subarray-sum-after-removing-all-occurrences-of-one-element/
 //
 struct Info {
-    ll sum, lval, rval, ans;
+    i64 sum, lval, rval, ans;
     Info() {}
     Info(int v) : sum(v), lval(v), rval(v), ans(v) {}
 };

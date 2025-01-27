@@ -1,5 +1,5 @@
 // 暴力判断一个数是否是质数
-bool isPrime(ll n) {
+bool isPrime(i64 n) {
     for (int i = 2; i * 1ll * i <= n; i++) {
         if (n % i == 0) {
             return false;
@@ -22,7 +22,7 @@ void sieve(int n) {
 
 
 // 找到一个数的所有质因数
-auto factorize = [&](ll x) {
+auto factorize = [&](i64 x) {
     map<int, int> res;
     for (int i = 2; i * 1ll * i <= x; ++i) {
         while (x % i == 0) {

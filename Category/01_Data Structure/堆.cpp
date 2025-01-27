@@ -1,5 +1,5 @@
 // 对顶堆查询前 K 大
-template <typename T = ll>
+template <typename T = i64>
 class DualHeap {
     priority_queue<T, vector<T>, greater<>> p;
     priority_queue<T> q;
@@ -42,7 +42,7 @@ public:
 
 
 // 对顶堆查询中位数
-template <typename T = ll>
+template <typename T = i64>
 class DualHeap {
 private:
     priority_queue<T, vector<T>, greater<>> p;
@@ -115,9 +115,9 @@ public:
 // 定长滑窗中位数，with 懒删除
 class DualHeap_slidingWindow {
 private:
-    priority_queue<ll, vector<ll>, greater<ll>> MinHeap;
-    priority_queue<ll> MaxHeap;
-    map<ll, int> delayed; // 记录「延迟删除」的元素
+    priority_queue<i64, vector<i64>, greater<i64>> MinHeap;
+    priority_queue<i64> MaxHeap;
+    map<i64, int> delayed; // 记录「延迟删除」的元素
     int MinSize = 0, MaxSize = 0; // 包含的元素个数（需要扣除被「延迟删除」的元素）
     int k = 0; // 窗口大小
 

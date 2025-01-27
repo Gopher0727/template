@@ -239,4 +239,29 @@ return dfs(dfs, 0, 0, true, false);
 
 //// DP 优化
 
+
+
+//// 其他专题
+
+> 跳跃游戏：
+
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        n = len(nums)
+        dp = [0] + [inf] * (n - 1)
+        for i in range(1, n):
+            for k in range(i):
+                if nums[k] + k >= i:
+                    dp[i] = min(dp[i], dp[k] + 1)
+        return dp[-1]
+
+        # 贪心
+        ans = curR = nxtR = 0
+        for i in range(len(nums) - 1):
+            nxtR = max(nxtR, i + nums[i])
+            if i == curR:
+                curR = nxtR
+                ans += 1
+        return ans
+
 */

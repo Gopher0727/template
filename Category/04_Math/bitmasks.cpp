@@ -19,7 +19,7 @@ int Gosper(int num) {
 
 //* 连续四个数的异或值
 // 4i ^ (4i+1) ^ (4i+2) ^ (4i+3) = 0
-ll get(ll n) {
+i64 get(i64 n) {
     if (n % 4 == 0) {
         return n;
     } else if (n % 4 == 1) {

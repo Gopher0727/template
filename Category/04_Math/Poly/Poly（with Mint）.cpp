@@ -325,7 +325,7 @@ Poly berlekampMassey(const Poly& s) {
     return c;
 }
 
-Mint linearRecurrence(Poly p, Poly q, ll n) {
+Mint linearRecurrence(Poly p, Poly q, i64 n) {
     int m = q.size() - 1;
     while (n > 0) {
         auto newq = q;

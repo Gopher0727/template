@@ -7,9 +7,9 @@
 //
 
 // 堆优化 稀疏图
-vector<ll> dis(n + 1, LLONG_MAX / 2);
+vector<i64> dis(n + 1, LLONG_MAX / 2);
 auto dijkstra = [&](int s = 0) -> void {
-    priority_queue<pair<ll, ll>, vector<pair<ll, ll>>, greater<>> pq;
+    priority_queue<pair<i64, i64>, vector<pair<i64, i64>>, greater<>> pq;
     pq.emplace(0, s); // dis[k], k
     dis[s] = 0;
     while (!pq.empty()) {
@@ -29,7 +29,7 @@ auto dijkstra = [&](int s = 0) -> void {
 
 
 // 朴素 稠密图
-vector<ll> dis(n + 1, LLONG_MAX / 2);
+vector<i64> dis(n + 1, LLONG_MAX / 2);
 vector<int> vis(n + 1);
 auto plain_dijkstra = [&](int s = 0) {
     dis[s] = 0;

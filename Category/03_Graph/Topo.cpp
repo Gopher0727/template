@@ -1,46 +1,50 @@
-int TopoSort() {
-    int n, m; // 点数、边数
-    cin >> n >> m;
+struct Topo {
+    int n;
+    vector<vector<int>> g;
+    vector<int> inDeg;
 
-    vector<vector<int>> g(n);
-    vector<int> inDeg(n);
-    for (int i = 0; i < m; ++i) {
-        int a, b;
-        cin >> a >> b;
-        a--, b--;
-        g[a].push_back(b);
-        inDeg[b]++;
+    Topo() {}
+    Topo(int n) { init(n); }
+
+    void init(int n) {
+        g.assign(n, {});
+        inDeg.assign(n, 0);
     }
 
-    queue<int> q;
-    for (int i = 0; i < n; ++i) {
-        if (inDeg[i] == 0) { // 入度为 0 的点入队
-            q.emplace(i);
-        }
+    void addEdge(int u, int v) {
+        g[u].push_back(v);
+        inDeg[v]++;
     }
 
-    int cnt = 0; // 用于判断图中是否存在环的计数器
-    vector<int> res;
-    while (!q.empty()) {
-        int u = q.front();
-        res.push_back(u);
-        q.pop();
-        for (int& v : g[u]) {
-            if (--inDeg[v] == 0) { // 若入度减为0，则入队
-                q.emplace(v);
+    auto work() {
+        queue<int> q;
+        for (int i = 0; i < n; ++i) {
+            if (inDeg[i] == 0) {
+                q.emplace(i);
             }
         }
-        cnt++;
-    }
-    if (cnt != n) {
-        cout << -1;
-        return 0;
-    }
-    // 图无环，存在拓扑序列
-    for (int i = 0; i < res.size(); ++i) {
-        cout << res[i] << " \n"[i == res.size() - 1];
-    }
 
-    return 0;
-}
-// The node-index starts from 0
+        int cnt = 0; // 用于判断图中是否存在环的计数器
+        vector<int> res;
+        while (!q.empty()) {
+            int u = q.front();
+            q.pop();
+            res.push_back(u);
+            for (int& v : g[u]) {
+                if (--inDeg[v] == 0) {
+                    q.emplace(v);
+                }
+            }
+            cnt++;
+        }
+        if (cnt != n) {
+            cout << -1;
+            return;
+        }
+        // 图无环，存在拓扑序
+        int _ = res.size();
+        for (int i = 0; i < _; ++i) {
+            cout << res[i] << " \n"[i == _ - 1];
+        }
+    }
+};
