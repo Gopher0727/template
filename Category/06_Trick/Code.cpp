@@ -15,6 +15,7 @@ auto findORs(const vector<int>& a, int k) {
     return dp;
 }
 
+
 // O(n^2) 求子串（子数组）是否回文
 // 一般用于 DP 预处理
 //
@@ -28,3 +29,9 @@ auto isPalindrome(const string& s) {
     }
     return isPal;
 }
+
+
+// 前缀和+哈希表 枚举
+//
+// Problems:
+// https://codeforces.com/contest/519/problem/D    1800（远古题，难度分偏高）

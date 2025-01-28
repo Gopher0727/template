@@ -135,7 +135,7 @@ void sieve(int n) {
     isPrime.assign(n + 1, 1);
     isPrime[0] = isPrime[1] = 0;
     primes.clear();
-    phi.assign(n + 1, 0);
+    phi.resize(n + 1);
     phi[1] = 1;
 
     for (int i = 2; i <= n; i++) {
@@ -161,17 +161,18 @@ void sieve(int n) {
 // 线性筛 + 最小质因数 + 欧拉函数（从 1 到 i 中与 i 互质的数的个数）
 vector<int> primes;
 vector<int> minp;
-vector<int> phi; // phi[1] = 0
+vector<int> phi;
 void sieve(int n) {
     primes.clear();
     minp.assign(n + 1, 0);
-    phi.assign(n + 1, 0);
+    phi.resize(n + 1);
+    phi[1] = 1;
 
     for (int i = 2; i <= n; i++) {
         if (minp[i] == 0) {
+            primes.push_back(i);
             minp[i] = i;
             phi[i] = i - 1;
-            primes.push_back(i);
         }
         for (auto p : primes) {
             if (i * p > n) {

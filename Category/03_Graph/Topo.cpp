@@ -1,9 +1,11 @@
+// Problems:
+//
+//
 struct Topo {
-    int n;
     vector<vector<int>> g;
     vector<int> inDeg;
 
-    Topo() {}
+    Topo() = delete;
     Topo(int n) { init(n); }
 
     void init(int n) {
@@ -18,13 +20,12 @@ struct Topo {
 
     auto work() {
         queue<int> q;
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < g.size(); ++i) {
             if (inDeg[i] == 0) {
                 q.emplace(i);
             }
         }
 
-        int cnt = 0; // 用于判断图中是否存在环的计数器
         vector<int> res;
         while (!q.empty()) {
             int u = q.front();
@@ -35,16 +36,7 @@ struct Topo {
                     q.emplace(v);
                 }
             }
-            cnt++;
         }
-        if (cnt != n) {
-            cout << -1;
-            return;
-        }
-        // 图无环，存在拓扑序
-        int _ = res.size();
-        for (int i = 0; i < _; ++i) {
-            cout << res[i] << " \n"[i == _ - 1];
-        }
+        return pair {res, res.size() == g.size()};
     }
 };
