@@ -7,21 +7,21 @@
 //
 
 // 堆优化 稀疏图
-vector<i64> dis(n + 1, LLONG_MAX / 2);
+vector<i64> dis(n, inf);
 auto dijkstra = [&](int s = 0) -> void {
-    priority_queue<pair<i64, i64>, vector<pair<i64, i64>>, greater<>> pq;
+    priority_queue<pair<i64, int>, vector<pair<i64, int>>, greater<>> pq;
     pq.emplace(0, s); // dis[k], k
     dis[s] = 0;
     while (!pq.empty()) {
-        auto [d, cur] = pq.top();
+        auto [d, u] = pq.top();
         pq.pop();
-        if (d > dis[cur]) {
+        if (d > dis[u]) {
             continue;
         }
-        for (auto& [to, w] : g[cur]) {
-            if (dis[to] > d + w) {
-                dis[to] = d + w;
-                pq.emplace(dis[to], to);
+        for (auto& [v, w] : g[u]) {
+            if (dis[v] > d + w) {
+                dis[v] = d + w;
+                pq.emplace(dis[v], v);
             }
         }
     }
@@ -29,27 +29,25 @@ auto dijkstra = [&](int s = 0) -> void {
 
 
 // 朴素 稠密图
-vector<i64> dis(n + 1, LLONG_MAX / 2);
-vector<int> vis(n + 1);
+vector<i64> dis(n, inf);
+vector<int> vis(n);
 auto plain_dijkstra = [&](int s = 0) {
     dis[s] = 0;
-    for (int i = 1; i < n; ++i) {
-        int cur = 0;
-        for (int j = 1; j <= n; ++j) {
-            if (vis[j] == 0 && dis[j] < dis[cur]) {
-                cur = j;
+    for (int i = 0; i < n - 1; ++i) {
+        int u = -1;
+        for (int j = 0; j < n; ++j) {
+            if (vis[j] == 0 && (u == -1 || dis[j] < dis[u])) {
+                u = j;
             }
         }
-        vis[cur] = 1;
-
-        for (auto& [to, w] : g[cur]) {
-            if (dis[to] > dis[cur] + w) {
-                dis[to] = dis[cur] + w;
+        vis[u] = 1;
+        for (auto& [v, w] : g[u]) {
+            if (dis[v] > dis[u] + w) {
+                dis[v] = dis[u] + w;
             }
         }
     }
-    return 0;
-}();
+};
 // The node-index starts from 0
 
 
@@ -57,8 +55,6 @@ auto plain_dijkstra = [&](int s = 0) {
 // 因为边权只有 0 和 1，我们可以把最小堆换成双端队列，遇到 0 边权就加入队首，遇到 1 边权就加入队尾，
 // 这样可以保证队首总是最小的，就不需要最小堆了。
 //
-static constexpr int inf = INT_MAX / 2;
-
 void solve() {
     int n = grid.size(), m = grid[0].size();
 
@@ -71,7 +67,6 @@ void solve() {
     while (!q.empty()) {
         auto [x, y] = q.front();
         q.pop_front();
-
         for (auto& [dx, dy] : dir) {
             int nx = x + dx, ny = y + dy;
             if (nx >= 0 && nx < n && ny >= 0 && ny < m) {
@@ -90,8 +85,6 @@ void solve() {
 //
 // 时间复杂度 O(nm)
 //
-static constexpr int inf = INT_MAX / 2;
-
 void solve() {
     int n, m, s;
     cin >> n >> m >> s;

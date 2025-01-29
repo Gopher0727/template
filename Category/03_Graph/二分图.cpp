@@ -1,41 +1,31 @@
 // '二分图' 定义：
 // 如果一张无向图的 N 个节点可以分成 A，B 两个不相交的非空集合，并且同一个集合内的点没有边相连，那么称该无向图为二分图。
 //
-
-
 // 代码采用邻接表存图，且点下标从 0 开始。
-
-
+//
 // '二分图' 染色判定：
-// 由于二分图不存在奇环。尝试用两种颜色标记图中的节点，当一个点被标记后，所有与它相邻的节点应该标记与它相反的颜色，
+// 由于二分图不存在奇环，尝试用两种颜色标记图中的节点，当一个点被标记后，所有与它相邻的节点应该标记与它相反的颜色，
 // 若标记过程中产生冲突，则说明图中存在奇环。
 //
-vector<int> color(n, -1);
-
+vector<int> col(n, -1);
 auto dfs = [&](auto&& dfs, int u, int c = 0) -> bool {
-    color[u] = c;
+    col[u] = c;
     for (int v : g[u]) {
-        if (color[v] == -1) {
-            if (dfs(dfs, v, c ^ 1)) {
-                return true;
-            }
-        } else if (color[v] == c) {
+        if (col[v] == -1 && dfs(dfs, v, c ^ 1) || col[v] == c) {
             return true;
         }
     }
     return false;
 };
 
-bool flag = false;
+bool flag = true;
 for (int i = 0; i < n; ++i) {
-    if (color[i] == -1) {
-        if (dfs(dfs, i)) {
-            flag = true; // 发现奇环
-            break;
-        }
+    // 发现奇环，不是二分图
+    if (col[i] == -1 && dfs(dfs, i)) {
+        flag = false;
+        break;
     }
 }
-
 
 
 // 2-Sat
@@ -46,7 +36,7 @@ struct TwoSat {
 
     TwoSat(int n) : n(n), e(2 * n), ans(n) {}
 
-    void add(int u, bool f, int v, bool g) {
+    void addEdge(int u, bool f, int v, bool g) {
         e[2 * u + !f].push_back(2 * v + g);
         e[2 * v + !g].push_back(2 * u + f);
     }
@@ -55,7 +45,7 @@ struct TwoSat {
         vector<int> id(2 * n, -1), dfn(2 * n, -1), low(2 * n, -1);
         vector<int> stk;
         int now = 0, cnt = 0;
-        auto tarjan = [&](auto self, int u) -> void {
+        auto tarjan = [&](auto&& self, int u) -> void {
             stk.push_back(u);
             dfn[u] = low[u] = now++;
             for (auto v : e[u]) {
@@ -82,14 +72,12 @@ struct TwoSat {
             }
         }
         for (int i = 0; i < n; ++i) {
-            if (id[2 * i] == id[2 * i + 1]) return false;
+            if (id[2 * i] == id[2 * i + 1]) {
+                return false;
+            }
             ans[i] = id[2 * i] > id[2 * i + 1];
         }
         return true;
-    }
-
-    vector<bool> answer() {
-        return ans;
     }
 };
 

@@ -14,9 +14,9 @@ public:
 
     void init(int n) {
         this->n = n;
-        g.assign(n + 1, {});
-        deg.assign(n + 1, 0);
-        dis.assign(n + 1, -1E18);
+        g.assign(n, {});
+        deg.assign(n, 0);
+        dis.assign(n, -1E18);
     }
 
     void addEdge(int x, int y, i64 w) {
@@ -26,7 +26,7 @@ public:
 
     auto TopoSort(int s, int t) {
         queue<int> q;
-        for (int i = 1; i <= n; i++) {
+        for (int i = 0; i < n; i++) {
             if (deg[i] == 0) {
                 q.push(i);
             }
