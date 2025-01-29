@@ -15,6 +15,7 @@
 > 【统计放置房子的方案数】(https://leetcode.cn/problems/count-number-of-ways-to-place-houses/)
 > 【打家劫舍 II】(https://leetcode.cn/problems/house-robber-ii/)
 > 【施咒的最大伤害】(https://leetcode.cn/problems/maximum-total-damage-with-spell-casting/)
+    · 更简单的版本：https://codeforces.com/contest/455/problem/A    1500（old）
 
 
 最大子数组(子段)和：
@@ -31,7 +32,7 @@
     f[i] = f[i-1] + a[i]，取最大值就得到了状态转移方程 f[i] = max(f[i−1], 0) + a[i]，答案为 max(f)。
 
     2> 前缀和：用前缀和减去最小前缀和
-       维护当前的前缀和，更新答案（用当前的前缀和减去维护的最小前缀和），更新最小前缀和
+    维护当前的前缀和，更新答案（用当前的前缀和减去维护的最小前缀和），更新最小前缀和
 
     3> 线段树
 

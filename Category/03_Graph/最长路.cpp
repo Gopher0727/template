@@ -1,16 +1,25 @@
 // TopoSort + DP
+//
 // 计算一张 DAG 中的最长路径，在执行前可能需要使用 dijkstra 重构一张正确的 DAG
 //
 struct DAG {
     int n;
-    vector<vector<pair<int, int>>> g;
+    vector<vector<pair<int, i64>>> g;
     vector<int> deg;
     vector<i64> dis;
 
 public:
-    DAG(int n) : n(n), g(n + 1), deg(n + 1), dis(n + 1, -1E18) {}
+    DAG() = delete;
+    DAG(int n) { init(n); }
 
-    void add(int x, int y, int w) {
+    void init(int n) {
+        this->n = n;
+        g.assign(n + 1, {});
+        deg.assign(n + 1, 0);
+        dis.assign(n + 1, -1E18);
+    }
+
+    void addEdge(int x, int y, i64 w) {
         g[x].push_back({y, w});
         ++deg[y];
     }
