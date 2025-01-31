@@ -1,55 +1,9 @@
-package copypasta
-
-import (
-    "math"
-    "math/bits"
-    "reflect"
-    "slices"
-    "sort"
-    "unsafe"
-)
-
 /*
-注：这里的代码偏向于数据结构，其余的树上统计类算法见 dp.go 中的树形 DP 部分
-
 从特殊到一般：先思考一条链的情况，然后逐渐增加分支来思考一般的情况
-
 NOTE: 对于有根树的题，可以考虑加上 g[0] = append(g[0], -1) 来简化代码
 NOTE: 由于树上任意两点间的路径等价于两条点到根的路径的对称差，处理一些树上异或的问题可以往这个方向思考
 NOTE: 注意特判整棵树只有一条边的情况，此时两个叶结点对应同一条边
-NOTE: 一些树上点对问题，可以从「每条边所能产生的贡献」来思考 https://codeforces.com/problemset/problem/700/B
-NOTE: 节点数小于 √n 的同层节点对不超过 n√n，节点数大于 √n 的层的数量小于 √n 个 https://codeforces.com/problemset/problem/1806/E
-NOTE: 树上两点的关系：v 和 w 相等【特判】、v 是 w 的祖先、w 是 v 的祖先、其它（v 和 w 在两棵不同子树中）https://codeforces.com/problemset/problem/1778/E
-NOTE: 记录从 x 到根的路径上的每个点到 x 的距离，就可以从 y 走到根的路径上，找到到 x 的距离，从而求出 y 到 x 的距离 https://codeforces.com/problemset/problem/1790/F
-
-简单 DFS
-- [2368. 受限条件下可到达节点的数目](https://leetcode.cn/problems/reachable-nodes-with-restrictions/) 1477
-- [3004. 相同颜色的最大子树](https://leetcode.cn/problems/maximum-subtree-of-the-same-color/)（会员题）
-https://codeforces.com/problemset/problem/580/C
-https://codeforces.com/problemset/problem/34/D 1600
-https://codeforces.com/problemset/problem/1675/D 1300 树分成尽量少的链
-
-利用递归栈快速标记祖先节点 https://codeforces.com/problemset/problem/1774/E
-树上统计（从下往上）典型题 https://codeforces.com/problemset/problem/766/E
-不错的构造 https://codeforces.com/problemset/problem/260/D
-分类讨论的好题 https://codeforces.com/problemset/problem/765/E
-
-树上路径异或
-LC2791 https://leetcode.cn/problems/count-paths-that-can-form-a-palindrome-in-a-tree/
-http://poj.org/problem?id=3764
-https://www.luogu.com.cn/problem/UVA13277 https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=878&page=show_problem&problem=5201
-
-树上移动 move on tree
-https://codeforces.com/problemset/problem/1774/E
-
-https://en.wikipedia.org/wiki/Tree_traversal#Pre-order,_NLR
-前序中序构造二叉树 + 判定是否合法 https://atcoder.jp/contests/abc255/tasks/abc255_f
-
-树的最小表示：复杂度分析
-https://leetcode.cn/problems/special-binary-string/solutions/1731760/on-log-n-by-hqztrue-nrmw/
-
-其它
-https://codeforces.com/problemset/problem/1491/E 2400
+NOTE: 节点数小于 √n 的同层节点对不超过 n√n，节点数大于 √n 的层的数量小于 √n 个
 */
 
 // namespace
@@ -130,51 +84,6 @@ func (*tree) bfsMultiSources(g [][]int, starts []int) {
     bfs(q)
 }
 
-// DFS: 树上两点路径
-func (*tree) path(st, end int, g [][]int) (path []int) {
-    var f func(v, fa int) bool
-    f = func(v, fa int) bool {
-        if v == st {
-            path = append(path, v)
-            return true
-        }
-        for _, w := range g[v] {
-            if w != fa {
-                if f(w, v) {
-                    path = append(path, v)
-                    return true
-                }
-            }
-        }
-        return false
-    }
-    // 反向寻找
-    f(end, -1)
-    return
-}
-
-// 预处理从 v 到 w 走一步的节点 move1[v][w]
-// 定义 v 到 v 走一步的节点为 v
-// https://codeforces.com/problemset/problem/1771/D
-func (*tree) move1(g [][]int) [][]int {
-    move1 := make([][]int, len(g))
-    for i := range move1 {
-        move1[i] = make([]int, len(g))
-    }
-    for rt := range move1 {
-        var build func(int, int)
-        build = func(v, fa int) {
-            move1[v][rt] = fa
-            for _, w := range g[v] {
-                if w != fa {
-                    build(w, v)
-                }
-            }
-        }
-        build(rt, rt)
-    }
-    return move1
-}
 
 // 两个基本信息：节点深度和子树大小
 // 节点深度：

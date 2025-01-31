@@ -15,6 +15,7 @@ struct Cut {
     vector<int> low, dfn;
     int clk, root;
 
+    Cut() = delete;
     Cut(int n) { init(n); }
 
     void init(int n) {
@@ -76,6 +77,7 @@ struct SCC {
     vector<int> stk;
     int clk, cnt;
 
+    SCC() = delete;
     SCC(int n) { init(n); }
 
     void init(int n) {
@@ -148,6 +150,7 @@ struct EBCC {
     set<array<int, 2>> bridge;
     int now, cnt;
 
+    EBCC() = delete;
     EBCC(int n) { init(n); }
 
     void init(int n) {
@@ -219,7 +222,7 @@ struct EBCC {
     vector<int> dfn, low, col;
     int cur, cnt;
 
-    EBCC() {}
+    EBCC() = delete;
     EBCC(int n) { init(n); }
 
     void init(int n) {
@@ -309,6 +312,7 @@ struct VBCC {
     int now, cnt;
     vector<bool> point; // 记录是否为割点
 
+    VBCC() = delete;
     VBCC(int n) : n(n) {
         g.resize(n + 1);
         dfn.resize(n + 1);

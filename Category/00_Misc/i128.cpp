@@ -1,6 +1,6 @@
 namespace Algo_i128 {
-    using i128 = __int128_t;
-    using u128 = unsigned __int128_t;
+    using i128 = __int128;
+    using u128 = unsigned __int128;
 
     std::ostream& operator<<(std::ostream& os, i128 n) {
         if (n == 0) {

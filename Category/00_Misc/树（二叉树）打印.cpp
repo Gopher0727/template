@@ -1,9 +1,6 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-using ll = long long;
-
-static constexpr int MOD = 1'000'000'007;
 
 struct TreeNode {
     int val;

@@ -192,7 +192,7 @@
         "scope": "cpp",
         "prefix": "lambda",
         "body": [
-            "auto $1 = [&](auto&& $1, $0) {",
+            "auto $1 = [&](auto&& $1, $0) -> void {",
             "    ",
             "};",
             "$1($1);"
@@ -202,7 +202,7 @@
         "scope": "cpp",
         "prefix": "lambda23",
         "body": [
-            "auto $1 = [&](this auto&& $1, $0) {",
+            "auto $1 = [&](this auto&& $1, $0) -> void {",
             "    ",
             "};",
             "$1();"

@@ -9,7 +9,7 @@ struct HLD {
     vector<vector<int>> g;
     int cur;
 
-    HLD() {}
+    HLD() = delete;
     HLD(int n) { init(n); }
 
     void init(int n) {

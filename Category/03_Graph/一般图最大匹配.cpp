@@ -7,6 +7,7 @@ struct Graph {
     vector<vector<int>> e;
 
 public:
+    Graph() = delete;
     Graph(int n) : n(n), e(n) {}
 
     void addEdge(int u, int v) {
@@ -14,7 +15,7 @@ public:
         e[v].push_back(u);
     }
 
-    vector<int> findMatching(int m, const auto& init) {
+    vector<int> work(int m, const auto& init) {
         vector<int> match(n, -1), vis(n), link(n), f(n), dep(n);
         for (auto [x, y] : init) {
             match[x] = y;

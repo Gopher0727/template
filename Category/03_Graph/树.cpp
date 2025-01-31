@@ -39,6 +39,44 @@ public:
         }
         return _size;
     }
+
+    // DFS: 树上两点路径
+    auto path(int st, int end) {
+        vector<int> path;
+        auto f = [&](auto&& f, int u, int pa) {
+            if (u == st) {
+                path.push_back(u);
+                return true;
+            }
+            for (int v : g[u]) {
+                if (v != pa && f(f, v, u)) {
+                    path.push_back(u);
+                    return true;
+                }
+            }
+            return false;
+        };
+        f(f, end, -1);
+        return path;
+    }
+
+    // 预处理从 v 到 w 走一步的节点 move[v][w]
+    // 定义：v 到 v 走一步的节点为 v
+    auto move() {
+        vector move(n, vector<int>(n));
+        for (int i = 0; i < n; ++i) {
+            auto build = [&](auto&& build, int u, int pa) -> void {
+                move[u][i] = pa;
+                for (int v : g[u]) {
+                    if (v != pa) {
+                        build(build, v, u);
+                    }
+                }
+            };
+            build(build, i, i);
+        }
+        return move;
+    }
 };
 // 默认：无向图，点下标从 0 开始
 
