@@ -8,112 +8,85 @@
     权值线段树一般 update 即是 build。
 */
 class SegTree {
-private:
     int n;
     vector<int> cnt;
 
 public:
-    SegTree() {}
+    SegTree() = delete;
     SegTree(int n) : n(n), cnt(n << 2) {}
-    SegTree(vector<int>& vec) : SegTree(vec.size()) {
-        for (int& v : vec) {
-            update(1, 1, n, v);
-        }
-    }
-
-private:
-    // 单点修改：添加一个数字（增加 1）
-    void update(int o, int l, int r, int x) {
-        if (l == r) {
-            cnt[o]++;
-            return;
-        }
-        int mid = l + (r - l) / 2;
-        if (x <= mid) {
-            update(o << 1, l, mid, x);
-        }
-        if (x > mid) {
-            update(o << 1 | 1, mid + 1, r, x);
-        }
-        cnt[o] = cnt[o << 1] + cnt[o << 1 | 1];
-    }
 
     // 单点修改：增加 v
-    void update(int o, int l, int r, int x, int v) {
+    void modify(int x, int v, int o, int l, int r) {
         if (l == r) {
             cnt[o] += v;
             return;
         }
         int mid = l + (r - l) / 2;
         if (x <= mid) {
-            update(o << 1, l, mid, x, v);
+            modify(x, v, o << 1, l, mid);
         }
         if (x > mid) {
-            update(o << 1 | 1, mid + 1, r, x, v);
+            modify(x, v, o << 1 | 1, mid + 1, r);
         }
         cnt[o] = cnt[o << 1] + cnt[o << 1 | 1];
     }
+    void modify(int x, int v = 1) { modify(x, v, 1, 0, n - 1); }
 
     // 单点查询：求某数的出现次数
-    int query(int o, int l, int r, int x) {
+    int query(int x, int o, int l, int r) {
         if (l == r) {
             return cnt[o];
         }
         int mid = l + (r - l) / 2;
         if (x <= mid) {
-            return query(o << 1, l, mid, x);
+            return query(x, o << 1, l, mid);
         }
-        return query(o << 1 | 1, mid + 1, r, x);
+        return query(x, o << 1 | 1, mid + 1, r);
     }
+    int query(int x) { return query(x, 1, 0, n - 1); }
 
     // 区间查询 [L, R]：查询一段区间中所有数字出现的总次数
-    int query(int o, int l, int r, int L, int R) {
+    int query(int L, int R, int o, int l, int r) {
         if (L <= l && r <= R) {
             return cnt[o];
         }
         int ans = 0;
         int mid = l + (r - l) / 2;
         if (L <= mid) {
-            ans += query(o << 1, l, mid, L, R);
+            ans += query(L, R, o << 1, l, mid);
         }
         if (R > mid) {
-            ans += query(o << 1 | 1, mid + 1, r, L, R);
+            ans += query(L, R, o << 1 | 1, mid + 1, r);
         }
         return ans;
     }
+    int query(int L, int R) { return query(L, R, 1, 0, n - 1); }
 
     // 查询整个值域中第 k 小的数
-    int Kth_Min(int o, int l, int r, int k) {
+    int Kth_Min(int k, int o, int l, int r) {
         if (l == r) {
             return l;
         }
         int mid = l + (r - l) / 2;
         int cl = cnt[o << 1], cr = cnt[o << 1 | 1];
         if (k <= cl) {
-            return Kth_Min(o << 1, l, mid, k);
+            return Kth_Min(k, o << 1, l, mid);
         }
-        return Kth_Min(o << 1 | 1, mid + 1, r, k - cl);
+        return Kth_Min(k - cl, o << 1 | 1, mid + 1, r);
     }
+    int Kth_Min(int k) { return Kth_Min(k, 1, 0, n - 1); }
 
     // 查询整个值域中第 k 大的数
-    int Kth_Max(int o, int l, int r, int k) {
+    int Kth_Max(int k, int o, int l, int r) {
         if (l == r) {
             return l;
         }
         int mid = l + (r - l) / 2;
         int cl = cnt[o << 1], cr = cnt[o << 1 | 1];
         if (k <= cr) {
-            return Kth_Max(o << 1, l, mid, k);
+            return Kth_Max(k, o << 1, l, mid);
         }
-        return Kth_Max(o << 1 | 1, mid + 1, r, k - cr);
+        return Kth_Max(k - cr, o << 1 | 1, mid + 1, r);
     }
-
-public:
-    void update(int x) { return update(1, 1, n, x); }
-    void update(int x, int v) { return update(1, 1, n, x, v); }
-    int query(int x) { return query(1, 1, n, x); }
-    int query(int l, int r) { return query(1, 1, n, l, r); }
-    int Kth_Max(int k) { return Kth_Max(1, 1, n, k); }
-    int Kth_Min(int k) { return Kth_Min(1, 1, n, k); }
+    int Kth_Max(int k) { return Kth_Max(k, 1, 0, n - 1); }
 };
-// 注意下标从 1 开始。

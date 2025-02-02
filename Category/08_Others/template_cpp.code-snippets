@@ -92,7 +92,7 @@
     "inf": {
         "scope": "cpp",
         "prefix": "inf",
-        "body": "static constexpr $0 inf = numeric_limits<$0>::max() / 2;"
+        "body": "static constexpr $0 inf = numeric_limits<$0>::max();"
     },
     "readFromFile": {
         "scope": "cpp",

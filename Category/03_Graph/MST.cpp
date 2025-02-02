@@ -7,23 +7,19 @@
 //
 struct Tree {
     int n;
-    using info = array<int, 3>; // w, u, v
-    priority_queue<info, vector<info>, greater<>> pq;
+    vector<tuple<i64, int, int>> edges;
 
-public:
-    Tree(int n) : n(n) {}
+    Tree() = delete;
+    Tree(int n) : n(n) { edges.reserve(n); }
 
-    void add(int u, int v, i64 w) { pq.emplace(w, u, v); }
+    void addEdge(int u, int v, i64 w) { edges.push_back({w, u, v}); }
 
-    // 是否存在最小生成树，若存在计算总权重
     auto kruskal() {
         DSU dsu(n);
-
         i64 ans = 0;
         int cnt = 0;
-        while (!pq.empty()) {
-            auto [w, u, v] = pq.top();
-            pq.pop();
+        ranges::sort(edges);
+        for (auto& [w, u, v] : edges) {
             if (dsu.same(u, v)) {
                 continue;
             }
@@ -31,7 +27,7 @@ public:
             ans += w;
             cnt++;
         }
-        return pair {cnt == n - 1, ans};
+        return pair {ans, cnt == n - 1};
     }
 };
 
@@ -40,12 +36,12 @@ public:
 //
 struct Tree {
     int n;
-    vector<vector<pair<i64, int>>> g;
+    vector<vector<pair<int, i64>>> g;
 
-public:
+    Tree() = delete;
     Tree(int n) : n(n), g(n) {}
 
-    void add(int u, int v, i64 w) {
+    void addEdge(int u, int v, i64 w) {
         g[u].push_back({v, w});
         g[v].push_back({u, w});
     }
@@ -54,8 +50,7 @@ public:
         i64 ans = 0;
         int cnt = 0;
         vector<int> vis(n);
-        using PLI = pair<i64, int>;
-        priority_queue<PLI, vector<PLI>, greater<>> pq;
+        priority_queue<pair<i64, int>, vector<pair<i64, int>>, greater<>> pq;
         pq.push({0, 0});
         while (!pq.empty()) {
             auto [w, v] = pq.top();

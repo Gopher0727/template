@@ -17,6 +17,7 @@ struct DSU { // Implement (union by size) + (path compression)
     vector<int> pa, _size;
     int block;
 
+    DSU() = delete;
     DSU(int n) : pa(n), _size(n, 1), block(n) { iota(pa.begin(), pa.end(), 0); }
 
     // int find(int x) { return x == pa[x] ? x : pa[x] = find(pa[x]); }

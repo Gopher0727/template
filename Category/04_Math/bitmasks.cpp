@@ -7,6 +7,14 @@
 // > a % 2^k = a & (2^k - 1)
 
 
+// 枚举集合 s 的非空子集
+for (int sub = s; sub; sub = (sub - 1) & s) {}
+// 枚举集合 s 的所有子集
+for (int sub = s; sub != s; sub = (sub - 1) & s) {}
+// 枚举集合 s 的所有超集（全集内）
+for (int sup = s; sup < (1 << n); sup = (sup + 1) | s) {}
+
+
 //* Gosper's Hack
 // 查找下一个置位数与 num 相等的数
 int Gosper(int num) {

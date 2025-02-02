@@ -232,6 +232,7 @@ return dfs(dfs, 0, 0, true, false);
 
 //// 状压 DP
 
+子集型：【使数组包含目标值倍数的最小增量】(https://leetcode.cn/problems/minimum-increments-for-target-multiples-in-an-array/)
 
 
 //// 概率/期望 DP
