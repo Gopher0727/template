@@ -34,7 +34,7 @@ struct TwoSat {
     vector<vector<int>> e;
     vector<bool> ans;
 
-    TwoSat(int n) : n(n), e(2 * n), ans(n) {}
+    explicit TwoSat(int n) : n(n), e(2 * n), ans(n) {}
 
     void addEdge(int u, bool f, int v, bool g) {
         e[2 * u + !f].push_back(2 * v + g);

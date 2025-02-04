@@ -3,11 +3,9 @@ template <typename T = i64>
 class DualHeap {
     priority_queue<T, vector<T>, greater<>> p;
     priority_queue<T> q;
-    T cur;
+    T cur = 0;
 
 public:
-    DualHeap() : cur(0) {}
-
     void add(const T& x) {
         if (!q.size() || x >= q.top()) {
             p.push(x);
@@ -60,8 +58,6 @@ private:
     }
 
 public:
-    DualHeap() {}
-
     void add(T num) {
         if (q.empty() || num <= q.top()) {
             q.push(num);

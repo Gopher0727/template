@@ -6,7 +6,7 @@ private:
     vector<vector<T>> st;
 
 public:
-    explicit ST(int n, auto&& Op) : n(n), len(__lg(n)), Op(Op), st(n, vector<T>(len + 1)) {}
+    ST(int n, auto&& Op) : n(n), len(__lg(n)), Op(Op), st(n, vector<T>(len + 1)) {}
 
     void init(const vector<int>& vec) {
         for (int i = 0; i < n; ++i) {

@@ -12,7 +12,7 @@ struct suffixArray {
     // rk[i] 表示当前长度下，i 开始的后缀的排名。
     vector<int> sa, rk, lc;
 
-    suffixArray(const string& s) : n(s.size()), sa(n), lc(n - 1), rk(n) {
+    explicit suffixArray(const string& s) : n(s.size()), sa(n), lc(n - 1), rk(n) {
         iota(sa.begin(), sa.end(), 0);
         // 按所有后缀的第一个字符排序
         sort(sa.begin(), sa.end(), [&](int a, int b) { return s[a] < s[b]; });

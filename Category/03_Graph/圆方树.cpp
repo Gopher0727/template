@@ -5,8 +5,7 @@ struct BlockCutTree {
     vector<pair<int, int>> edges;
     int cnt, cur;
 
-    BlockCutTree() = delete;
-    BlockCutTree(int n) { init(n); }
+    explicit BlockCutTree(int n) { init(n); }
 
     void init(int n) {
         this->n = n;

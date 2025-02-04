@@ -9,8 +9,7 @@ struct HLD {
     vector<vector<int>> g;
     int cur;
 
-    HLD() = delete;
-    HLD(int n) { init(n); }
+    explicit HLD(int n) { init(n); }
 
     void init(int n) {
         this->n = n;
@@ -125,7 +124,7 @@ struct HLD {
     vector<int> in, id, val;
     SegTree seg;
 
-    HLD(int n) {
+    explicit HLD(int n) {
         this->n = n;
         idx = 0;
         ver.resize(n + 1);

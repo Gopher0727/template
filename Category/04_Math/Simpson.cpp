@@ -14,8 +14,7 @@ class Integral {
     }
 
 public:
-    Integral() = delete;
-    Integral(function<double(double)> func) : f(func) {}
+    explicit Integral(function<double(double)> func) : f(func) {}
 
     double simpson(double l, double r) const { return (f(l) + 4 * f((l + r) / 2) + f(r)) * (r - l) / 6; }
 

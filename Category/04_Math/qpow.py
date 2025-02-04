@@ -1,4 +1,5 @@
-"""
+# pypy 下面手写 qpow
+
 def qpow(a: int, b: int, p: int):
     ans = 1
     while b:
@@ -17,7 +18,7 @@ def qpow(a: int, b: int):
         a *= a
         b >>= 1
     return ans
-"""
+
 
 def multiply(a: List[List[int]], b: List[List[int]]) -> List[List[int]]:
     return [[sum(x * y for x, y in zip(row, col)) % MOD for col in zip(*b)] for row in a]

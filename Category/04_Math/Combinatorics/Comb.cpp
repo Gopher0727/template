@@ -11,8 +11,8 @@ struct Combinatorics {
     int n;
     vector<Mint> _fac, _invfac, _inv;
 
-    Combinatorics() : n {0}, _fac {1}, _invfac {1}, _inv {0} {}
-    Combinatorics(int n) : Combinatorics() { init(n); }
+    explicit Combinatorics() : n {0}, _fac {1}, _invfac {1}, _inv {0} {}
+    explicit Combinatorics(int n) : Combinatorics() { init(n); }
 
     void init(int m) {
         if (m <= n) {

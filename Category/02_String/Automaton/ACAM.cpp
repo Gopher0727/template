@@ -13,7 +13,7 @@ struct Node {
     Node* fail; // 当 cur.son[i] 不能匹配 target 中的某个字符时，cur.fail.son[i] 即为下一个待匹配节点（等于 root 则表示没有匹配）
     int len; // 从根到 node 的字符串的长度，也是 node 在 trie 中的深度
 
-    Node(int len) : len(len) {}
+    explicit Node(int len) : len(len) {}
 };
 
 struct AhoCorasick {

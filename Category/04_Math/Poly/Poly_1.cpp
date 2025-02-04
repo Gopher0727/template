@@ -38,7 +38,7 @@ namespace Polynomial {
     struct NTT {
         int n, invN;
 
-        NTT(int n) : n(n), invN(nttPow(n, P - 2)) {}
+        explicit NTT(int n) : n(n), invN(nttPow(n, P - 2)) {}
 
     public:
         void transform(vector<int>& a, const vector<int>& omega) const {
@@ -124,7 +124,7 @@ namespace Polynomial {
     }
 
     struct Poly : vector<int> {
-        Poly(int n) : vector<int>(n) {}
+        explicit Poly(int n) : vector<int>(n) {}
 
     public:
         Poly operator+(const Poly& b) const {

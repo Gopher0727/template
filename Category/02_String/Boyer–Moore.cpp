@@ -47,7 +47,7 @@ private:
     }
 
 public:
-    BoyerMoore(const string& pattern) : pattern(pattern), badCharTable(256, -1) {
+    explicit BoyerMoore(const string& pattern) : pattern(pattern), badCharTable(256, -1) {
         buildBadCharTable();
         buildGoodSuffixTable();
     }

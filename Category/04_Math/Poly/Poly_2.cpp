@@ -68,13 +68,13 @@ struct Poly {
     vector<int> a;
 
 public:
-    Poly() {}
-    Poly(int a0) {
+    explicit Poly() {}
+    explicit Poly(int a0) {
         if (a0) {
             a = {a0};
         }
     }
-    Poly(const vector<int>& a1) : a(a1) {
+    explicit Poly(const vector<int>& a1) : a(a1) {
         while (!a.empty() && !a.back()) {
             a.pop_back();
         }

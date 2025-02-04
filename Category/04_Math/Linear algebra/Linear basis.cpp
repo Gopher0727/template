@@ -7,8 +7,8 @@ class xorBasis {
 private:
     vector<int> b;
 
-    int num, or_;
-    bool canBeZero; // minXor, kthXor
+    int num = 0, or_ = 0;
+    bool canBeZero = false; // minXor, kthXor
     vector<int> basis; // initOnce
     vector<int> rightMost;
 
@@ -78,8 +78,7 @@ private:
     }
 
 public:
-    xorBasis() = default;
-    xorBasis(vector<int>& a) : b(64), rightMost(b.size()) {
+    explicit xorBasis(vector<int>& a) : b(64), rightMost(b.size()) {
         for (int& v : a) {
             insert(v);
         }

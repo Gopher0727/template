@@ -6,7 +6,7 @@ struct Tree {
     vector<vector<int>> g;
 
 public:
-    Tree(int n) : n(n), g(n) {}
+    explicit Tree(int n) : n(n), g(n) {}
 
     void addEdge(int x, int y) {
         g[x].push_back(y);

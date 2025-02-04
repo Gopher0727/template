@@ -11,8 +11,7 @@ struct Graph {
     vector<i64> dis;
     i64 ans = 0; // 输出 SPT 的边权和
 
-    Graph() = delete;
-    Graph(int n) { init(n); }
+    explicit Graph(int n) { init(n); }
 
     void init(int n) {
         this->n = n;

@@ -60,7 +60,7 @@ class StringHash {
     vector<int> pre_hash1, pre_hash2;
 
 public:
-    StringHash(const T& s) {
+    explicit StringHash(const T& s) {
         int n = s.size();
         pow_base1.resize(n + 1);
         pow_base2.resize(n + 1);

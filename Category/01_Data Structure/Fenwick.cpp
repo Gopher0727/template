@@ -2,7 +2,7 @@ template <typename T>
 struct Fenwick {
     vector<T> tree;
 
-    Fenwick(int n = 0) : tree(n, T {}) {}
+    explicit Fenwick(int n = 0) : tree(n, T {}) {}
     template <typename U>
     Fenwick(const vector<U>& a) : Fenwick(a.size()) {
         for (int i = 0; i < a.size(); ++i) {

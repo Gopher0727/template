@@ -3,9 +3,7 @@ struct Frac {
     T x, y;
 
 public:
-    Frac() : Frac(0, 1) {}
-    Frac(T x_) : Frac(x_, 1) {}
-    Frac(T x_, T y_) : x(x_), y(y_) {
+    Frac(T x_ = 0, T y_ = 1) : x(x_), y(y_) {
         if (y < 0) {
             y = -y;
             x = -x;

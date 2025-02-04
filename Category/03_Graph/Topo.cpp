@@ -2,8 +2,7 @@ struct Topo {
     vector<vector<int>> adj;
     vector<int> inDeg;
 
-    Topo() = delete;
-    Topo(int n) { init(n); }
+    explicit Topo(int n) { init(n); }
 
     void init(int n) {
         adj.assign(n, {});

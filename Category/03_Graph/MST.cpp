@@ -9,8 +9,7 @@ struct Tree {
     int n;
     vector<tuple<i64, int, int>> edges;
 
-    Tree() = delete;
-    Tree(int n) : n(n) { edges.reserve(n); }
+    explicit Tree(int n) : n(n) { edges.reserve(n); }
 
     void addEdge(int u, int v, i64 w) { edges.push_back({w, u, v}); }
 

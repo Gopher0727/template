@@ -9,8 +9,7 @@ struct DAG {
     vector<i64> dis;
 
 public:
-    DAG() = delete;
-    DAG(int n) { init(n); }
+    explicit DAG(int n) { init(n); }
 
     void init(int n) {
         this->n = n;

@@ -7,8 +7,7 @@ struct Graph {
     vector<vector<int>> e;
 
 public:
-    Graph() = delete;
-    Graph(int n) : n(n), e(n) {}
+    explicit Graph(int n) : n(n), e(n) {}
 
     void addEdge(int u, int v) {
         e[u].push_back(v);
