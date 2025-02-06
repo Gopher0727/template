@@ -22,7 +22,11 @@ void sieve(int n) {
 
 
 // 找到一个数的所有质因数
-auto factorize = [&](i64 x) {
+//
+// Problems:
+// https://codeforces.com/contest/1787/problem/B    1100
+//
+auto factorize(i64 x) {
     map<int, int> res;
     for (int i = 2; i * 1ll * i <= x; ++i) {
         while (x % i == 0) {
@@ -34,7 +38,7 @@ auto factorize = [&](i64 x) {
         res[x]++;
     }
     return res;
-};
+}
 
 
 // 埃氏筛  ErlichScreen  2e7
