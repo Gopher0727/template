@@ -3,19 +3,6 @@
 // Trie 是一棵 “非典型” 的多叉树模型
 // TrieNode 中并没有直接保存字符值的数据成员，而是通过字母映射表 next 和一个父节点预知所有子节点
 
-// 一般多叉树节点设计
-template <typename T>
-struct TreeNode {
-    T value; // 节点值
-    TreeNode* children[NUM]; // 指向子节点
-};
-
-// Trie 节点设计
-struct TrieNode {
-    bool isEnd; // 该节点是否是一个字符串的末尾
-    TrieNode* next[26]; // 子节点映射（假定26个小写英文字母）
-};
-
 // 字典树应用：
 //   · 检索字符串
 //   · AC自动机（trie 是AC自动机的一部分）

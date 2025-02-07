@@ -17,20 +17,21 @@
 // 当 o.son[i] 不能匹配文本串 s 中的某个字符时，o.fail.son[i] 即为下一个待匹配节点（等于 root 则表示没有匹配）
 // 虚拟子节点 o.son[i]，和 o.fail.son[i] 是同一个，方便失配时直接跳到下一个可能匹配的位置（但不一定是某个 words[k] 的最后一个字母）
 
-// cnt 表示（子树中）完整字符串的个数
 
+// 以下为数组实现：
 
-// 非指针实现
-//
 static constexpr int ALPHABET = 26;
 struct Node {
-    int len = 0;
-    int fail = 0;
-    int cnt = 0;
     array<int, ALPHABET> next {};
+    int len = 0;
+    int cnt = 0; // （子树中）完整字符串的个数
+    int fail = 0;
 };
+
 vector<Node> t;
-class AhoCorasick {
+vector<int> endIdx;
+
+struct AhoCorasick {
 public:
     AhoCorasick() { init(); }
 
@@ -38,6 +39,7 @@ public:
         t.assign(2, Node());
         t[0].next.fill(1);
         t[0].len = -1;
+        endIdx.clear();
     }
 
     int newNode() {
@@ -55,7 +57,7 @@ public:
             }
             p = t[p].next[x];
         }
-        t[p].cnt++;
+        endIdx.push_back(p);
         return p;
     }
 
@@ -76,182 +78,41 @@ public:
         }
     }
 
-    // 返回在文本串 s 中出现的模式串的数量（编号不同，则模式串不同）
-    int query(const string& s) {
-        int ans = 0;
+    // 返回模式串在文本串 s 中的出现次数（未找到时为 0）
+    auto query(const string& s) {
         int p = 1;
         for (char ch : s) {
-            p = t[p].next[ch - 'a'];
-            for (int f = p; f != 1 && t[f].cnt >= 0; f = t[f].fail) {
-                ans += t[f].cnt;
-                t[f].cnt = -1; // visited
-            }
-        }
-        return ans;
-    }
-} ac;
-
-
-// 指针实现
-//
-static constexpr int ALPHABET = 26;
-struct Node {
-    Node* son[ALPHABET] {};
-    Node* fail = nullptr;
-    Node* last = nullptr;
-    int len;
-    int cnt;
-
-    explicit Node(int len = 0, int cnt = 0) : len(len), cnt(cnt) {}
-};
-struct AhoCorasick {
-    Node* root = new Node();
-
-    void put(string& s) {
-        auto o = root;
-        for (char ch : s) {
-            if (o->son[ch - 'a'] == nullptr) {
-                o->son[ch - 'a'] = new Node(o->len + 1);
-            }
-            o = o->son[ch - 'a'];
-        }
-        o->cnt++;
-    }
-
-    void work() {
-        root->fail = root;
-        root->last = root;
-        queue<Node*> q;
-        for (int i = 0; i < ALPHABET; i++) {
-            auto& son = root->son[i];
-            if (son == nullptr) {
-                son = root;
-            } else {
-                son->fail = root;
-                son->last = root;
-                q.push(son);
-            }
-        }
-        while (!q.empty()) {
-            auto o = q.front();
-            q.pop();
-            for (int i = 0; i < ALPHABET; i++) {
-                auto& son = o->son[i];
-                if (son == nullptr) {
-                    son = o->fail->son[i];
-                    continue;
-                }
-                son->fail = o->fail->son[i]; // 计算失配位置
-                if (son->fail->cnt > 0) {
-                    son->last = son->fail;
-                } else {
-                    son->last = son->fail->last;
-                }
-                q.push(son);
-            }
-        }
-    }
-
-    // 返回在文本串 s 中出现的模式串的数量（编号不同，则模式串不同）
-    int query(const string& s) {
-        auto o = root;
-        int ans = 0;
-        for (char ch : s) {
-            o = o->son[ch - 'a'];
-            for (auto f = o; f != root && f->cnt >= 0; f = f->fail) {
-                ans += f->cnt;
-                f->cnt = -1; // 访问标记
-            }
-        }
-        return ans;
-    }
-};
-
-
-static constexpr int ALPHABET = 26;
-struct Node {
-    Node* son[ALPHABET] {};
-    Node* fail = nullptr;
-    int cnt = 0;
-    int idx = 0;
-};
-struct AhoCorasick {
-    Node* root = new Node();
-    map<Node*, int> inDeg;
-
-    int ord(char ch) { return ch - 'a'; }
-
-    void put(const string& s, int idx) {
-        auto o = this->root;
-        for (char ch : s) {
-            int i = ord(ch);
-            if (o->son[i] == nullptr) {
-                o->son[i] = new Node();
-                this->inDeg[o->son[i]] = 0;
-            }
-            o = o->son[i];
-        }
-        o->idx = ++idx;
-    }
-
-    void work() {
-        this->root->fail = this->root;
-        queue<Node*> q;
-        for (int i = 0; i < ALPHABET; i++) {
-            auto& son = this->root->son[i];
-            if (son == nullptr) {
-                son = this->root;
-            } else {
-                son->fail = this->root;
-                q.push(son);
-            }
-        }
-        while (!q.empty()) {
-            auto o = q.front();
-            q.pop();
-            for (int i = 0; i < ALPHABET; i++) {
-                auto& son = o->son[i];
-                if (son == nullptr) {
-                    son = o->fail->son[i];
-                    continue;
-                }
-                son->fail = o->fail->son[i]; // 计算失配位置
-                this->inDeg[son->fail]++;
-                q.push(son);
-            }
-        }
-    }
-
-    // 返回一个 ans 列表，其中 ans[i] 表示 patterns[i] 的在文本串 text 的出现次数（未找到时为 0）
-    //! 不存在相同的模式串
-    auto SearchCount(int n, const string& s) {
-        auto o = this->root;
-        for (char ch : s) {
-            o = o->son[ord(ch)];
             // 本来应该像上面那样一路找到 t.root，但这样太慢了
             // 可以先打个标记，然后在 fail 树上跑拓扑序一起统计
-            o->cnt++;
+            p = t[p].next[ch - 'a'];
+            t[p].cnt++;
         }
 
-        vector<int> ans(n);
-        auto deg = this->inDeg;
-        queue<Node*> q;
-        for (auto& [v, d] : deg) {
-            if (d == 0) {
+        int n = t.size();
+        vector<int> inDeg(n);
+        for (int u = 0; u < n; ++u) {
+            inDeg[t[u].fail]++;
+        }
+
+        queue<int> q;
+        for (int u = 0; u < n; ++u) {
+            if (inDeg[u] == 0) {
+                q.push(u);
+            }
+        }
+        while (!q.empty()) {
+            int u = q.front();
+            q.pop();
+            int v = t[u].fail;
+            t[v].cnt += t[u].cnt;
+            if (--inDeg[v] == 0) {
                 q.push(v);
             }
         }
-        while (!q.empty()) {
-            auto v = q.front();
-            q.pop();
-            if (v->idx > 0) {
-                ans[v->idx - 1] = v->cnt;
-            }
-            auto w = v->fail;
-            w->cnt += v->cnt;
-            if (--deg[w] == 0) {
-                q.push(w);
-            }
+
+        vector<int> ans;
+        for (int& v : endIdx) {
+            ans.push_back(t[v].cnt);
         }
         return ans;
     }
