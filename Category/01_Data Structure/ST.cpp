@@ -26,11 +26,6 @@ public:
 };
 
 
-// 练习题：
-// https://codeforces.com/contest/1878/problem/E    1400
-// https://atcoder.jp/contests/abc388/tasks/abc388_g
-
-
 // 二维 ST 表
 
 // 初始化 log 表

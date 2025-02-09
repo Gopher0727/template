@@ -1,85 +1,88 @@
-const int MX = 1 << 22; // 必须是2的幂
-const double pi = acos(-1);
+constexpr int P = 998244353;
 
-vector<complex<double>> w;
-auto init = []() {
-    w.resize(MX);
-    for (int i = 0; i < MX; ++i) {
-        w[i] = {cos(pi * 2 * i / MX), sin(pi * 2 * i / MX)};
-    }
-    return 0;
-}();
-
-void fft(vector<complex<double>>& a, bool inverse) {
-    int n = a.size();
-    for (int i = 0, j = 0; i < n; ++i) {
-        if (i < j) {
-            swap(a[i], a[j]);
+int qpow(int a, int b) {
+    int res = 1;
+    for (; b; b /= 2, a = 1ll * a * a % P) {
+        if (b % 2) {
+            res = 1ll * res * a % P;
         }
-        int k = n >> 1;
-        while ((j ^= k) < k) {
-            k >>= 1;
-        }
-    }
-    for (int step = 2; step <= n; step *= 2) {
-        int h = step / 2, d = MX / step;
-        for (int i = 0; i < n; i += step) {
-            for (int j = 0; j < h; ++j) {
-                auto& x = a[i + j];
-                auto& y = a[i + j + h];
-                auto t = w[d * j] * y;
-                y = x - t;
-                x = x + t;
-            }
-        }
-    }
-    if (inverse) {
-        reverse(a.begin() + 1, a.end());
-        for (auto& x : a) {
-            x /= n;
-        }
-    }
-}
-vector<double> operator*(const vector<double>& a, const vector<double>& b) {
-    int n = a.size() + b.size();
-    int size = 2;
-    while (size < n) {
-        size <<= 1;
-    }
-
-    vector<complex<double>> x(size), y(size);
-    copy(a.begin(), a.end(), x.begin());
-    copy(b.begin(), b.end(), y.begin());
-
-    fft(x, false);
-    fft(y, false);
-    for (int i = 0; i < size; i++) {
-        x[i] *= y[i];
-    }
-
-    fft(x, true); // IFFT
-
-    vector<double> res(n - 1);
-    for (int i = 0; i < res.size(); ++i) {
-        res[i] = x[i].real();
     }
     return res;
 }
 
-void solve() {
-    int n, m;
-    cin >> n >> m;
+vector<int> rev, roots {0, 1};
 
-    vector<double> a(n + 1), b(m + 1);
-    for (int i = 0; i <= n; ++i) {
-        cin >> a[i];
+void dft(vector<int>& a) {
+    int n = a.size();
+    if (int(rev.size()) != n) {
+        int k = __builtin_ctz(n) - 1;
+        rev.resize(n);
+        for (int i = 0; i < n; i++) {
+            rev[i] = rev[i >> 1] >> 1 | (i & 1) << k;
+        }
     }
-    for (int i = 0; i <= m; ++i) {
-        cin >> b[i];
+    for (int i = 0; i < n; i++) {
+        if (rev[i] < i) {
+            swap(a[i], a[rev[i]]);
+        }
+    }
+    if (roots.size() < n) {
+        int k = __builtin_ctz(roots.size());
+        roots.resize(n);
+        while ((1 << k) < n) {
+            int e = qpow(31, 1 << (__builtin_ctz(P - 1) - k - 1));
+            for (int i = 1 << (k - 1); i < (1 << k); i++) {
+                roots[2 * i] = roots[i];
+                roots[2 * i + 1] = 1ll * roots[i] * e % P;
+            }
+            k++;
+        }
     }
 
-    auto ans = a * b;
-    for (auto& v : ans) {
-        cout << fixed << setprecision(0) << v + 1e-8 << " ";
+    for (int k = 1; k < n; k *= 2) {
+        for (int i = 0; i < n; i += 2 * k) {
+            for (int j = 0; j < k; j++) {
+                int u = a[i + j];
+                int v = 1ll * a[i + j + k] * roots[k + j] % P;
+                a[i + j] = (u + v) % P;
+                a[i + j + k] = (u - v) % P;
+            }
+        }
     }
+}
+
+void idft(vector<int>& a) {
+    int n = a.size();
+    reverse(a.begin() + 1, a.end());
+    dft(a);
+    int inv = (1 - P) / n;
+    for (int i = 0; i < n; i++) {
+        a[i] = 1ll * a[i] * inv % P;
+    }
+}
+
+auto mul(vector<int> a, vector<int> b) {
+    int n = 1, tot = a.size() + b.size() - 1;
+    while (n < tot) {
+        n *= 2;
+    }
+    if (tot < 128) {
+        vector<int> c(a.size() + b.size() - 1);
+        for (int i = 0; i < a.size(); i++) {
+            for (int j = 0; j < b.size(); j++) {
+                c[i + j] = (c[i + j] + 1ll * a[i] * b[j]) % P;
+            }
+        }
+        return c;
+    }
+    a.resize(n);
+    b.resize(n);
+    dft(a);
+    dft(b);
+    for (int i = 0; i < n; i++) {
+        a[i] = 1ll * a[i] * b[i] % P;
+    }
+    idft(a);
+    a.resize(tot);
+    return a;
 }

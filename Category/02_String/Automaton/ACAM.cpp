@@ -1,4 +1,4 @@
-// AC 自动机    Aho–Corasick Automaton (ACAM) / Deterministic Finite Automaton (DFA)
+// AC 自动机    Aho–Corasick Automaton (ACAM)
 // trie + KMP
 // 如果我们既知道前缀信息（trie），又知道后缀信息（fail），就可以做字符串匹配：
 // 前缀的后缀就是子串，只要遍历到所有前缀，对每个前缀做「后缀匹配」，就完成了字符串匹配（统计子串出现次数）
@@ -23,9 +23,9 @@
 static constexpr int ALPHABET = 26;
 struct Node {
     array<int, ALPHABET> next {};
+    int fail = 0;
     int len = 0;
     int cnt = 0; // （子树中）完整字符串的个数
-    int fail = 0;
 };
 
 vector<Node> t;

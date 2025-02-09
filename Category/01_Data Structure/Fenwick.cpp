@@ -1,37 +1,35 @@
 template <typename T>
 struct Fenwick {
-    vector<T> tree;
+    int n;
+    vector<T> t;
 
-    explicit Fenwick(int n = 0) : tree(n, T {}) {}
-    template <typename U>
-    Fenwick(const vector<U>& a) : Fenwick(a.size()) {
-        for (int i = 0; i < a.size(); ++i) {
-            add(i, a[i]);
-        }
-    }
+    explicit Fenwick(int n = 0) : n(n), t(n, T {}) {}
 
     void add(int k, const T& val) {
-        for (int i = k + 1; i <= tree.size(); i += i & -i) {
-            tree[i - 1] = tree[i - 1] + val;
+        for (int i = k + 1; i <= n; i += i & -i) {
+            t[i - 1] = t[i - 1] + val;
         }
     }
 
-    T query(int k) { // Sum of the first k elements
+    // Sum of the first k elements
+    T query(int k) {
         T ans {};
         for (int i = k; i > 0; i &= i - 1) {
-            ans = ans + tree[i - 1];
+            ans = ans + t[i - 1];
         }
         return ans;
     }
+
     T query(int l, int r) { return query(r) - query(l); }
 
-    int select(const T& k) { // The length of the longest prefix that No sum of its prefix greater than k
-        int x = 0, n = tree.size();
+    // The length of the longest prefix that 'NO' sum of its prefix is greater than k
+    int select(const T& k) {
+        int x = 0;
         T cur {};
         for (int i = 1 << std::__lg(n); i; i >>= 1) {
-            if (x + i <= n && cur + tree[x + i - 1] <= k) {
+            if (x + i <= n && cur + t[x + i - 1] <= k) {
                 x += i;
-                cur = cur + tree[x - 1];
+                cur = cur + t[x - 1];
             }
         }
         return x;
@@ -39,6 +37,7 @@ struct Fenwick {
 };
 // Fenwick index is aligned with the corresponding array index.
 // The node index starts from 0
+
 
 // 差分树状数组，利用差分数组，实现 O(log n) 的区间加、区间查询
 // a[1] = diff[1], a[2] = diff[1] + diff[2], ..., a[m] = diff[1] + ... + diff[m]

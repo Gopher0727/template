@@ -1,22 +1,24 @@
-struct PAM {
-    static constexpr int ALPHABET_SIZE = 26;
-    struct Node {
-        int len {};
-        int link {};
-        int cnt {};
-        std::array<int, ALPHABET_SIZE> next {};
-    };
-    std::vector<Node> t;
-    int suff;
-    std::string s;
+static constexpr int ALPHABET_SIZE = 26;
+struct Node {
+    array<int, ALPHABET_SIZE> next {};
+    int fail = 0;
+    int len = 0;
+    int cnt = 0;
+};
 
+vector<Node> t;
+string s;
+int endIdx;
+
+struct PAM {
+public:
     PAM() { init(); }
 
     void init() {
         t.assign(2, Node());
         t[0].len = -1;
-        suff = 1;
         s.clear();
+        endIdx = 1;
     }
 
     int newNode() {
@@ -24,48 +26,39 @@ struct PAM {
         return t.size() - 1;
     }
 
-    bool add(char c) {
+    bool insert(char ch) {
         int pos = s.size();
-        s += c;
-        int let = c - 'a';
-        int cur = suff, curlen = 0;
+        s.push_back(ch);
+        int x = ch - 'a';
+        int cur = endIdx, curlen = 0;
         while (true) {
             curlen = t[cur].len;
             if (pos - 1 - curlen >= 0 && s[pos - 1 - curlen] == s[pos]) {
                 break;
             }
-            cur = t[cur].link;
+            cur = t[cur].fail;
         }
-        if (t[cur].next[let]) {
-            suff = t[cur].next[let];
+        if (t[cur].next[x]) {
+            endIdx = t[cur].next[x];
             return false;
         }
         int num = newNode();
-        suff = num;
+        endIdx = num;
+        t[cur].next[x] = num;
         t[num].len = t[cur].len + 2;
-        t[cur].next[let] = num;
         if (t[num].len == 1) {
-            t[num].link = 1;
+            t[num].fail = 1;
             t[num].cnt = 1;
             return true;
         }
         while (true) {
-            cur = t[cur].link;
-            curlen = t[cur].len;
+            cur = t[cur].fail, curlen = t[cur].len;
             if (pos - 1 - curlen >= 0 && s[pos - 1 - curlen] == s[pos]) {
-                t[num].link = t[cur].next[let];
+                t[num].fail = t[cur].next[x];
                 break;
             }
         }
-        t[num].cnt = 1 + t[t[num].link].cnt;
+        t[num].cnt = t[t[num].fail].cnt + 1;
         return true;
     }
-
-    int next(int p, int x) { return t[p].next[x]; }
-
-    int link(int p) { return t[p].link; }
-
-    int len(int p) { return t[p].len; }
-
-    int size() { return t.size(); }
 };
