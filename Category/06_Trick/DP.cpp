@@ -115,7 +115,10 @@ Problems:
 01背包：
 下标从0开始，外层枚举物品，内层枚举背包容量
 
-> 恰好装满型：【和为目标值的最长子序列的长度】(https://leetcode.cn/problems/length-of-the-longest-subsequence-that-sums-to-target/)
+> 恰好装满型：
+    【和为目标值的最长子序列的长度】(https://leetcode.cn/problems/length-of-the-longest-subsequence-that-sums-to-target/)
+    https://atcoder.jp/contests/abc281/tasks/abc281_d    二维
+
 
 class Solution:
     def lengthOfLongestSubsequence(self, nums: List[int], target: int) -> int:

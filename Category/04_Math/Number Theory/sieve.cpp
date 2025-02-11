@@ -9,7 +9,7 @@ bool isPrime(i64 n) {
 }
 
 
-// 记录范围内的所有数的因数  1e5
+// 记录范围内的所有数的因数  2e5
 vector<vector<int>> factors;
 void sieve(int n) {
     factors.resize(n + 1);
@@ -22,10 +22,6 @@ void sieve(int n) {
 
 
 // 找到一个数的所有质因数
-//
-// Problems:
-// https://codeforces.com/contest/1787/problem/B    1100
-//
 auto factorize(i64 x) {
     map<int, int> res;
     for (int i = 2; i * 1ll * i <= x; ++i) {
@@ -59,8 +55,8 @@ void sieve(int n) {
 }
 
 
-// 线性筛  LinearScreen  5e7
-// (EulerScreen) ———— 让每个合数只被标记一次
+// 线性筛  （LinearScreen / EulerScreen）  5e7
+// ———— 让每个合数只被标记一次
 vector<int> isPrime;
 vector<int> primes;
 void sieve(int n) {
