@@ -180,6 +180,9 @@ Problems:
 
 /*---------------------------------------------- 数位 DP ----------------------------------------------
 
+// Problems:
+// 【盒子中小球的最大数量】(https://leetcode.cn/problems/maximum-number-of-balls-in-a-box)
+
 vector memo(m, vector<int>(1 << 10, -1));
 auto dfs = [&](auto&& dfs, int i, int mask, bool isLimit, bool isNum) -> int {
     if (i == m) {
