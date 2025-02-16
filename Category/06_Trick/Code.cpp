@@ -4,6 +4,33 @@ int d1 = (r - (v % r)) % r;
 int d2 = (v + r - 1) / r * r - v;
 
 
+// 给定区间集合，返回最多能选多少个无重叠的区间（端点重合不记作重叠）
+auto intervalsCount(vector<pair<int, int>>& intervals) {
+    ranges::sort(intervals, {}, &pair<int, int>::second);
+    int ans = 0, pre = numeric_limits<int>::min();
+    for (auto [l, r] : intervals) {
+        if (l >= pre) {
+            ans++;
+            pre = r;
+        }
+    }
+    return ans;
+}
+
+// 给定区间集合，返回合并后的区间
+auto intervalsMerge(vector<pair<int, int>>& intervals) {
+    vector<pair<int, int>> ans;
+    for (auto& p : intervals) {
+        if (!ans.empty() && p.first <= ans.back().second) {
+            ans.back().second = max(ans.back().second, p.second);
+        } else {
+            ans.emplace_back(p);
+        }
+    }
+    return ans;
+}
+
+
 // 预处理，求长为 k 的子序列的按位或    O(n * k * 2^k)
 //
 auto findORs(const vector<int>& a, int k) {

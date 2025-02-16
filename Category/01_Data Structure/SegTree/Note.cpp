@@ -133,3 +133,9 @@ struct Info {
 Info operator+(const Info& a, const Info& b) {
     return Info(max(a.mx, b.mx));
 }
+
+
+
+// 扫描线（矩形面积并）
+//
+// 直接维护的困难：一次操作对于同一节点内的每个元素可能有不同的影响。

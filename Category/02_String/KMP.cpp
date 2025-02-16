@@ -25,7 +25,7 @@ vector<int> calcPi(string& s) {
 
 // 返回文本串 text 中，模式串 pattern 所有成功匹配的下标（pattern[0] 在 text 中的下标）
 vector<int> kmpSearch(string& text, string& pattern) {
-    vector<int> res;
+    vector<int> pos;
     auto pi = calcPi(pattern);
     int match = 0;
     for (int i = 0; i < text.size(); ++i) {
@@ -37,11 +37,11 @@ vector<int> kmpSearch(string& text, string& pattern) {
             match++;
         }
         if (match == pattern.size()) {
-            res.emplace_back(i - pattern.size() + 1);
+            pos.emplace_back(i - pattern.size() + 1);
             match = pi[match - 1]; // 不允许重叠则置零
         }
     }
-    return res;
+    return pos;
 }
 
 // 生成 nxt 数组

@@ -1,5 +1,5 @@
 template <class Info, class Tag>
-class Node {
+class DynNode {
 public:
     Node* left = nullptr;
     Node* right = nullptr;
@@ -7,11 +7,11 @@ public:
     Info info;
     Tag tag;
 
-    Node(int l, int r) : l(l), r(r), mid(l + (r - l) / 2) { info.len = r - l + 1; }
+    DynNode(int l, int r) : l(l), r(r), mid(l + (r - l) / 2) { info.len = r - l + 1; }
 };
 template <class Info, class Tag, int N>
 class DynamicSegTree {
-    using _Node = Node<Info, Tag>;
+    using _Node = DynNode<Info, Tag>;
 
 private:
     _Node* root;

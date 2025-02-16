@@ -174,25 +174,11 @@
             "static constexpr int dy[] = {1, -1, -1, 1};"
         ]
     },
-    "区间合并": {
-        "scope": "cpp",
-        "prefix": "intervalsMerge",
-        "body": [
-            "vector<pair<int, int>> ans;",
-            "for (auto& p : vec) {",
-            "    if (!ans.empty() && p.first <= ans.back().second) {",
-            "        ans.back().second = max(ans.back().second, p.second);",
-            "    } else {",
-            "        ans.emplace_back(p);",
-            "    }",
-            "}"
-        ]
-    },
     "lambda递归": {
         "scope": "cpp",
         "prefix": "lambda",
         "body": [
-            "auto $1 = [&](auto&& $1, $0) -> void {",
+            "auto $1 = [&](auto&& $1, $0) -> $2 {",
             "    ",
             "};",
             "$1($1);"
@@ -202,7 +188,7 @@
         "scope": "cpp",
         "prefix": "lambda23",
         "body": [
-            "auto $1 = [&](this auto&& $1, $0) -> void {",
+            "auto $1 = [&](this auto&& $1, $0) -> $2 {",
             "    ",
             "};",
             "$1();"
