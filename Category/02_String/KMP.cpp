@@ -6,7 +6,7 @@
 //
 
 // 计算前缀函数
-vector<int> calcPi(string& s) {
+auto calcPi(const string& s) {
     int n = s.size();
     vector<int> pi(n);
     int match = 0;
@@ -23,21 +23,21 @@ vector<int> calcPi(string& s) {
     return pi;
 }
 
-// 返回文本串 text 中，模式串 pattern 所有成功匹配的下标（pattern[0] 在 text 中的下标）
-vector<int> kmpSearch(string& text, string& pattern) {
+// 返回文本串 s 中，模式串 p 所有成功匹配的下标（pattern[0] 在 s 中的下标）
+auto kmpSearch(const string& s, const string p) {
+    auto pi = calcPi(p);
     vector<int> pos;
-    auto pi = calcPi(pattern);
     int match = 0;
-    for (int i = 0; i < text.size(); ++i) {
-        char ch = text[i];
-        while (match > 0 && pattern[match] != ch) {
+    for (int i = 0; i < s.size(); ++i) {
+        char ch = s[i];
+        while (match > 0 && p[match] != ch) {
             match = pi[match - 1];
         }
-        if (pattern[match] == ch) {
+        if (p[match] == ch) {
             match++;
         }
-        if (match == pattern.size()) {
-            pos.emplace_back(i - pattern.size() + 1);
+        if (match == p.size()) {
+            pos.emplace_back(i - p.size() + 1);
             match = pi[match - 1]; // 不允许重叠则置零
         }
     }
@@ -45,7 +45,7 @@ vector<int> kmpSearch(string& text, string& pattern) {
 }
 
 // 生成 nxt 数组
-vector<int> nextArray(string& s) {
+auto nextArray(const string& s) {
     int n = s.size();
     vector<int> nxt(n + 1);
     nxt[0] = -1;
@@ -59,7 +59,7 @@ vector<int> nextArray(string& s) {
 }
 
 // 返回文本串 text 中，模式串 pattern 首次出现的下标（pattern[0] 在 text 中的下标）
-int KMP(string& text, string& pattern) {
+int KMP(const string& text, const string& pattern) {
     vector<int> nxt(nextArray(pattern));
     int n = text.size(), m = pattern.size();
     int x = 0, y = 0;
