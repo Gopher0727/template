@@ -149,7 +149,7 @@ struct Tag {
     }
 };
 struct Info {
-    i64 sum = 0, len = 0;
+    i64 sum = 0, len = 1;
     void apply(const Tag& t) {
         if (t.add) {
             sum += len * t.add;
