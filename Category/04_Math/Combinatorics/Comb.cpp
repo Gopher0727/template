@@ -1,17 +1,8 @@
-// Problems：
-//
-// [F. Multiplicative Arrays](https://codeforces.com/contest/2060/problem/F)    DP
-//
-// [统计恰好有 K 个相等相邻元素的数组数目](https://leetcode.cn/problems/count-the-number-of-arrays-with-k-matching-adjacent-elements/)
-//
-
-// 自动扩容类（Mint）
-//
 struct Combinatorics {
     int n;
-    vector<Mint> _fac, _invfac, _inv;
+    vector<Mint> _fac, _ifac, _inv;
 
-    explicit Combinatorics() : n {0}, _fac {1}, _invfac {1}, _inv {0} {}
+    explicit Combinatorics() : n {0}, _fac {1}, _ifac {1}, _inv {0} {}
     explicit Combinatorics(int n) : Combinatorics() { init(n); }
 
     void init(int m) {
@@ -19,16 +10,16 @@ struct Combinatorics {
             return;
         }
         _fac.resize(m + 1);
-        _invfac.resize(m + 1);
+        _ifac.resize(m + 1);
         _inv.resize(m + 1);
 
         for (int i = n + 1; i <= m; i++) {
             _fac[i] = _fac[i - 1] * i;
         }
-        _invfac[m] = _fac[m].inv();
+        _ifac[m] = _fac[m].inv();
         for (int i = m; i > n; i--) {
-            _invfac[i - 1] = _invfac[i] * i;
-            _inv[i] = _invfac[i] * _fac[i - 1];
+            _ifac[i - 1] = _ifac[i] * i;
+            _inv[i] = _ifac[i] * _fac[i - 1];
         }
         n = m;
     }
@@ -39,11 +30,11 @@ struct Combinatorics {
         }
         return _fac[m];
     }
-    Mint invfac(int m) {
+    Mint ifac(int m) {
         if (m > n) {
             init(2 * m);
         }
-        return _invfac[m];
+        return _ifac[m];
     }
     Mint inv(int m) {
         if (m > n) {
@@ -55,13 +46,13 @@ struct Combinatorics {
         if (n < m || m < 0) {
             return 0;
         }
-        return fac(n) * invfac(m) * invfac(n - m);
+        return fac(n) * ifac(m) * ifac(n - m);
     }
     Mint perm(int n, int m) {
         if (n < m || m < 0) {
             return 0;
         }
-        return fac(n) * invfac(n - m);
+        return fac(n) * ifac(n - m);
     }
     Mint catalan(int n) {
         if (n <= 0) {
@@ -88,28 +79,28 @@ namespace Comb {
 
     const int MX = 2e5 + 1;
 
-    vector<i64> F, INV_F;
+    vector<i64> Fac, iFac;
     auto init = [] {
-        F.resize(MX); // F[i] = i!
-        INV_F.resize(MX); // INV_F[i] = i!^-1
+        Fac.resize(MX); // Fac[i] = i!
+        iFac.resize(MX); // iFac[i] = i!^-1
 
-        F[0] = 1;
+        Fac[0] = 1;
         for (int i = 1; i < MX; i++) {
-            F[i] = F[i - 1] * i % MOD;
+            Fac[i] = Fac[i - 1] * i % MOD;
         }
         // 连续阶乘的逆元 从右往左 线性递推
-        INV_F[MX - 1] = qpow(F[MX - 1], MOD - 2, MOD);
+        iFac[MX - 1] = qpow(Fac[MX - 1], MOD - 2, MOD);
         for (int i = MX - 1; i; i--) {
-            INV_F[i - 1] = INV_F[i] * i % MOD;
+            iFac[i - 1] = iFac[i] * i % MOD;
         }
         return 0;
     }();
 
     i64 comb(int n, int m) {
-        return n < m || m < 0 ? 0 : F[n] * INV_F[m] % MOD * INV_F[n - m] % MOD;
+        return n < m || m < 0 ? 0 : Fac[n] * iFac[m] % MOD * iFac[n - m] % MOD;
     }
     i64 perm(int n, int m) {
-        return n < m || m < 0 ? 0 : F[n] * INV_F[n - m] % MOD;
+        return n < m || m < 0 ? 0 : Fac[n] * iFac[n - m] % MOD;
     }
     i64 catalan(int n) {
         return n < 0 ? 0 : comb(2 * n, n) - comb(2 * n, n - 1);

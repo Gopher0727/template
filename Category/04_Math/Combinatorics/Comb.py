@@ -11,10 +11,10 @@ class Combinatorics:
         for i in range(N - 2, -1, -1):
             self.g[i] = self.g[i + 1] * (i + 1) % MOD
 
-    def fact(self, n) -> int:
+    def fac(self, n) -> int:
         return self.f[n]
 
-    def fact_inv(self, n) -> int:
+    def ifac(self, n) -> int:
         return self.g[n]
 
     def inv(self, n) -> int:
@@ -48,7 +48,7 @@ fac[0] = 1
 for i in range(1, N):
     fac[i] = fac[i - 1] * i % MOD
 
-inv_f = [0] * N  # inv_f[i] = i!^-1
-inv_f[-1] = pow(fac[-1], -1, MOD)
+ifac = [0] * N  # ifac[i] = i!^-1
+ifac[-1] = pow(fac[-1], -1, MOD)
 for i in range(N - 1, 0, -1):
-    inv_f[i - 1] = inv_f[i] * i % MOD
+    ifac[i - 1] = ifac[i] * i % MOD
