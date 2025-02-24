@@ -10,7 +10,7 @@ vector<int> getMu(int n) {
     vector<int> p;
     p.reserve(n + 1);
     for (int i = 2; i <= n; ++i) {
-        if (!flg[i]) {
+        if (flg[i] == 0) {
             p.push_back(i);
             mu[i] = -1;
         }

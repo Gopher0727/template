@@ -1,3 +1,5 @@
+// 自动扩容类 （Mint）
+//
 struct Combinatorics {
     int n;
     vector<Mint> _fac, _ifac, _inv;
@@ -42,7 +44,7 @@ struct Combinatorics {
         }
         return _inv[m];
     }
-    Mint comb(int n, int m) {
+    Mint binom(int n, int m) {
         if (n < m || m < 0) {
             return 0;
         }
@@ -58,14 +60,14 @@ struct Combinatorics {
         if (n <= 0) {
             return 0;
         }
-        return comb(2 * n, n) - comb(2 * n, n - 1);
+        return binom(2 * n, n) - binom(2 * n, n - 1);
     }
 } C;
 
 
 // 预处理
 //
-namespace Comb {
+namespace Combinatorics {
     i64 qpow(i64 a, i64 b, int p) {
         i64 res = 1;
         a = (a % p + p) % p;
@@ -96,24 +98,24 @@ namespace Comb {
         return 0;
     }();
 
-    i64 comb(int n, int m) {
+    i64 binom(int n, int m) {
         return n < m || m < 0 ? 0 : Fac[n] * iFac[m] % MOD * iFac[n - m] % MOD;
     }
     i64 perm(int n, int m) {
         return n < m || m < 0 ? 0 : Fac[n] * iFac[n - m] % MOD;
     }
     i64 catalan(int n) {
-        return n < 0 ? 0 : comb(2 * n, n) - comb(2 * n, n - 1);
+        return n < 0 ? 0 : binom(2 * n, n) - binom(2 * n, n - 1);
     }
 };
-using namespace Comb;
+using namespace Combinatorics;
 
 
 // 操作次数较少，直接实现
 //
-namespace Comb {
+namespace Combinatorics {
     // 小范围，不取模
-    i64 comb_not_MOD(int n, int m) {
+    i64 binom_not_MOD(int n, int m) {
         if (n < m || m < 0) {
             return 0;
         }
@@ -145,7 +147,7 @@ namespace Comb {
         }
         return res;
     }
-    i64 comb(int n, int m) {
+    i64 binom(int n, int m) {
         if (n < m || m < 0) {
             return 0;
         }
@@ -156,8 +158,8 @@ namespace Comb {
         }
         return ans;
     }
-}; // namespace Comb
-using namespace Comb;
+}; // namespace Combinatorics
+using namespace Combinatorics;
 
 
 // 逆元：
