@@ -1,11 +1,11 @@
 // 自动扩容类 （Mint）
 //
-struct Combinatorics {
+struct Comb {
     int n;
     vector<Mint> _fac, _ifac, _inv;
 
-    explicit Combinatorics() : n {0}, _fac {1}, _ifac {1}, _inv {0} {}
-    explicit Combinatorics(int n) : Combinatorics() { init(n); }
+    explicit Comb() : n {0}, _fac {1}, _ifac {1}, _inv {0} {}
+    explicit Comb(int n) : Comb() { init(n); }
 
     void init(int m) {
         if (m <= n) {
@@ -65,9 +65,9 @@ struct Combinatorics {
 } C;
 
 
-// 预处理
+// 预处理阶乘及阶乘逆元，模数为质数
 //
-namespace Combinatorics {
+namespace Comb {
     i64 qpow(i64 a, i64 b, int p) {
         i64 res = 1;
         a = (a % p + p) % p;
@@ -108,59 +108,75 @@ namespace Combinatorics {
         return n < 0 ? 0 : binom(2 * n, n) - binom(2 * n, n - 1);
     }
 };
-using namespace Combinatorics;
+using namespace Comb;
 
 
-// 操作次数较少，直接实现
-//
-namespace Combinatorics {
-    // 小范围，不取模
-    i64 binom_not_MOD(int n, int m) {
-        if (n < m || m < 0) {
-            return 0;
-        }
-        i64 ans = 1;
-        for (int i = 0; i < m; i++) {
-            ans = ans * (n - i) / (i + 1);
-        }
-        return ans;
+// 直接实现，且不取模
+i64 binom(int n, int m) {
+    if (n < m || m < 0) {
+        return 0;
     }
+    i64 ans = 1;
+    for (int i = 0; i < m; i++) {
+        ans = ans * (n - i) / (i + 1);
+    }
+    return ans;
+}
 
 
+// 预处理连续一组数的逆元，直接实现，模数为质数
+//
+namespace Comb {
     // 求连续一组数的逆元
+    const int MX = 2E5 + 1;
+
     vector<int> inv;
-    auto Inv = [](int n = 2E5, int p = MOD) {
-        inv.resize(n + 1);
+    auto Inv = []() {
+        inv.resize(MX + 1);
         inv[1] = 1;
-        for (int i = 2; i <= n; ++i) {
+        for (int i = 2; i <= MX; ++i) {
             inv[i] = p - inv[p % i] * 1ll * (p / i) % p;
         }
         return inv;
     }();
-    i64 qpow(i64 a, i64 b, int p) {
-        i64 res = 1;
-        a = (a % p + p) % p;
-        for (; b; b >>= 1, a = a * a % p) {
-            if (b & 1) {
-                res = a * res % p;
-            }
-        }
-        return res;
-    }
     i64 binom(int n, int m) {
         if (n < m || m < 0) {
             return 0;
         }
         i64 ans = 1;
         for (int i = 1, j = n - m + 1; i <= m; i++, j++) {
-            // ans = ans * j % MOD * qpow(i, MOD - 2, MOD) % MOD;
             ans = ans * j % MOD * inv[i] % MOD;
         }
         return ans;
     }
-}; // namespace Combinatorics
-using namespace Combinatorics;
+}; // namespace Comb
+using namespace Comb;
 
 
 // 逆元：
 // https://www.cnblogs.com/zjp-shadow/p/7773566.html
+//
+// 根据费马小定理，利用快速幂求解逆元  inv(i) = qpow(i, mod-2, mod)
+
+
+//// 组合数取模：
+// Lucas 定理：（p 大概 1E6 范围，且为质数）
+//
+// 由于，C(p, i) = p/i * C(p-1, i-1) = 0 (mod p)  1 <= i <= p-1，有 (1+x)^p = 1 + x^p (mod p)
+//
+// Lucas(n, m) = C(n%p, m%p) * Lucas(n/p, m/p) (mod p)，其中 Lucas(x, 0) = 1 (mod p)
+//
+int Lucas(i64 n, i64 k, int p) {
+    int res = 1;
+    while (n > 0 || k > 0) {
+        int ni = n % p;
+        int ki = k % p;
+        if (ki > ni) {
+            return 0;
+        }
+        res = res * 1ll * binom(ni, ki) % p;
+        n /= p;
+        k /= p;
+    }
+    return res;
+}

@@ -109,6 +109,37 @@ Info operator+(const Info& p, const Info& q) {
 }
 
 
+// 维护最长重复子串的长度
+//
+// https://leetcode.cn/problems/longest-substring-of-one-repeating-character/
+//
+struct Info {
+    int pre = 0, suf = 0, most = 0, len = 0;
+    char lch = 0, rch = 0;
+};
+Info operator+(const Info& a, const Info& b) {
+    if (a.lch == 0) {
+        return Info();
+    }
+    Info info;
+    info.pre = a.pre;
+    if (a.lch == b.lch && a.pre == a.len) {
+        info.pre += b.pre;
+    }
+    info.suf = b.suf;
+    if (a.rch == b.rch && b.suf == b.len) {
+        info.suf += a.suf;
+    }
+    info.most = max(a.most, b.most);
+    if (a.rch == b.lch) {
+        info.most = max(info.most, a.suf + b.pre);
+    }
+    info.len = a.len + b.len;
+    info.lch = a.lch;
+    info.rch = b.rch;
+    return info;
+}
+
 
 // 实现一个区间赋值
 //

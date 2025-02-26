@@ -25,7 +25,7 @@ class Combinatorics:
             return 0
         return self.f[n] * self.g[n - m] % MOD
 
-    def comb(self, n, m) -> int:
+    def binom(self, n, m) -> int:
         if m < 0 or n < 0 or n < m:
             return 0
         return self.f[n] * self.g[m] * self.g[n - m] % MOD
@@ -33,7 +33,7 @@ class Combinatorics:
     def catalan(self, n):
         if n <= 0:
             return 0
-        return (self.comb(2 * n, n) - self.comb(2 * n, n - 1)) % MOD
+        return (self.binom(2 * n, n) - self.binom(2 * n, n - 1)) % MOD
 
 
 C = Combinatorics(2 * 10**5)

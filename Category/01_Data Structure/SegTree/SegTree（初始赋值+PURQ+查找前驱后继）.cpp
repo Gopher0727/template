@@ -17,7 +17,7 @@ public:
     }
 
     template <typename T>
-    void init(vector<T> _init) {
+    void init(const vector<T>& _init) {
         n = _init.size();
         info.assign(4 << std::__lg(n), Info {});
 
@@ -35,20 +35,20 @@ public:
     }
 
 public:
-    void modify(int id, const Info& info, int o, int l, int r) {
+    void modify(int id, const Info& init, int o, int l, int r) {
         if (l == r) {
-            info[o] = info;
+            info[o] = init;
             return;
         }
         int m = l + (r - l) / 2;
         if (id <= m) {
-            modify(id, info, o << 1, l, m);
+            modify(id, init, o << 1, l, m);
         } else {
-            modify(id, info, o << 1 | 1, m + 1, r);
+            modify(id, init, o << 1 | 1, m + 1, r);
         }
         pull(o);
     }
-    void modify(int id, const Info& info) { modify(id, info, 1, 0, n - 1); }
+    void modify(int id, const Info& init) { modify(id, init, 1, 0, n - 1); }
 
     Info query(int L, int R, int o, int l, int r) {
         if (L <= l && r <= R) {
