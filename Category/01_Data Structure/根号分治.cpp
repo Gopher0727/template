@@ -1,3 +1,8 @@
+// 根号分治（Sqrt Decomposition）
+
+
+
+
 // 分块，是一种优雅的暴力，它通过对数列分段，完成对数列一些区间操作和区间查询的操作，是一种根号算法。
 // Link:
 // https://www.luogu.com.cn/problem/P2801
