@@ -92,6 +92,20 @@ auto isPalindrome(const string& s) {
 }
 
 
+// 预处理右端点为 i 的回文子串的数量
+//
+auto calc(const string& s) {
+    vector<int> sum(n);
+    for (int i = 0; i < 2 * n - 1; ++i) {
+        for (int l = i / 2, r = (i + 1) / 2; l >= 0 && r < n && s[l] == s[r]; l--, r++) {
+            sum[r]++;
+        }
+    }
+    return sum;
+}
+
+
+
 // 前缀和+哈希表 枚举
 //
 // Problems:
