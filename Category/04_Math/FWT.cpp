@@ -69,6 +69,24 @@ auto fwtXor(vector<int> a, int Op) {
     return a;
 }
 
+auto fwtXor(vector<i64>& a, bool invert) {
+    int n = a.size();
+    for (int len = 1; len < n; len <<= 1) {
+        for (int i = 0; i < n; i += 2 * len) {
+            for (int j = 0; j < len; ++j) {
+                i64 u = a[i + j], v = a[i + j + len];
+                a[i + j] = u + v;
+                a[i + j + len] = u - v;
+            }
+        }
+    }
+    if (invert) {
+        for (int i = 0; i < n; ++i) {
+            a[i] /= n;
+        }
+    }
+}
+
 // 子集卷积
 // todo
 

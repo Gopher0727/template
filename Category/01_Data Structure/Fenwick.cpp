@@ -36,7 +36,7 @@ struct Fenwick {
     }
 };
 // Fenwick index is aligned with the corresponding array index.
-// The node index starts from 0
+// The node index starts from 0.
 
 
 // 差分树状数组，利用差分数组，实现 O(log n) 的区间加、区间查询
