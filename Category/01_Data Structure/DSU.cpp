@@ -103,13 +103,14 @@ struct DSU { // Implement (union by size) + (path compression)
         return true;
     }
 
-    bool same(int x, int y) { return find(x) == find(y); } // 判断是否在同一连通块
+    bool same(int x, int y) { return find(x) == find(y); }
 
-    int size(int x) { return _size[find(x)]; } // 返回所在连通块的大小
+    int size(int x) { return _size[find(x)]; }
 
-    bool loop(int x) { return _loop[find(x)]; } // 判断连通块内是否存在自环
+    bool loop(int x) { return _loop[find(x)]; }
 
-    int edges(int x) { return _edges[find(x)]; } // 返回连通块中的边的数量
+    // 返回连通块中的边的数量
+    int edges(int x) { return _edges[find(x)]; }
 };
 
 

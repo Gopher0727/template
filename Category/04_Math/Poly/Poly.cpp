@@ -22,19 +22,6 @@ namespace Polynomial {
         return 0;
     }();
 
-    vector<int> inv {0, 1};
-    auto Inv(int m) {
-        int n = inv.size();
-        if (m < n) {
-            return;
-        }
-        inv.resize(m);
-        for (int i = n; i < m; ++i) {
-            inv[i] = P - inv[P % i] * 1ll * (P / i) % P;
-        }
-        n = m;
-    }
-
     struct NTT {
         int n, invN;
 
@@ -76,6 +63,19 @@ namespace Polynomial {
             }
         }
     };
+
+    vector<int> inv {0, 1};
+    auto Inv(int m) {
+        int n = inv.size();
+        if (m < n) {
+            return;
+        }
+        inv.resize(m);
+        for (int i = n; i < m; ++i) {
+            inv[i] = P - inv[P % i] * 1ll * (P / i) % P;
+        }
+        n = m;
+    }
 
     // Tonelli–Shanks 模素数的情况下，计算平方根
     int modSqrt(int a) {

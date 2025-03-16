@@ -38,25 +38,3 @@ i64 get(i64 n) {
         return 0;
     }
 }
-
-
-// 题目：
-// https://codeforces.com/contest/1918/problem/C    1400
-// https://codeforces.com/contest/1870/problem/B    1200
-// https://atcoder.jp/contests/abc147/tasks/abc147_d
-
-
-/*
-
-| a | b | c | a^b | (a|c)^(b|c) | (a&c)^(b&c) | (a|c)&(b|c) | (a&c)|(b&c) |
-| 1 | 1 | 1 |  0  |      0      |      0      |      1      |      1      |
-| 1 | 1 | 0 |  0  |      0      |      0      |      1      |      0      |
-| 1 | 0 | 1 |  1  |      0      |      1      |      1      |      1      |
-| 1 | 0 | 0 |  1  |      1      |      0      |      0      |      0      |
-| 0 | 1 | 1 |  1  |      0      |      1      |      1      |      1      |
-| 0 | 1 | 0 |  1  |      1      |      0      |      0      |      0      |
-| 0 | 0 | 1 |  0  |      0      |      0      |      1      |      0      |
-| 0 | 0 | 0 |  0  |      0      |      0      |      0      |      0      |
-
-*/
-

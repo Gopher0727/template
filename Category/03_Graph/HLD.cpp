@@ -5,9 +5,6 @@
 // 3. seq 数组的作用是 将 DFS 序的时间戳（in[u] 的值）映射回原始节点编号。
 //
 
-// Problems:
-// https://www.luogu.com.cn/problem/P3384  模板
-
 struct HLD {
     int n;
     int cur;

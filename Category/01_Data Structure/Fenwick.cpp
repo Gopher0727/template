@@ -11,7 +11,6 @@ struct Fenwick {
         }
     }
 
-    // Sum of the first k elements
     T query(int k) {
         T ans {};
         for (int i = k; i > 0; i &= i - 1) {
@@ -22,7 +21,6 @@ struct Fenwick {
 
     T query(int l, int r) { return query(r) - query(l); }
 
-    // The length of the longest prefix that 'NO' sum of its prefix is greater than k
     int select(const T& k) {
         int x = 0;
         T cur {};
@@ -35,7 +33,6 @@ struct Fenwick {
         return x;
     }
 };
-// Fenwick index is aligned with the corresponding array index.
 // The node index starts from 0.
 
 
