@@ -2,11 +2,11 @@ namespace Algo_i128 {
     using i128 = __int128;
     using u128 = unsigned __int128;
 
-    std::ostream& operator<<(std::ostream& os, i128 n) {
+    ostream& operator<<(ostream& os, i128 n) {
         if (n == 0) {
             return os << 0;
         }
-        std::string s;
+        string s;
         while (n > 0) {
             s += static_cast<char>('0' + n % 10);
             n /= 10;
@@ -15,7 +15,7 @@ namespace Algo_i128 {
         return os << s;
     }
 
-    i128 stoi128(const std::string& s) {
+    i128 stoi128(const string& s) {
         i128 n = 0;
         for (auto c : s) {
             n = n * 10 + (c - '0');

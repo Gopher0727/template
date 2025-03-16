@@ -1,4 +1,4 @@
-static constexpr i64 inf = 9e18;
+static constexpr i64 inf = 9E18;
 
 template <class Info, class Tag>
 class SegTree {
