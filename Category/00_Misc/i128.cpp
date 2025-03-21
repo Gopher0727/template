@@ -23,7 +23,7 @@ namespace Algo_i128 {
         return n;
     }
 
-    i128 sqrtI128(const i128 n) {
+    i128 sqrt128(const i128 n) {
         i128 lo = 0, hi = 1E16;
         while (lo < hi) {
             i128 x = (lo + hi + 1) / 2;
@@ -36,7 +36,7 @@ namespace Algo_i128 {
         return lo;
     }
 
-    i128 gcd(i128 a, i128 b) {
+    i128 gcd128(i128 a, i128 b) {
         while (b) {
             a %= b;
             std::swap(a, b);

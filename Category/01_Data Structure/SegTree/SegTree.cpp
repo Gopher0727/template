@@ -13,16 +13,12 @@ private:
 
 public:
     SegTree() : n(0) {}
-    SegTree(int n, Info v = Info{}) { init(vector(n, v)); }
-    template <class T>
-    SegTree(const vector<T>& _init) {
-        init(_init);
-    }
+    SegTree(int n, Info v = Info {}) { init(vector(n, v)); }
+    SegTree(const vector<Info>& _init) { init(_init); }
 
-    template <class T>
-    void init(const vector<T>& _init) {
+    void init(const vector<Info>& _init) {
         n = _init.size();
-        info.assign(4 << __lg(n), Info{});
+        info.assign(4 << __lg(n), Info {});
         tag.assign(4 << __lg(n), Tag());
 
         auto build = [&](auto&& self, int o, int l, int r) -> void {
