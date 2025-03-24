@@ -136,7 +136,7 @@ void sieve(int n) {
     }
 }
 bool isPrime(int n) {
-    return minp[n] == n;
+    return n >= 0 && minp[n] == n;
 }
 
 
@@ -222,7 +222,7 @@ void sieve(int n) {
     // }
 }
 bool isPrime(int n) {
-    return minp[n] == n;
+    return n >= 0 && minp[n] == n;
 }
 
 
