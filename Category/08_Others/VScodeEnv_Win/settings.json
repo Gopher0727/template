@@ -5,6 +5,7 @@
     "cph.language.cpp.Args": "-std=c++23 -O2 -ID:/Code/OJ_Code/headers -DLOCAL",
     "cph.language.python.Command": "pypy3.10",
     "cph.general.firstTime": false,
+    "cph.general.autoShowJudge": false,
     // "cph.general.useShortCodeForcesName": true,
     "clangd.arguments": [
         "--log=verbose",

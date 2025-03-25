@@ -7,6 +7,7 @@
             "command": "clang++",
             "args": [
                 "-std=c++26",
+                // "-fsanitize=undefined", // win 开不了
                 // "-O2",
                 // "-pipe",
                 // "-Wno-vla # 禁用变量长度数组(VLA)的警告",

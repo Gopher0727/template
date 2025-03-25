@@ -10,7 +10,7 @@
             "#else",
             "#define debug(...) void(0)",
             "#endif",
-            "using i64 = long long;",
+            "using i64 = int64_t;",
             "\n$0\n",
             "#ifdef LOCAL",
             "int main() {}",
@@ -30,7 +30,7 @@
             "#endif",
             "",
             "using namespace std;",
-            "using i64 = long long;",
+            "using i64 = int64_t;",
             "",
             "void solve() {",
             "    $0",
@@ -59,7 +59,7 @@
             "#endif",
             "",
             "using namespace std;",
-            "using i64 = long long;",
+            "using i64 = int64_t;",
             "",
             "void solve() {",
             "    $0",
@@ -92,7 +92,7 @@
     "inf": {
         "scope": "cpp",
         "prefix": "inf",
-        "body": "static constexpr $0 inf = numeric_limits<$0>::max();"
+        "body": "static constexpr $1 inf = $0;"
     },
     "readFromFile": {
         "scope": "cpp",
@@ -174,11 +174,21 @@
             "static constexpr int dy[] = {1, -1, -1, 1};"
         ]
     },
-    "lambda递归": {
+    "lambda": {
         "scope": "cpp",
         "prefix": "lambda",
         "body": [
-            "auto $1 = [&](auto&& $1, $0) -> $2 {",
+            "auto $1 = [&]($0) {",
+            "    ",
+            "};",
+            "$1();"
+        ]
+    },
+    "lambda递归": {
+        "scope": "cpp",
+        "prefix": "lambda_rec",
+        "body": [
+            "auto $1 = [&]($0) {",
             "    ",
             "};",
             "$1($1);"
@@ -186,9 +196,9 @@
     },
     "lambda递归23版": {
         "scope": "cpp",
-        "prefix": "lambda23",
+        "prefix": "lambda23_rec",
         "body": [
-            "auto $1 = [&](this auto&& $1, $0) -> $2 {",
+            "auto $1 = [&](this auto&& $1, $0) {",
             "    ",
             "};",
             "$1();"
