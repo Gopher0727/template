@@ -19,6 +19,7 @@ struct Fenwick {
         return ans;
     }
 
+    // [l, r)
     T query(int l, int r) { return query(r) - query(l); }
 
     int select(const T& k) {
