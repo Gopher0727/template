@@ -11,6 +11,7 @@ struct Fenwick {
         }
     }
 
+    // [0, k)
     T query(int k) {
         T ans {};
         for (int i = k; i > 0; i &= i - 1) {

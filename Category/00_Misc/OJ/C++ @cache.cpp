@@ -1,6 +1,3 @@
-// Problems:
-// https://codeforces.com/contest/2062/problem/C
-//
 namespace hashing {
     using i64 = std::int64_t;
     using u64 = std::uint64_t;

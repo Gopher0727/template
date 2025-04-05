@@ -91,7 +91,7 @@ void sieve(int n) {
 vector<int> isPrime;
 vector<int> primes;
 void sieve(int n) {
-    isPrime.resize(n + 1, 1);
+    isPrime.assign(n + 1, 1);
     isPrime[0] = isPrime[1] = 0;
     for (int i = 2; i <= n; ++i) {
         if (isPrime[i]) {
