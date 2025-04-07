@@ -6,16 +6,6 @@
 //
 // 把数组元素值当作键值 w，而把数组下标当作键值 k。
 // (※) 可以发现这种特殊的笛卡尔树满足一棵子树内的下标是一个连续区间。
-//
-// Link：
-// https://oi-wiki.org/ds/cartesian-tree/
-//
-//
-// Problems：
-// https://www.luogu.com.cn/problem/P5854
-//
-// 【柱状图中最大的矩形】(https://leetcode.cn/problems/largest-rectangle-in-histogram/)
-//
 
 
 // 指针版，构建笛卡尔树并返回根节点指针

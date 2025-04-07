@@ -8,10 +8,17 @@ for %%i in (%folders%) do (
         pushd "%%i"
         del /q *
         popd
-        echo %%i has been cleared.
+        echo Dir %%i has been cleared.
     ) else (
-        echo %%i does not exist.
+        echo Dir %%i does not exist.
     )
 )
+
+REM 删除当前目录下的所有 .cpp 文件
+set "fileType=*.cpp"
+if exist "%fileType%" (
+    del /f /q %fileType%
+)
+echo Files .cpp has been cleared.
 
 endlocal

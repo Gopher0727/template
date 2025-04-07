@@ -1,12 +1,12 @@
 template <typename T>
-class ST { // 用于解决可重复贡献问题，需要空间较大
+class SparseTable { // 用于解决可重复贡献问题，需要空间较大
 private:
     int n, len;
     function<T(T, T)> Op; // max, min, gcd, 按位 &, 按位 | -> [](int a, int b) { return max(a, b); }
     vector<vector<T>> st;
 
 public:
-    ST(int n, auto&& Op) : n(n), len(__lg(n)), Op(Op), st(n, vector<T>(len + 1)) {}
+    SparseTable(int n, auto&& Op) : n(n), len(__lg(n)), Op(Op), st(n, vector<T>(len + 1)) {}
 
     void init(const vector<int>& vec) {
         for (int i = 0; i < n; ++i) {
@@ -26,10 +26,11 @@ public:
 };
 
 
-// 二维 ST 表
+// 二维 SparseTable 表
+vector<vector<int>> log_;
+vector<vector<vector<vector<int>>>> st;
 
 // 初始化 log 表
-vector<vector<int>> log_;
 void initlog_(int n) {
     log_.resize(n + 1, vector<int>(n + 1, 0));
     for (int i = 2; i <= n; ++i) {
@@ -39,11 +40,8 @@ void initlog_(int n) {
     }
 }
 
-// 初始化ST表
-vector<vector<vector<vector<int>>>> st;
-
-// 初始化ST表
-void initST(const vector<vector<int>>& arr, int n) {
+// 初始化 SparseTable 表
+void initSparseTable(const vector<vector<int>>& arr, int n) {
     st.resize(n, vector<vector<vector<int>>>(n, vector<vector<int>>(log_[n][n] + 1, vector<int>(log_[n][n] + 1))));
 
     for (int i = 0; i < n; ++i) {

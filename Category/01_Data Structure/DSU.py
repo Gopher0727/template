@@ -28,6 +28,15 @@ class DSU:
         self.block -= 1
         return True
 
+    def merge_x2y(self, x, y):
+        rx, ry = self.find(x), self.find(y)
+        if rx == ry:
+            return False
+        self.parent[rx] = ry
+        self._size[ry] += self._size[rx]
+        self.block -= 1
+        return True
+
     def same(self, x, y):
         return self.find(x) == self.find(y)
 

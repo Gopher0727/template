@@ -11,9 +11,6 @@
 // Link：
 // 【图解单调栈】(https://leetcode.cn/problems/next-greater-node-in-linked-list/solutions/2217563/tu-jie-dan-diao-zhan-liang-chong-fang-fa-v9ab/)
 //
-// Problems:
-// https://codeforces.com/contest/1919/problem/D    2100
-//
 
 static constexpr int inf = numeric_limits<int>::max() / 2;
 

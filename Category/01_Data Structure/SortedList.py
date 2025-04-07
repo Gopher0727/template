@@ -1,5 +1,3 @@
-# See: https://ac.nowcoder.com/acm/contest/view-submission?submissionId=71146869
-
 class SortedList:
     def __init__(self, iterable=[], _load=200):
         """Initialize sorted list instance."""

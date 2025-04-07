@@ -1,18 +1,13 @@
 // 并查集 （适用于无向图）
 //
-// 只有路径压缩的并查集复杂度是 O(nlogn) 的，这也是大多数情况下的实现方案
-// 只有启发式合并（按深度合并）的并查集的复杂度也是 O(nlogn) 的，适用于可持久化的场景
+// 只实现路径压缩的并查集复杂度是 O(nlogn) 的，这也是大多数情况下的实现方案
+// 只实现启发式合并（按深度合并）的并查集的复杂度也是 O(nlogn) 的，适用于可持久化的场景
 //
 // Link：
 // 【RMQ 标准算法和线性树上并查集】(https://ljt12138.blog.uoj.ac/blog/4874)
 //
-// Problems:
-// https://codeforces.com/contest/2060/problem/E
-// https://atcoder.jp/contests/abc392/tasks/abc392_e
-// https://ac.nowcoder.com/acm/contest/100253/D    按位放进桶里，再用并查集合并桶里的数字
-//
 
-struct DSU { // Implement (union by size) + (path compression)
+struct DSU {
     vector<int> pa, _size;
     int block;
 
@@ -46,6 +41,17 @@ struct DSU { // Implement (union by size) + (path compression)
         return true;
     }
 
+    bool merge_x2y(int x, int y) {
+        int px = find(x), py = find(y);
+        if (px == py) {
+            return false;
+        }
+        pa[px] = py;
+        _size[py] += _size[px];
+        block--;
+        return true;
+    }
+
     bool same(int x, int y) { return find(x) == find(y); }
 
     int size(int x) { return _size[find(x)]; }
@@ -53,7 +59,7 @@ struct DSU { // Implement (union by size) + (path compression)
 
 
 // DSU++
-struct DSU { // Implement (union by size) + (path compression)
+struct DSU {
     vector<int> pa;
     vector<int> _size;
     vector<int> _edges;
@@ -83,7 +89,7 @@ struct DSU { // Implement (union by size) + (path compression)
         return root;
     }
 
-    bool merge(int x, int y) { // 设 x 是 y 的祖先
+    bool merge(int x, int y) {
         if (x == y) {
             _loop[find(x)] = 1;
         }
@@ -109,7 +115,6 @@ struct DSU { // Implement (union by size) + (path compression)
 
     bool loop(int x) { return _loop[find(x)]; }
 
-    // 返回连通块中的边的数量
     int edges(int x) { return _edges[find(x)]; }
 };
 
