@@ -90,12 +90,12 @@ public:
 
         int n = t.size();
         vector<int> inDeg(n);
-        for (int u = 0; u < n; ++u) {
+        for (int u = 0; u < n; u++) {
             inDeg[t[u].fail]++;
         }
 
         queue<int> q;
-        for (int u = 0; u < n; ++u) {
+        for (int u = 0; u < n; u++) {
             if (inDeg[u] == 0) {
                 q.push(u);
             }

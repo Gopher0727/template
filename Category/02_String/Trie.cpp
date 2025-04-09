@@ -9,9 +9,6 @@
 //   · 维护异或极值 ———— 将数的二进制看作一个字符串，建构 01-trie
 //   · 维护异或和
 
-// 练习题目：
-// https://atcoder.jp/contests/abc377/tasks/abc377_g
-
 class Trie {
 private:
     Trie* children[70] {}; // todo 根据 |Σ| 调整
@@ -88,13 +85,22 @@ struct TrieNode {
 };
 template <integral T>
 class Trie {
-    const int N = 31; // 30 for 1e9, 63 for i64
+    static constexpr int N = []() constexpr {
+        if constexpr (is_same_v<T, int>) {
+            return 31;
+        } else if constexpr (is_same_v<T, i64>) {
+            return 63;
+        } else {
+            static_assert(sizeof(T) == 4 || sizeof(T) == 8, "Unsupported integral type");
+        }
+    }();
+
     TrieNode* root = new TrieNode();
 
 public:
     auto bin(T v) {
         string s(N, ' ');
-        for (int i = 0; i < s.size(); ++i) {
+        for (int i = 0; i < s.size(); i++) {
             s[i] = (v >> (N - 1 - i) & 1) + '0';
         }
         return s;
@@ -105,7 +111,7 @@ public:
         if (v < o->mn) {
             o->mn = v;
         }
-        for (int i = N - 1; i >= 0; --i) {
+        for (int i = N - 1; i >= 0; i--) {
             int b = v >> i & 1;
             if (o->son[b] == nullptr) {
                 o->son[b] = new TrieNode();
@@ -121,7 +127,7 @@ public:
 
     auto remove(T v) {
         auto o = this->root;
-        for (int i = N - 1; i >= 0; --i) {
+        for (int i = N - 1; i >= 0; i--) {
             o = o->son[v >> i & 1];
             o->cnt--;
         }
@@ -132,7 +138,7 @@ public:
     // void remove(T v) {
     //     vector<pair<TrieNode*, int>> path;
     //     TrieNode* o = root;
-    //     for (int i = N - 1; i >= 0; --i) {
+    //     for (int i = N - 1; i >= 0; i--) {
     //         int b = (v >> i) & 1;
     //         path.emplace_back(o, b);
     //         if (o->son[b] == nullptr) {
@@ -141,7 +147,7 @@ public:
     //         o = o->son[b];
     //         o->cnt--;
     //     }
-    //     for (int i = path.size() - 1; i >= 0; --i) {
+    //     for (int i = path.size() - 1; i >= 0; i--) {
     //         auto [pa, b] = path[i];
     //         TrieNode* child = pa->son[b];
     //         if (child->cnt == 0) {
@@ -164,10 +170,10 @@ public:
     //             }
     //         }
     //     }
-    //
+
     //     // Update root's mn in case all children were deleted
     //     root->mn = numeric_limits<int>::max();
-    //     for (int j = 0; j < 2; ++j) {
+    //     for (int j = 0; j < 2; j++) {
     //         if (root->son[j]) {
     //             if (root->son[j]->mn < root->mn) {
     //                 root->mn = root->son[j]->mn;
@@ -180,9 +186,9 @@ public:
     auto minXor(T v) {
         auto o = this->root;
         T ans {};
-        for (int i = N - 1; i >= 0; --i) {
+        for (int i = N - 1; i >= 0; i--) {
             int b = v >> i & 1;
-            if (o->son[b] == nullptr) {
+            if (o->son[b] == nullptr && o->son[b]->cnt > 0) {
                 ans |= 1 << i;
                 b ^= 1;
             }
@@ -195,9 +201,9 @@ public:
     auto maxXor(T v) {
         auto o = this->root;
         T ans {};
-        for (int i = N - 1; i >= 0; --i) {
+        for (int i = N - 1; i >= 0; i--) {
             int b = v >> i & 1;
-            if (o->son[b ^ 1] != nullptr) {
+            if (o->son[b ^ 1] != nullptr && o->son[b ^ 1]->cnt > 0) {
                 ans |= 1 << i;
                 b ^= 1;
             }
@@ -212,9 +218,9 @@ public:
     auto kth_maxXor(int v, int k) {
         auto o = this->root;
         T ans {};
-        for (int i = N - 1; i >= 0; --i) {
+        for (int i = N - 1; i >= 0; i--) {
             int b = v >> i & 1;
-            if (o->son[b ^ 1] != nullptr) {
+            if (o->son[b ^ 1] != nullptr && o->son[b ^ 1]->cnt > 0) {
                 if (k <= o->son[b ^ 1]->cnt) {
                     ans |= 1 << i;
                     b ^= 1;
@@ -235,9 +241,9 @@ public:
             return -1;
         }
         T ans {};
-        for (int i = N - 1; i >= 0; --i) {
+        for (int i = N - 1; i >= 0; i--) {
             int b = v >> i & 1;
-            if (o->son[b ^ 1] != nullptr && o->son[b ^ 1]->mn <= limit) {
+            if (o->son[b ^ 1] != nullptr && o->son[b ^ 1]->cnt > 0 && o->son[b ^ 1]->mn <= limit) {
                 ans |= 1 << i;
                 b ^= 1;
             }
@@ -253,10 +259,10 @@ public:
         limit++;
         auto o = this->root;
         T cnt {};
-        for (int i = N - 1; i >= 0; --i) {
+        for (int i = N - 1; i >= 0; i--) {
             int b = v >> i & 1;
             if (limit >> i & 1) {
-                if (o->son[b] != nullptr) {
+                if (o->son[b] != nullptr && o->son[b]->cnt > 0) {
                     cnt += o->son[b]->cnt;
                 }
                 b ^= 1;
@@ -277,15 +283,15 @@ public:
         auto o = this->root;
         auto lastO = new Trie(), lastI = -2, lastAns = 0;
         T ans {};
-        for (int i = N - 1; i >= 0; --i) {
+        for (int i = N - 1; i >= 0; i--) {
             int b = v >> i & 1;
             if (limit >> i & 1) {
-                if (o->son[b] != nullptr) {
+                if (o->son[b] != nullptr && o->son[b]->cnt > 0) {
                     lastO = o->son[b];
                     lastI = i - 1;
                     lastAns = ans;
                 }
-                if (o->son[b ^ 1] != nullptr) {
+                if (o->son[b ^ 1] != nullptr && o->son[b ^ 1]->cnt > 0) {
                     ans |= 1 << i;
                 }
                 b ^= 1;
@@ -301,9 +307,9 @@ public:
 
         ans = lastAns;
         o = lastO;
-        for (int i = lastI; i >= 0; --i) {
+        for (int i = lastI; i >= 0; i--) {
             int b = v >> i & 1;
-            if (o->son[b ^ 1] != nullptr) {
+            if (o->son[b ^ 1] != nullptr && o->son[b ^ 1]->cnt > 0) {
                 ans |= 1 << i;
                 b ^= 1;
             }

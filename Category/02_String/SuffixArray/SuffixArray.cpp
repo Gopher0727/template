@@ -1,8 +1,5 @@
 ﻿// 求解 SA：（倍增，基数排序/桶排序）
 //    先把以每个位置开始的长度为 1 的子串排序，在此基础上再把长度为 2 的子串排序，以此类推，直到子串的末尾。
-//
-// 题目：
-// https://leetcode.cn/problems/count-beautiful-splits-in-an-array/
 
 struct suffixArray {
     int n;

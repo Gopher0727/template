@@ -3,14 +3,14 @@
 // 前缀函数表示 s[0:i]（闭区间）的相等的真前缀与真后缀的最大长度
 // 实际编码过程中，把 PMT 右移一位，第 0 位的值设成了 -1，得到 nxt 数组
 // nxt 数组表示不含当前字符的前后缀最大匹配长度（前后缀小于子串长度）
-//
+
 
 // 计算前缀函数
 auto calcPi(const string& s) {
     int n = s.size();
     vector<int> pi(n);
     int match = 0;
-    for (int i = 1; i < n; ++i) {
+    for (int i = 1; i < n; i++) {
         char ch = s[i];
         while (match > 0 && s[match] != ch) {
             match = pi[match - 1];
@@ -28,7 +28,7 @@ auto kmpSearch(const string& s, const string p) {
     auto pi = calcPi(p);
     vector<int> pos;
     int match = 0;
-    for (int i = 0; i < s.size(); ++i) {
+    for (int i = 0; i < s.size(); i++) {
         char ch = s[i];
         while (match > 0 && p[match] != ch) {
             match = pi[match - 1];
@@ -49,7 +49,7 @@ auto nextArray(const string& s) {
     int n = s.size();
     vector<int> nxt(n + 1);
     nxt[0] = -1;
-    for (int i = 2, j = 0; i <= n; ++i) {
+    for (int i = 2, j = 0; i <= n; i++) {
         while (j != -1 && s[i - 1] != s[j]) {
             j = nxt[j];
         }

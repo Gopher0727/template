@@ -3,7 +3,7 @@
 // 构造
 // a 是字符集，|s| = n，nxt[i][ch] 表示 i 之后的字符 ch 的最近位置
 // 0 为根节点，可以建立一个 DAG
-for (int i = n - 1; i >= 0; --i) {
+for (int i = n - 1; i >= 0; i--) {
     for (auto j : a) {
         nxt[i][j] = nxt[i + 1][j];
     }

@@ -5,7 +5,7 @@
 //
 // https://www.luogu.com.cn/article/lt2rnl6d
 // https://oi-wiki.org/string/lyndon/
-//
+
 vector<string> duval(const string& s) {
     vector<string> res;
     int n = s.size();
