@@ -29,7 +29,7 @@ void sieve(int n) {
     lpf.resize(n + 1);
     pa.resize(n + 1);
 
-    for (int i = 2; i <= n; ++i) {
+    for (int i = 2; i <= n; i++) {
         if (!vis[i]) {
             primes.emplace_back(i);
             lpf[i] = i;

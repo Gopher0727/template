@@ -7,7 +7,7 @@ auto Change(const vector<int>& a) {
     vector<int> h(n + 2), k(n + 2);
     h[0] = 0, h[1] = 1;
     k[0] = 1, k[1] = 0;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; i++) {
         h[i + 2] = a[i] * h[i + 1] + h[i];
         k[i + 2] = a[i] * k[i + 1] + k[i];
     }

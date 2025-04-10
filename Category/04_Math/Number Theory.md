@@ -24,7 +24,7 @@ vector<int> inv;
 auto Inv(int n, int p = MOD) {
     inv.resize(n + 1);
     inv[1] = 1;
-    for (int i = 2; i <= n; ++i) {
+    for (int i = 2; i <= n; i++) {
         inv[i] = p - inv[p % i] * 1ll * (p / i) % p;
     }
     return inv;

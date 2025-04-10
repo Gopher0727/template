@@ -14,7 +14,7 @@ private:
 
     bool insert(int v) {
         or_ |= v;
-        for (int i = b.size() - 1; i >= 0; --i) {
+        for (int i = b.size() - 1; i >= 0; i--) {
             if ((v >> i & 1) == 0) {
                 continue;
             }
@@ -30,7 +30,7 @@ private:
     }
 
     bool insertRightMost(int idx, int v) { // 遇到线性相关的基，保留位置最靠右的
-        for (int i = b.size() - 1; i >= 0; --i) {
+        for (int i = b.size() - 1; i >= 0; i--) {
             if ((v >> i & 1) == 0) {
                 continue;
             }
@@ -55,11 +55,11 @@ private:
             return;
         }
         vector<int> tmp(b);
-        for (int i = 0; i < tmp.size(); ++i) {
+        for (int i = 0; i < tmp.size(); i++) {
             if (tmp[i] == 0) {
                 continue;
             }
-            for (int j = i - 1; j >= 0; --j) {
+            for (int j = i - 1; j >= 0; j--) {
                 if (tmp[i] >> j & 1) {
                     tmp[i] ^= tmp[j];
                 }
@@ -69,7 +69,7 @@ private:
     }
 
     void merge(xorBasis& other) {
-        for (int i = other.b.size() - 1; i >= 0; --i) {
+        for (int i = other.b.size() - 1; i >= 0; i--) {
             int x = other.b[i];
             if (x > 0) {
                 insert(x);
@@ -86,7 +86,7 @@ public:
 
     int maxXor(int val = 0) {
         int res = 0;
-        for (int i = b.size() - 1; i >= 0; --i) {
+        for (int i = b.size() - 1; i >= 0; i--) {
             // (res >> i & 1) == 0 && rightMost[i] >= lowerIndex && res ^ b[i] > res
             if ((res ^ b[i]) > res) {
                 res ^= b[i];
@@ -99,7 +99,7 @@ public:
         if (canBeZero) {
             return 0;
         }
-        for (int i = 0;; ++i) {
+        for (int i = 0;; i++) {
             if (b[i] > 0) {
                 return b[i];
             }
@@ -117,7 +117,7 @@ public:
         }
 
         int res = 0;
-        for (int i = 0; i < basis.size(); ++i) {
+        for (int i = 0; i < basis.size(); i++) {
             if (k >> i & 1) {
                 res ^= basis[i];
             }
@@ -127,7 +127,7 @@ public:
 
     // v 能否由线性基表出
     bool decompose(int v) {
-        for (int i = b.size() - 1; i >= 0; --i) {
+        for (int i = b.size() - 1; i >= 0; i--) {
             if ((v >> i & 1) == 0) {
                 continue;
             }

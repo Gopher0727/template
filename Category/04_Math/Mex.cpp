@@ -16,7 +16,7 @@
 // 求解 suf-mex
 vector<int> vis(n), suf(n);
 int mex = 0;
-for (int i = n - 1; i >= 0; --i) {
+for (int i = n - 1; i >= 0; i--) {
     if (a[i] < n) {
         vis[a[i]] = 1;
     }

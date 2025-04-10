@@ -7,7 +7,7 @@ auto rankPermutation(const vector<int>& prem) {
     int n = prem.size();
     vector<int> F(n);
     F[0] = 1;
-    for (int i = 1; i < n; ++i) {
+    for (int i = 1; i < n; i++) {
         F[i] = F[i - 1] * i % MOD;
     }
 
@@ -29,7 +29,7 @@ auto rankPermutation(const vector<int>& prem) {
     }
 
     int ans = 0;
-    for (int i = 0; i < prem.size(); ++i) {
+    for (int i = 0; i < prem.size(); i++) {
         ans += sum(prem[i] - 1) * F[n - 1 - i] % MOD;
         add(prem[i], -1);
     }
@@ -46,7 +46,7 @@ auto rankPermutation(const vector<int>& prem) {
 auto kthPermutation(int n, int k) {
     vector<int> F(n);
     F[0] = 1;
-    for (int i = 1; i < n; ++i) {
+    for (int i = 1; i < n; i++) {
         F[i] = F[i - 1] * i;
     }
 
@@ -55,9 +55,9 @@ auto kthPermutation(int n, int k) {
     perm.reserve(n);
     vector<int> valid(n + 1, 1);
     valid[0] = 0;
-    for (int i = 1; i <= n; ++i) {
+    for (int i = 1; i <= n; i++) {
         int order = k / F[n - i] + 1;
-        for (int j = 1; j <= n; ++j) { // 从 1 开始的排列
+        for (int j = 1; j <= n; j++) { // 从 1 开始的排列
             order -= valid[j];
             if (order == 0) {
                 perm.push_back(j);

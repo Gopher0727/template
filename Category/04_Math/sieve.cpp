@@ -13,7 +13,7 @@ bool isPrime(i64 n) {
 vector<vector<int>> factors;
 void sieve(int n) {
     factors.resize(n + 1);
-    for (int i = 1; i <= n; ++i) {
+    for (int i = 1; i <= n; i++) {
         for (int j = i; j <= n; j += i) {
             factors[j].push_back(i);
         }
@@ -24,7 +24,7 @@ void sieve(int n) {
 // 找到一个数的所有质因数
 auto factorize(i64 x) {
     map<int, int> res;
-    for (int i = 2; i * 1ll * i <= x; ++i) {
+    for (int i = 2; i * 1ll * i <= x; i++) {
         while (x % i == 0) {
             x /= i;
             res[i]++;
@@ -44,7 +44,7 @@ auto init = [] {
 
     for (int base = 1; base <= 10000; base *= 10) {
         // 生成奇数长度的回文数
-        for (int i = base; i < base * 10; ++i) {
+        for (int i = base; i < base * 10; i++) {
             int x = i;
             for (int t = i / 10; t; t /= 10) {
                 x = x * 10 + t % 10;
@@ -53,7 +53,7 @@ auto init = [] {
         }
         // 生成偶数长度的回文数
         if (base <= 1000) {
-            for (int i = base; i < base * 10; ++i) {
+            for (int i = base; i < base * 10; i++) {
                 int x = i;
                 for (int t = i; t; t /= 10) {
                     x = x * 10 + t % 10;
@@ -74,7 +74,7 @@ vector<int> primes;
 void sieve(int n) {
     isPrime.assign(n + 1, 1);
     isPrime[0] = isPrime[1] = 0;
-    for (int i = 2; i <= n; ++i) {
+    for (int i = 2; i <= n; i++) {
         if (!isPrime[i]) {
             continue;
         }
@@ -93,7 +93,7 @@ vector<int> primes;
 void sieve(int n) {
     isPrime.assign(n + 1, 1);
     isPrime[0] = isPrime[1] = 0;
-    for (int i = 2; i <= n; ++i) {
+    for (int i = 2; i <= n; i++) {
         if (isPrime[i]) {
             primes.push_back(i);
         }
@@ -143,7 +143,7 @@ bool isPrime(int n) {
 // 欧拉函数（单个数）
 int phi(int n) {
     int res = n;
-    for (int i = 2; i <= n / i; ++i) {
+    for (int i = 2; i <= n / i; i++) {
         if (n % i == 0) {
             while (n % i == 0) {
                 n /= i;

@@ -43,7 +43,7 @@ public:
 
         vector<Mint> suf(k);
         suf[k - 1] = 1;
-        for (int i = k - 1; i > 0; --i) {
+        for (int i = k - 1; i > 0; i--) {
             suf[i - 1] = suf[i] * (n - i);
         }
 

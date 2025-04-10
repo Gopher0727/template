@@ -9,12 +9,12 @@ vector<int> getMu(int n) {
     vector<int> flg(n + 1);
     vector<int> p;
     p.reserve(n + 1);
-    for (int i = 2; i <= n; ++i) {
+    for (int i = 2; i <= n; i++) {
         if (flg[i] == 0) {
             p.push_back(i);
             mu[i] = -1;
         }
-        for (int j = 0; j < p.size() && i * p[j] <= n; ++j) {
+        for (int j = 0; j < p.size() && i * p[j] <= n; j++) {
             flg[i * p[j]] = 1;
             if (i % p[j] == 0) {
                 mu[i * p[j]] = 0;

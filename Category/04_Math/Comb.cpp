@@ -134,7 +134,7 @@ namespace Comb {
     auto Inv = []() {
         inv.resize(MX + 1);
         inv[1] = 1;
-        for (int i = 2; i <= MX; ++i) {
+        for (int i = 2; i <= MX; i++) {
             inv[i] = p - inv[p % i] * 1ll * (p / i) % p;
         }
         return inv;

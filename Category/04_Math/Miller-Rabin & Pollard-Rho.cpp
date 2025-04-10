@@ -26,7 +26,7 @@ bool isprime(i64 n) {
             continue;
         }
         int ok = 0;
-        for (int i = 0; i < s - 1; ++i) {
+        for (int i = 0; i < s - 1; i++) {
             x = mul(x, x, n);
             if (x == n - 1) {
                 ok = 1;
@@ -45,7 +45,7 @@ vector<i64> factorize(i64 n) {
     vector<i64> p;
     auto f = [&](auto&& f, i64 n) {
         if (n <= 10000) {
-            for (int i = 2; i * i <= n; ++i) {
+            for (int i = 2; i * i <= n; i++) {
                 for (; n % i == 0; n /= i) {
                     p.push_back(i);
                 }
@@ -69,7 +69,7 @@ vector<i64> factorize(i64 n) {
             i64 v = 1;
             while (d == 1) {
                 y = g(y);
-                ++lam;
+                lam++;
                 v = mul(v, abs(x - y), n);
                 if (lam % 127 == 0) {
                     d = gcd(v, n);
@@ -88,7 +88,7 @@ vector<i64> factorize(i64 n) {
                 f(f, n / d);
                 return;
             }
-            ++x0;
+            x0++;
         }
     };
     f(f, n);

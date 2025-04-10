@@ -13,8 +13,8 @@
 auto FMT(const vector<int>& a, int Op = 1) {
     int n = a.size();
     vector<int> b(a);
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < (1 << n); ++j) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < (1 << n); j++) {
             if (j & (1 << i)) {
                 b[j] += b[j ^ (1 << i)] * Op; // Op = -1，则表示 IFMT
             }
@@ -33,7 +33,7 @@ auto fwtOr(vector<int> a, int Op) {
     int n = a.size();
     for (int len = 2, k = 1; len <= n; len <<= 1, k <<= 1) {
         for (int i = 0; i < n; i += len) {
-            for (int j = 0; j < k; ++j) {
+            for (int j = 0; j < k; j++) {
                 a[i + j + k] += a[i + j] * Op;
             }
         }
@@ -46,7 +46,7 @@ auto fwtAnd(vector<int> a, int Op) {
     int n = a.size();
     for (int len = 2, k = 1; len <= n; len <<= 1, k <<= 1) {
         for (int i = 0; i < n; i += len) {
-            for (int j = 0; j < k; ++j) {
+            for (int j = 0; j < k; j++) {
                 a[i + j] += a[i + j + k] * Op;
             }
         }
@@ -59,7 +59,7 @@ auto fwtXor(vector<int> a, int Op) {
     int n = a.size();
     for (int len = 2, k = 1; len <= n; len <<= 1, k <<= 1) {
         for (int i = 0; i < n; i += len) {
-            for (int j = 0; j < k; ++j) {
+            for (int j = 0; j < k; j++) {
                 int x = a[i + j], y = a[i + j + len];
                 a[i + j] = (x + y) * Op; // % mod
                 a[i + j + len] = (x - y) * Op; // % mod
@@ -73,7 +73,7 @@ auto fwtXor(vector<i64>& a, bool invert) {
     int n = a.size();
     for (int len = 1; len < n; len <<= 1) {
         for (int i = 0; i < n; i += 2 * len) {
-            for (int j = 0; j < len; ++j) {
+            for (int j = 0; j < len; j++) {
                 i64 u = a[i + j], v = a[i + j + len];
                 a[i + j] = u + v;
                 a[i + j + len] = u - v;
@@ -81,7 +81,7 @@ auto fwtXor(vector<i64>& a, bool invert) {
         }
     }
     if (invert) {
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n; i++) {
             a[i] /= n;
         }
     }

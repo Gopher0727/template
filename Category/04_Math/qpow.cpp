@@ -28,9 +28,9 @@ i64 qpow(i64 a, i64 b, i64 res = 1) {
 vector<vector<i64>> multiply(vector<vector<i64>>& a, vector<vector<i64>>& b) { // 矩阵乘法
     int m = a.size(), n = b[0].size(), k = a[0].size();
     vector<vector<i64>> res(m, vector<i64>(n));
-    for (int i = 0; i < m; ++i) {
-        for (int j = 0; j < n; ++j) {
-            for (int c = 0; c < k; ++c) {
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            for (int c = 0; c < k; c++) {
                 res[i][j] += a[i][c] * b[c][j];
                 res[i][j] %= MOD;
             }
@@ -43,7 +43,7 @@ vector<vector<i64>> qpow_mul(vector<vector<i64>> a, i64 b, vector<vector<i64>> f
     int n = a.size();
     if (f.empty()) {
         f = vector(n, vector<i64>(n));
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n; i++) {
             f[i][i] = 1;
         }
     }

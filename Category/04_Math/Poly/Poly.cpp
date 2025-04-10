@@ -146,7 +146,7 @@ namespace Polynomial {
         Poly operator-() const {
             int n = this->size();
             Poly c(n);
-            for (int i = 0; i < n; ++i) {
+            for (int i = 0; i < n; i++) {
                 if (this->at(i) > 0) {
                     c[i] = (P - this->at(i)) % P;
                 }
@@ -339,7 +339,7 @@ namespace Polynomial {
             for (int l = 2; l <= m; l <<= 1) {
                 Poly b = e.resize(l).ln();
                 b[0]--;
-                for (int i = 0; i < l; ++i) {
+                for (int i = 0; i < l; i++) {
                     b[i] = (A[i] - b[i] + P) % P;
                 }
                 e = b.conv(e.resize(l)).resize(l);

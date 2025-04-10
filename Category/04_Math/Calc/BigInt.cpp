@@ -23,7 +23,7 @@ private:
         sign = 1;
         a.clear();
         int pos = 0;
-        while (pos < (int) s.size() && (s[pos] == '-' || s[pos] == '+')) {
+        while (pos < s.size() && (s[pos] == '-' || s[pos] == '+')) {
             if (s[pos] == '-') {
                 sign = -sign;
             }
@@ -42,14 +42,14 @@ private:
     static vector<int> convert_base(const vector<int>& a, int old_digits, int new_digits) {
         vector<i64> p(max(old_digits, new_digits) + 1);
         p[0] = 1;
-        for (int i = 1; i < (int) p.size(); ++i) {
+        for (int i = 1; i < p.size(); i++) {
             p[i] = p[i - 1] * 10;
         }
 
         vector<int> res;
         i64 cur = 0;
         int cur_digits = 0;
-        for (int i = 0; i < (int) a.size(); ++i) {
+        for (int i = 0; i < a.size(); i++) {
             cur += a[i] * p[cur_digits];
             cur_digits += old_digits;
             while (cur_digits >= new_digits) {
@@ -88,29 +88,29 @@ public:
             v = -v;
         }
         int m = 0;
-        for (int i = a.size() - 1; i >= 0; --i) {
+        for (int i = a.size() - 1; i >= 0; i--) {
             m = (a[i] + m * (i64) base) % v;
         }
         return m * sign;
     }
     void operator*=(int v) {
         check(v);
-        for (int i = 0, carry = 0; i < (int) a.size() || carry; ++i) {
-            if (i == (int) a.size()) {
+        for (int i = 0, carry = 0; i < a.size() || carry; i++) {
+            if (i == a.size()) {
                 a.push_back(0);
             }
             i64 cur = a[i] * (i64) v + carry;
-            carry = (int) (cur / base);
-            a[i] = (int) (cur % base);
+            carry = cur / base;
+            a[i] = cur % base;
         }
         trimLeadingZero();
     }
     void operator/=(int v) {
         check(v);
-        for (int i = (int) a.size() - 1, rem = 0; i >= 0; --i) {
+        for (int i = a.size() - 1, rem = 0; i >= 0; i--) {
             i64 cur = a[i] + rem * 1ll * base;
-            a[i] = (int) (cur / v);
-            rem = (int) (cur % v);
+            a[i] = cur / v;
+            rem = cur % v;
         }
         trimLeadingZero();
     }
@@ -120,11 +120,11 @@ public:
     BigInt operator+(const BigInt& v) const {
         if (sign == v.sign) {
             BigInt res = v;
-            for (int i = 0, carry = 0; i < (int) max(a.size(), v.a.size()) || carry; ++i) {
-                if (i == (int) res.a.size()) {
+            for (int i = 0, carry = 0; i < max(a.size(), v.a.size()) || carry; i++) {
+                if (i == res.a.size()) {
                     res.a.push_back(0);
                 }
-                res.a[i] += carry + (i < (int) a.size() ? a[i] : 0);
+                res.a[i] += carry + (i < a.size() ? a[i] : 0);
                 carry = res.a[i] >= base;
                 if (carry) {
                     res.a[i] -= base;
@@ -138,8 +138,8 @@ public:
         if (sign == v.sign) {
             if (abs() >= v.abs()) {
                 BigInt res = *this;
-                for (int i = 0, carry = 0; i < (int) v.a.size() || carry; ++i) {
-                    res.a[i] -= carry + (i < (int) v.a.size() ? v.a[i] : 0);
+                for (int i = 0, carry = 0; i < v.a.size() || carry; i++) {
+                    res.a[i] -= carry + (i < v.a.size() ? v.a[i] : 0);
                     carry = res.a[i] < 0;
                     if (carry) {
                         res.a[i] += base;
@@ -170,10 +170,10 @@ public:
         vector<i64> c = karatsubaMultiply(a, b);
         BigInt res;
         res.sign = sign * v.sign;
-        for (int i = 0, carry = 0; i < (int) c.size(); ++i) {
+        for (int i = 0, carry = 0; i < c.size(); i++) {
             i64 cur = c[i] + carry;
-            res.a.push_back((int) (cur % 1000000));
-            carry = (int) (cur / 1000000);
+            res.a.push_back(cur % 1000000);
+            carry = cur / 1000000;
         }
         res.a = convert_base(res.a, 6, base_digits);
         res.trimLeadingZero();
@@ -238,7 +238,7 @@ public:
             os << '-';
         }
         os << (v.a.empty() ? 0 : v.a.back());
-        for (int i = (int) v.a.size() - 2; i >= 0; --i) {
+        for (int i = v.a.size() - 2; i >= 0; i--) {
             os << setw(base_digits) << setfill('0') << v.a[i];
         }
         return os;
@@ -271,7 +271,7 @@ public:
         BigInt b = b1.abs() * norm;
         BigInt q, r;
         q.a.resize(a.a.size());
-        for (int i = (int) a.a.size() - 1; i >= 0; i--) {
+        for (int i = a.a.size() - 1; i >= 0; i--) {
             r *= base;
             r += a.a[i];
             int s1 = r.a.size() <= b.a.size() ? 0 : r.a[b.a.size()];
@@ -294,7 +294,7 @@ public:
         int n = a.size();
         vector<i64> res(n + n);
         if (n <= 32) {
-            for (int i = 0; i < n; ++i) {
+            for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
                     res[i + j] += a[i] * b[j];
                 }
@@ -313,15 +313,15 @@ public:
         }
 
         vector<i64> r = karatsubaMultiply(a2, b2);
-        for (int i = 0; i < (int) a1b1.size(); ++i) {
+        for (int i = 0; i < a1b1.size(); i++) {
             r[i] -= a1b1[i];
             res[i] += a1b1[i];
         }
-        for (int i = 0; i < (int) a2b2.size(); ++i) {
+        for (int i = 0; i < a2b2.size(); i++) {
             r[i] -= a2b2[i];
             res[i + n] += a2b2[i];
         }
-        for (int i = 0; i < (int) r.size(); ++i) {
+        for (int i = 0; i < r.size(); i++) {
             res[i + k] += r[i];
         }
         return res;

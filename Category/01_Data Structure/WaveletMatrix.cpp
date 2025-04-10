@@ -17,7 +17,7 @@ struct WaveletTree {
         int m = (l + r) / 2;
         c[u].reserve(end - begin + 1);
         c[u].push_back(0);
-        for (auto it = begin; it != end; ++it) {
+        for (auto it = begin; it != end; it++) {
             c[u].push_back(c[u].back() + (*it < m));
         }
         auto p = stable_partition(begin, end, [=](int i) { return i < m; });
@@ -26,7 +26,7 @@ struct WaveletTree {
     }
 
     // occurrences of val in position[0, i)
-    int rank(int i, int val) const {
+    int quantile(int i, int val) const {
         if (val < 0 or val >= SIGMA) {
             return 0;
         }
@@ -45,7 +45,7 @@ struct WaveletTree {
     }
 
     // The kth(>= 1) smallest val in position[i, j)
-    int quantile(int i, int j, int k) const {
+    int rank(int i, int j, int k) const {
         assert(k > 0);
         k = min(k, j - i);
         int l = 0, r = SIGMA, u = 1;
