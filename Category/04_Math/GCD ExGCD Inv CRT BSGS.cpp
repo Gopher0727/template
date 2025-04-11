@@ -340,3 +340,4 @@ namespace BSGS {
     }
 } // namespace BSGS
 using namespace BSGS;
+

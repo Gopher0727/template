@@ -37,8 +37,8 @@ auto findORs(const vector<int>& a, int k) {
     vector<set<int>> dp;
     vector<set<int>> pre(k + 1);
     pre[0].insert(0);
-    for (int i = 0; i < a.size(); ++i) {
-        for (int j = min(k - 1, i + 1); j >= 0; --j) {
+    for (int i = 0; i < a.size(); i++) {
+        for (int j = min(k - 1, i + 1); j >= 0; j--) {
             for (int x : pre[j]) {
                 pre[j + 1].insert(x | a[i]);
             }
@@ -55,9 +55,9 @@ auto findLCMs(const vector<int>& a) {
     int n = a.size();
     vector<i64> lcms(1 << n);
     lcms[0] = 1;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; i++) {
         int bit = 1 << i;
-        for (int mask = 0; mask < bit; ++mask) {
+        for (int mask = 0; mask < bit; mask++) {
             lcms[bit | mask] = lcm(a[i], lcms[mask]);
         }
     }
@@ -68,9 +68,9 @@ auto findLCMs(const vector<int>& a) {
 auto findORs(const vector<int>& a) {
     int n = a.size();
     vector<i64> ors(1 << n);
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; i++) {
         int bit = 1 << i;
-        for (int mask = 0; mask < bit; ++mask) {
+        for (int mask = 0; mask < bit; mask++) {
             ors[bit | mask] = a[i] | ors[mask];
         }
     }
@@ -83,8 +83,8 @@ auto findORs(const vector<int>& a) {
 auto isPalindrome(const string& s) {
     int n = s.size();
     vector isPal(n, vector<int>(n));
-    for (int l = n - 1; l >= 0; --l) {
-        for (int r = l; r < n; ++r) {
+    for (int l = n - 1; l >= 0; l--) {
+        for (int r = l; r < n; r++) {
             isPal[l][r] = (s[l] == s[r] && (r - l < 3 || isPal[l + 1][r - 1]));
         }
     }
@@ -96,7 +96,7 @@ auto isPalindrome(const string& s) {
 //
 auto calc(const string& s) {
     vector<int> sum(n);
-    for (int i = 0; i < 2 * n - 1; ++i) {
+    for (int i = 0; i < 2 * n - 1; i++) {
         for (int l = i / 2, r = (i + 1) / 2; l >= 0 && r < n && s[l] == s[r]; l--, r++) {
             sum[r]++;
         }
@@ -126,10 +126,10 @@ class Solution {
 public:
     int minimumDifference(vector<int>& nums, int k) {
         int ans = INT_MAX;
-        for (int i = 0; i < nums.size(); ++i) {
+        for (int i = 0; i < nums.size(); i++) {
             int x = nums[i];
             ans = min(ans, abs(x - k));
-            for (int j = i - 1; j >= 0 && (x | nums[j]) != nums[j]; --j) {
+            for (int j = i - 1; j >= 0 && (x | nums[j]) != nums[j]; j--) {
                 nums[j] |= x;
                 ans = min(ans, abs(nums[j] - k));
             }
@@ -147,13 +147,13 @@ class Solution {
 public:
     int minimumDifference(vector<int>& nums, int k) {
         int ans = INT_MAX, left = 0, bottom = 0, right_or = 0;
-        for (int right = 0; right < nums.size(); ++right) {
+        for (int right = 0; right < nums.size(); right++) {
             right_or |= nums[right];
             while (left <= right && (nums[left] | right_or) > k) {
                 ans = min(ans, (nums[left] | right_or) - k);
                 left++;
                 if (bottom < left) {
-                    for (int i = right - 1; i >= left; --i) {
+                    for (int i = right - 1; i >= left; i--) {
                         nums[i] |= nums[i + 1];
                     }
                     bottom = right;
@@ -195,7 +195,7 @@ public:
             if (l < r) {
                 ls.resize(r - l);
                 ls[0] = nums[r - 1];
-                for (int i = 1; i < r - l; ++i) {
+                for (int i = 1; i < r - l; i++) {
                     ls[i] = ls[i - 1] | nums[r - i - 1];
                 }
             }

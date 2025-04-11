@@ -7,7 +7,7 @@ void bubble_sort(vector<int>& a) {
     bool flag = true;
     while (flag) {
         flag = false;
-        for (int i = 0; i < n - 1; ++i) {
+        for (int i = 0; i < n - 1; i++) {
             if (a[i] > a[i + 1]) {
                 flag = true;
                 swap(a[i], a[i + 1]);
@@ -22,9 +22,9 @@ void selection_sort(vector<int>& a) {
     if (n < 2) {
         return;
     }
-    for (int i = 0; i < n - 1; ++i) {
+    for (int i = 0; i < n - 1; i++) {
         int idx = i;
-        for (int j = i + 1; j < n; ++j) {
+        for (int j = i + 1; j < n; j++) {
             if (a[j] < a[idx]) { // 稳定
                 idx = j;
             }
@@ -41,7 +41,7 @@ void insertion_sort(vector<int>& a) {
     if (n < 2) {
         return;
     }
-    for (int i = 1; i < n; ++i) {
+    for (int i = 1; i < n; i++) {
         int v = a[i];
         int j = i - 1;
         while (j >= 0 && a[j] > v) {
@@ -54,7 +54,7 @@ void insertion_sort(vector<int>& a) {
 
 // 折半插入排序  `rotate`
 void half_insertion_sort(vector<int>& a) {
-    for (auto i = a.begin(); i != a.end(); ++i) {
+    for (auto i = a.begin(); i != a.end(); i++) {
         rotate(upper_bound(a.begin(), i, *i), i, i + 1);
     }
 }
@@ -69,7 +69,7 @@ void shell_sort(vector<int>& a) {
         if (gap >= a.size()) {
             continue;
         }
-        for (int i = gap; i < a.size(); ++i) {
+        for (int i = gap; i < a.size(); i++) {
             int temp = a[i];
             int j = i;
             for (; j >= gap && a[j - gap] > temp; j -= gap) {
@@ -84,7 +84,7 @@ void shell_sort(vector<int>& a) {
 int partition(vector<int>& a, int low, int high) {
     int pivot = a[high]; // 选择最后一个元素作为枢轴
     int i = low - 1; // 较小元素的索引
-    for (int j = low; j < high; ++j) {
+    for (int j = low; j < high; j++) {
         if (a[j] <= pivot) {
             swap(a[++i], a[j]);
         }
@@ -129,7 +129,7 @@ void counting_sort(vector<int>& a) {
     for (int& v : a) {
         cnt[v]++;
     }
-    for (int i = 1; i <= w; ++i) {
+    for (int i = 1; i <= w; i++) {
         cnt[i] += cnt[i - 1];
     }
 
@@ -183,10 +183,10 @@ void heapify(vector<int>& a, int n, int i) {
 }
 void heap_sort(vector<int>& a) {
     int n = a.size();
-    for (int i = n / 2 - 1; i >= 0; --i) {
+    for (int i = n / 2 - 1; i >= 0; i--) {
         heapify(a, n, i);
     }
-    for (int i = n - 1; i > 0; --i) {
+    for (int i = n - 1; i > 0; i--) {
         swap(a[0], a[i]);
         heapify(a, i, 0);
     }
@@ -197,7 +197,7 @@ void solve() {
     mt19937_64 gen(chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count());
     uniform_int_distribution<int> dis(1, 100);
 
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 10; i++) {
         vector<int> a(10);
         for (int& v : a) {
             v = dis(gen);

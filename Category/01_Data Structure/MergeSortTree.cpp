@@ -1,8 +1,20 @@
 // 归并排序树：支持区间查询，统计区间 [ql,qr] 内值在 [L, R] 内的个数
-struct MergeSortTree {
+class MergeSortTree {
     int n;
     vector<vector<int>> seg;
 
+    int query(int idx, int l, int r, int ql, int qr, int Lval, int Rval) {
+        if (ql > r || qr < l) {
+            return 0;
+        }
+        if (ql <= l && r <= qr) {
+            return ranges::upper_bound(seg[idx], Rval) - ranges::lower_bound(seg[idx], Lval);
+        }
+        int mid = (l + r) >> 1;
+        return query(idx << 1, l, mid, ql, qr, Lval, Rval) + query(idx << 1 | 1, mid + 1, r, ql, qr, Lval, Rval);
+    }
+
+public:
     MergeSortTree(const vector<int>& arr) {
         n = arr.size();
         seg.resize(4 * n);
@@ -22,20 +34,6 @@ struct MergeSortTree {
     }
 
     // query in interval [ql, qr] counting numbers in [Lval, Rval]
-    int query(int idx, int l, int r, int ql, int qr, int Lval, int Rval) {
-        if (ql > r || qr < l) {
-            return 0;
-        }
-        if (ql <= l && r <= qr) {
-            // 在 seg[idx] 中计数
-            auto& vec = seg[idx];
-            int cnt = (upper_bound(vec.begin(), vec.end(), Rval) - lower_bound(vec.begin(), vec.end(), Lval));
-            return cnt;
-        }
-        int mid = (l + r) >> 1;
-        return query(idx << 1, l, mid, ql, qr, Lval, Rval) + query(idx << 1 | 1, mid + 1, r, ql, qr, Lval, Rval);
-    }
-
     int query(int ql, int qr, int Lval, int Rval) {
         if (ql > qr) {
             return 0;

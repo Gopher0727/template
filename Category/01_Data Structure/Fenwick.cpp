@@ -1,19 +1,18 @@
-template <typename T>
 struct Fenwick {
     int n;
-    vector<T> t;
+    vector<i64> t;
 
-    explicit Fenwick(int n = 0) : n(n), t(n, T {}) {}
+    explicit Fenwick(int n = 0) : n(n), t(n) {}
 
-    void modify(int k, const T& val) {
+    void modify(int k, const i64& val) {
         for (int i = k + 1; i <= n; i += i & -i) {
             t[i - 1] = t[i - 1] + val;
         }
     }
 
     // [0, k)
-    T query(int k) {
-        T ans {};
+    auto query(int k) {
+        i64 ans = 0;
         for (int i = k; i > 0; i &= i - 1) {
             ans = ans + t[i - 1];
         }
@@ -21,11 +20,11 @@ struct Fenwick {
     }
 
     // [l, r)
-    T query(int l, int r) { return query(r) - query(l); }
+    auto query(int l, int r) { return query(r) - query(l); }
 
-    int select(const T& k) {
+    int select(const i64& k) {
         int x = 0;
-        T cur {};
+        i64 cur = 0;
         for (int i = 1 << std::__lg(n); i; i >>= 1) {
             if (x + i <= n && cur + t[x + i - 1] <= k) {
                 x += i;
