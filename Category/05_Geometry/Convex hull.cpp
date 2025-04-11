@@ -26,8 +26,7 @@ bool cmp(int u, int v) {
 struct Point {
     i64 x;
     i64 y;
-    Point() : x {0}, y {0} {}
-    Point(i64 x_, i64 y_) : x {x_}, y {y_} {}
+    Point(i64 x_ = 0, i64 y_ = 0) : x {x_}, y {y_} {}
 };
 Point operator+(Point a, Point b) {
     return Point(a.x + b.x, a.y + b.y);
@@ -41,11 +40,16 @@ auto dot(Point a, Point b) {
 auto cross(Point a, Point b) {
     return a.x * b.y - a.y * b.x;
 }
-auto getHull(vector<Point> p) {
-    ranges::sort(p, [&](auto a, auto b) { return a.x < b.x || (a.x == b.x && a.y < b.y); });
+auto getHull(vector<Point>& vec) {
+    ranges::sort(vec, [&](auto a, auto b) {
+        if (a.x == b.x) {
+            return a.y < b.y;
+        }
+        return a.x < b.x;
+    });
 
     vector<Point> hi, lo;
-    for (auto p : p) {
+    for (auto p : vec) {
         while (hi.size() > 1 && cross(hi.back() - hi[hi.size() - 2], p - hi.back()) >= 0) {
             hi.pop_back();
         }
@@ -62,8 +66,6 @@ auto getHull(vector<Point> p) {
     }
     return make_pair(hi, lo);
 }
-
-const double inf = INFINITY;
 
 
 // Point with complex
