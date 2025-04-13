@@ -18,14 +18,14 @@ public:
         vector<int> _size(n, 1);
         vector<int> vis(n);
         stack<pair<int, int>> stk;
-        stk.emplace(x, -1); // 子节点，父节点
+        stk.push({x, -1}); // 子节点，父节点
         while (!stk.empty()) {
             auto [x, pa] = stk.top();
             if (vis[x] == 0) {
                 vis[x] = 1;
                 for (int y : g[x]) {
                     if (y != pa && vis[y] == 0) {
-                        stk.emplace(y, x);
+                        stk.push({y, x});
                     }
                 }
             } else { // 当前节点及其子树已经完全访问，处理子树大小
@@ -64,7 +64,7 @@ public:
     // 定义：v 到 v 走一步的节点为 v
     auto move() {
         vector move(n, vector<int>(n));
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n; i++) {
             auto build = [&](auto&& build, int u, int pa) -> void {
                 move[u][i] = pa;
                 for (int v : g[u]) {
@@ -108,11 +108,8 @@ public:
 因此，在 DP 求解的过程中，我们只需要在更新 dp[u] 之前，计算 d = max(d, dp[u] + dp[v] + w(u, v)) 即可算出直径 d。
 
 
-链：
-   从子树中的叶子节点到当前节点的路径。把最长链的长度，作为 dfs 的返回值。根据这一定义，空节点的链长是 −1，叶子节点的链长是 0。
-直径：
-   等价于由两条（或者一条）链拼成的路径。我们枚举每个 node，假设直径在这里「拐弯」，也就是计算由左右两条从下面的叶子节点
-   到 node 的链的节点值之和，去更新答案的最大值。
+链：从子树中的叶子节点到当前节点的路径。把最长链的长度，作为 dfs 的返回值。根据这一定义，空节点的链长是 −1，叶子节点的链长是 0。
+直径：等价于由两条（或者一条）链拼成的路径。我们枚举每个 node，假设直径在这里「拐弯」，也就是计算由左右两条从下面的叶子节点到 node 的链的节点值之和，去更新答案的最大值。
 
 */
 
@@ -139,6 +136,52 @@ int diameterOfBinaryTree(TreeNode* root) {
 //    1> 若树上所有边边权均为正，则树的所有直径中点重合。
 //
 
+
+// 树的直径与偏心距
+auto bfs = [&](int s, const vector<vector<int>>& g) {
+    int n = g.size();
+    vector<int> dis(n, -1);
+    dis[s] = 0;
+    queue<int> q;
+    q.push(s);
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        for (auto v : g[u]) {
+            if (dis[v] == -1) {
+                dis[v] = dis[u] + 1;
+                q.push(v);
+            }
+        }
+    }
+    return dis;
+};
+
+auto func = [&](const vector<vector<int>>& g) {
+    int n = g.size();
+    auto d0 = bfs(0, g);
+    int far = 0;
+    for (int i = 0; i < n; i++) {
+        if (d0[i] > d0[far]) {
+            far = i;
+        }
+    }
+    auto d1 = bfs(far, g);
+    int end = far;
+    for (int i = 0; i < n; i++) {
+        if (d1[i] > d1[end]) {
+            end = i;
+        }
+    }
+    auto d2 = bfs(end, g);
+    vector<int> ecc(n);
+    int diam = 0;
+    for (int i = 0; i < n; i++) {
+        ecc[i] = max(d1[i], d2[i]);
+        diam = max(diam, ecc[i]);
+    }
+    return pair {diam, ecc};
+};
 
 
 // 树的直径、重心、中心
@@ -262,7 +305,9 @@ auto get = [&](auto self, int x, int fa, int n) -> void { // 获取树的重心
     siz[x] = 1;
     int val = 0;
     for (auto [y, w] : ver[x]) {
-        if (y == fa || vis[y]) continue;
+        if (y == fa || vis[y]) {
+            continue;
+        }
         self(self, y, x, n);
         siz[x] += siz[y];
         val = max(val, siz[y]);
@@ -277,12 +322,16 @@ auto calc = [&](int x) -> void { // 以 x 为新的根，维护询问
     set<int> pre = {0}; // 记录到根节点 x 距离为 i 的路径是否存在
     vector<int> dis(n + 1);
     for (auto [y, w] : ver[x]) {
-        if (vis[y]) continue;
+        if (vis[y]) {
+            continue;
+        }
         vector<int> child; // 记录 x 的子树节点的深度信息
         auto dfs = [&](auto self, int x, int fa) -> void {
             child.push_back(dis[x]);
             for (auto [y, w] : ver[x]) {
-                if (y == fa || vis[y]) continue;
+                if (y == fa || vis[y]) {
+                    continue;
+                }
                 dis[y] = dis[x] + w;
                 self(self, y, x);
             }
@@ -291,7 +340,9 @@ auto calc = [&](int x) -> void { // 以 x 为新的根，维护询问
         dfs(dfs, y, x);
         for (auto it : child) {
             for (int i = 1; i <= m; i++) { // 根据询问更新值
-                if (q[i] < it || !pre.count(q[i] - it)) continue;
+                if (q[i] < it || !pre.count(q[i] - it)) {
+                    continue;
+                }
                 ans[i] = 1;
             }
         }
@@ -302,7 +353,9 @@ auto dfz = [&](auto self, int x, int fa) -> void { // 点分治
     vis[x] = 1; // 标记已经被更新过的旧重心，确保只对子树分治
     calc(x);
     for (auto [y, w] : ver[x]) {
-        if (y == fa || vis[y]) continue;
+        if (y == fa || vis[y]) {
+            continue;
+        }
         MaxTree = 1e18;
         get(get, y, x, siz[y]);
         self(self, root, x);
@@ -318,6 +371,7 @@ struct Tree {
     int n;
     vector<vector<int>> ver, val;
     vector<int> lg, dep;
+
     Tree(int n) {
         this->n = n;
         ver.resize(n + 1);
@@ -328,10 +382,12 @@ struct Tree {
             lg[i] = lg[i - 1] + (1 << lg[i - 1] == i);
         }
     }
+
     void add(int x, int y) { // 建立双向边
         ver[x].push_back(y);
         ver[y].push_back(x);
     }
+
     void dfs(int x, int fa) {
         val[x][0] = fa; // 储存 x 的父节点
         dep[x] = dep[fa] + 1;
@@ -339,26 +395,37 @@ struct Tree {
             val[x][i] = val[val[x][i - 1]][i - 1];
         }
         for (auto y : ver[x]) {
-            if (y == fa) continue;
+            if (y == fa) {
+                continue;
+            }
             dfs(y, x);
         }
     }
+
     int lca(int x, int y) {
-        if (dep[x] < dep[y]) swap(x, y);
+        if (dep[x] < dep[y]) {
+            swap(x, y);
+        }
         while (dep[x] > dep[y]) {
             x = val[x][lg[dep[x] - dep[y]] - 1];
         }
-        if (x == y) return x;
+        if (x == y) {
+            return x;
+        }
         for (int k = lg[dep[x]] - 1; k >= 0; k--) {
-            if (val[x][k] == val[y][k]) continue;
+            if (val[x][k] == val[y][k]) {
+                continue;
+            }
             x = val[x][k];
             y = val[y][k];
         }
         return val[x][0];
     }
+
     int calc(int x, int y) { // 倍增查询两点间距离
         return dep[x] + dep[y] - 2 * dep[lca(x, y)];
     }
+
     void work(int root = 1) { // 在此初始化
         dfs(root, 0);
     }
@@ -370,6 +437,7 @@ struct Tree {
     vector<vector<int>> val, Max;
     vector<vector<pair<int, int>>> ver;
     vector<int> lg, dep;
+
     Tree(int n) {
         this->n = n;
         ver.resize(n + 1);
@@ -381,10 +449,12 @@ struct Tree {
             lg[i] = lg[i - 1] + (1 << lg[i - 1] == i);
         }
     }
+
     void add(int x, int y, int w) { // 建立双向边
         ver[x].push_back({y, w});
         ver[y].push_back({x, w});
     }
+
     void dfs(int x, int fa) {
         val[x][0] = fa;
         dep[x] = dep[fa] + 1;
@@ -398,6 +468,7 @@ struct Tree {
             dfs(y, x);
         }
     }
+
     int lca(int x, int y) {
         if (dep[x] < dep[y]) swap(x, y);
         while (dep[x] > dep[y]) {
@@ -411,9 +482,11 @@ struct Tree {
         }
         return val[x][0];
     }
+
     int calc(int x, int y) { // 倍增查询两点间距离
         return dep[x] + dep[y] - 2 * dep[lca(x, y)];
     }
+
     int query(int x, int y) { // 倍增查询两点路径上的最大边权（带权图）
         auto get = [&](int x, int y) -> int {
             int ans = 0;
@@ -430,6 +503,7 @@ struct Tree {
         int fa = lca(x, y);
         return max(get(x, fa), get(y, fa));
     }
+
     void work(int root = 1) { // 在此初始化
         dfs(root, 0);
     }
