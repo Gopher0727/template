@@ -27,6 +27,7 @@ public:
         build(_init);
     }
 
+private:
     void init(int n) {
         size = 1;
         height = 0;
@@ -49,7 +50,18 @@ public:
     }
 
 public:
-    void modify(int l, int r, const Tag& t) {
+    void modify(int pos, const Info& info) {
+        pos += size;
+        for (int i = height; i > 0; i--) {
+            push(pos >> i);
+        }
+        info[pos] = info;
+        for (pos /= 2; pos; pos /= 2) {
+            pull(pos);
+        }
+    }
+
+    void modify(int l, int r, const Tag& tag) {
         l += size;
         r += size + 1;
         int l0 = l, r0 = r;
@@ -63,10 +75,10 @@ public:
         }
         for (int tl = l, tr = r; tl < tr; tl >>= 1, tr >>= 1) {
             if (tl & 1) {
-                apply(tl++, t);
+                apply(tl++, tag);
             }
             if (tr & 1) {
-                apply(--tr, t);
+                apply(--tr, tag);
             }
         }
         for (int i = 1; i <= height; i++) {
@@ -77,6 +89,14 @@ public:
                 pull((r0 - 1) >> i);
             }
         }
+    }
+
+    Info query(int pos) {
+        pos += size;
+        for (int i = height; i > 0; i--) {
+            push(pos >> i);
+        }
+        return info[pos];
     }
 
     Info query(int l, int r) {
@@ -102,36 +122,41 @@ public:
         return resL + resR;
     }
 
-    // 查找满足条件的最左侧索引，范围在 [pos, size)
-    int findFirst(int pos, const function<bool(const Info&)>& check) {
-        int l = pos - 1, r = size;
-        while (l + 1 < r) {
-            int m = l + (r - l) / 2;
-            if (check(query(l + 1, m))) {
-                r = m;
-            } else {
-                l = m;
-            }
-        }
-        if (r == size) {
-            r = -1;
-        }
-        return r;
-    }
+    Info queryAll() { return info[1]; }
 
-    // 查找满足条件的最右侧索引，范围在 [0, pos)
-    int findLast(int pos, const function<bool(const Info&)>& check) {
-        int l = -1, r = pos;
-        while (l + 1 < r) {
-            int m = l + (r - l) / 2;
-            if (check(query(m, pos - 1))) {
-                l = m;
+    int findFirst(int l, int r, auto&& pred) {
+        int lo = l - 1, hi = r + 1;
+        while (lo + 1 < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (pred(query(l, mid))) {
+                hi = mid;
             } else {
-                r = m;
+                lo = mid;
             }
         }
-        return l;
+        if (hi == r + 1) {
+            hi = -1;
+        }
+        return hi;
     }
+    int findFirst(int pos, auto&& pred) { return findFirst(pos, size - 1, pred); }
+
+    int findLast(int l, int r, auto&& pred) {
+        int lo = l - 1, hi = r + 1;
+        while (lo + 1 < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (pred(query(mid, r))) {
+                lo = mid;
+            } else {
+                hi = mid;
+            }
+        }
+        if (lo == l - 1) {
+            return -1;
+        }
+        return lo;
+    }
+    int findLast(int pos, auto&& pred) { return findLast(0, pos, pred); }
 };
 
 struct Tag {
@@ -144,7 +169,6 @@ struct Tag {
         }
     }
 };
-
 struct Info {
     i64 sum = 0, len = 0;
     void apply(const Tag& t, int len) {
