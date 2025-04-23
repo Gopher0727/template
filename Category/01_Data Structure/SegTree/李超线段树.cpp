@@ -15,7 +15,8 @@ class LiChao {
         Node(Line line) : line(line) {}
     }* root = nullptr;
 
-    i64 L, R; // 查询x的范围
+    // [L, R) 查询x的范围
+    i64 L, R;
 
     // 评估直线
     i64 eval(const Line& line, i64 x) const { return line.k * x + line.b; }

@@ -37,6 +37,33 @@ auto factorize(i64 x) {
 }
 
 
+// EXP[x] 为 x 分解质因数后，每个质因数的指数
+vector<vector<int>> EXP;
+int m = 0;
+void sieve(int n) {
+    if (n <= m) {
+        return;
+    }
+    EXP.resize(n + 1, {});
+    for (int x = max(m + 1, 2); x <= n; x++) {
+        int a = x;
+        for (int i = 2; i * i <= a; i++) {
+            int e = 0;
+            for (; a % i == 0; a /= i) {
+                e++;
+            }
+            if (e) {
+                EXP[x].push_back(e);
+            }
+        }
+        if (a > 1) {
+            EXP[x].push_back(1);
+        }
+    }
+    m = n;
+}
+
+
 // 按从小到大的顺序生成回文数（1 ~ 1e9 之间）
 vector<int> palindrome;
 auto init = [] {
@@ -128,7 +155,8 @@ void sieve(int n) {
                 break;
             }
             minp[i * p] = p;
-            // 当 minp[i]（即 i 的当前最小质因数）等于当前的质数 p 时，就没有必要继续用更大的质数去更新了
+            // 当 minp[i]（即 i 的当前最小质因数）等于当前的质数 p 时，
+            // 就没有必要继续用更大的质数去更新了
             if (p == minp[i]) {
                 break;
             }

@@ -4,7 +4,7 @@ struct Fenwick {
 
     explicit Fenwick(int n = 0) : n(n), t(n) {}
 
-    void modify(int k, const i64& val) {
+    void add(int k, const i64& val) {
         for (int i = k + 1; i <= n; i += i & -i) {
             t[i - 1] = t[i - 1] + val;
         }
