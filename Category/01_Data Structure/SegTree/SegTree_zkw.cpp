@@ -19,15 +19,6 @@ private:
 
     void pull(int p) { info[p] = info[p << 1] + info[p << 1 | 1]; }
 
-public:
-    ZKWSegTree() = delete;
-    ZKWSegTree(int n, Info v = Info {}) : ZKWSegTree(vector(n, Info {})) {}
-    ZKWSegTree(const vector<Info>& _init) {
-        init(_init.size());
-        build(_init);
-    }
-
-private:
     void init(int n) {
         size = 1;
         height = 0;
@@ -50,6 +41,13 @@ private:
     }
 
 public:
+    ZKWSegTree() = delete;
+    ZKWSegTree(int n, Info v = Info {}) : ZKWSegTree(vector(n, Info {})) {}
+    ZKWSegTree(const vector<Info>& _init) {
+        init(_init.size());
+        build(_init);
+    }
+
     void modify(int pos, const Info& info) {
         pos += size;
         for (int i = height; i > 0; i--) {
@@ -111,6 +109,8 @@ public:
             }
         }
         Info resL {}, resR {};
+        // todo
+
         for (; l < r; l >>= 1, r >>= 1) {
             if (l & 1) {
                 resL = resL + info[l++];

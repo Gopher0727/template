@@ -1,5 +1,3 @@
-static constexpr i64 inf = 9E18;
-
 template <class Info>
 class SegTree {
 private:
@@ -34,7 +32,6 @@ public:
         build(build, 1, 0, n - 1);
     }
 
-public:
     void modify(int id, const Info& _init, int o, int l, int r) {
         if (l == r) {
             info[o] = _init;
@@ -99,7 +96,6 @@ public:
     }
     int findLast(int l, int r, auto&& pred) { return findLast(l, r, pred, 1, 0, n - 1); }
 };
-
 struct Info {
     i64 mx = 0;
 };

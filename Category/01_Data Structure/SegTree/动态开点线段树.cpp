@@ -1,43 +1,31 @@
-template <class Info, class Tag>
-class DynNode {
-public:
-    Node* left = nullptr;
-    Node* right = nullptr;
-    int l = 0, r = 0, mid = 0;
-    Info info;
-    Tag tag;
-
-    DynNode(int l, int r) : l(l), r(r), mid(l + (r - l) / 2) { info.len = r - l + 1; }
-};
-template <class Info, class Tag, int N>
+template <class Info, class Tag, class DynNode>
 class DynamicSegTree {
-    using _Node = DynNode<Info, Tag>;
-
 private:
-    _Node* root;
+    DynNode* root;
+    int L, R;
 
-    void apply(_Node* node, const Tag& t) { node->tag.apply(t), node->info.apply(t); }
+    void apply(DynNode* node, const Tag& t) { node->tag.apply(t), node->info.apply(t); }
 
-    void pull(_Node* node) {
+    void pull(DynNode* node) {
         if (node->left && node->right) {
             node->info = node->left->info + node->right->info;
         }
     }
 
-    void push(_Node* node) {
+    void push(DynNode* node) {
         if (node->left == nullptr) {
-            node->left = new _Node(node->l, node->mid);
+            node->left = new DynNode(node->l, node->mid);
         }
         if (node->right == nullptr) {
-            node->right = new _Node(node->mid + 1, node->r);
+            node->right = new DynNode(node->mid + 1, node->r);
         }
         apply(node->left, node->tag), apply(node->right, node->tag), node->tag = Tag();
     }
 
 public:
-    DynamicSegTree(int L = 0, int R = N) { root = new _Node(L, R); }
+    DynamicSegTree(int L, int R) : L(L), R(R) { root = new DynNode(L, R); }
 
-    void modify(int L, int R, const Tag& v, _Node* node) {
+    void modify(int L, int R, const Tag& v, DynNode* node) {
         if (L <= node->l && node->r <= R) {
             apply(node, v);
             return;
@@ -53,12 +41,13 @@ public:
     }
     void modify(int L, int R, const Tag& v) { modify(L, R, v, root); }
 
-    Info query(int L, int R, _Node* node) {
+    Info query(int L, int R, DynNode* node) {
         if (L <= node->l && node->r <= R) {
             return node->info;
         }
         push(node);
-        Info res;
+        Info res {};
+        // todo
         if (L <= node->mid) {
             res = res + query(L, R, node->left);
         }
@@ -68,12 +57,12 @@ public:
         return res;
     }
     Info query(int L, int R) { return query(L, R, root); }
-    Info queryAll() { return query(0, N); }
+
+    Info queryAll() { return query(L, R); }
 };
 struct Tag {
     i64 add = 0;
-    Tag() {}
-    Tag(i64 v) : add(v) {}
+    Tag(i64 v = 0) : add(v) {}
     void apply(const Tag& t) {
         if (t.add) {
             add += t.add;
@@ -81,11 +70,12 @@ struct Tag {
     }
 };
 struct Info {
-    i64 sum = 0, len = 0, mx = 0;
+    i64 sum, len;
+    // todo
     void apply(const Tag& t) {
         if (t.add) {
             sum += len * t.add;
-            mx += t.add;
+            // todo
         }
     }
 };
@@ -93,9 +83,23 @@ Info operator+(const Info& a, const Info& b) {
     Info info;
     info.sum = a.sum + b.sum;
     info.len = a.len + b.len;
-    info.mx = max(a.mx, b.mx);
+    // todo
     return info;
 }
+class DynNode {
+public:
+    DynNode* left = nullptr;
+    DynNode* right = nullptr;
+    int l = 0, r = 0, mid = 0;
+    Info info;
+    Tag tag;
+
+    DynNode(int l, int r) : l(l), r(r), mid(l + (r - l) / 2) {
+        info.sum = 0;
+        info.len = r - l + 1;
+        // todo
+    }
+};
 
 static constexpr int N = 1E9 + 10;
-using SegTree = DynamicSegTree<Info, Tag, N>;
+using SegTree = DynamicSegTree<Info, Tag, DynNode>;

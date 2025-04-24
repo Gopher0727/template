@@ -1,5 +1,3 @@
-static constexpr i64 inf = 9E18;
-
 template <class Info, class Tag>
 class SegTree {
 private:
@@ -8,7 +6,9 @@ private:
     vector<Tag> tag;
 
     void apply(int o, const Tag& t) { tag[o].apply(t), info[o].apply(t); }
+
     void push(int o) { apply(o << 1, tag[o]), apply(o << 1 | 1, tag[o]), tag[o] = Tag(); }
+
     void pull(int o) { info[o] = info[o << 1] + info[o << 1 | 1]; }
 
 public:
@@ -34,7 +34,6 @@ public:
         build(build, 1, 0, n - 1);
     }
 
-public:
     void modify(int id, const Info& _init, int o, int l, int r) {
         if (l == r) {
             info[o] = _init;
