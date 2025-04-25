@@ -15,7 +15,6 @@ class CtNode {
 
 public:
     CtNode(int _id, int _val) : id(_id), val(_val), lr {nullptr, nullptr} {}
-    ~CtNode() { delete lr[0], delete lr[1]; }
 
     CtNode* build(const vector<int>& a) {
         if (a.empty()) {

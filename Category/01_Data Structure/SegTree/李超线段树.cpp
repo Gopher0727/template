@@ -2,9 +2,10 @@
 //
 // 用来维护在平面直角坐标系上的线段关系，可以用于最大化 f(x)
 
-static constexpr i64 inf = 1E18;
-
+template <class Cmp = std::less<i64>>
 class LiChao {
+    const Cmp cmp = Cmp();
+
     struct Line { // 直线 f(x) = k * x + b
         i64 k, b;
     };
@@ -27,8 +28,8 @@ class LiChao {
             return;
         }
         i64 mid = (l + r) >> 1;
-        bool left_better = eval(newline, l) > eval(node->line, l);
-        bool mid_better = eval(newline, mid) > eval(node->line, mid);
+        bool left_better = cmp(eval(newline, l), eval(node->line, l));
+        bool mid_better = cmp(eval(newline, mid), eval(node->line, mid));
         if (mid_better) {
             swap(newline, node->line);
         }
@@ -44,7 +45,11 @@ class LiChao {
 
     i64 query(Node* node, i64 l, i64 r, i64 x) const {
         if (node == nullptr) {
-            return -inf;
+            if constexpr (std::is_same_v<Cmp, std::less<i64>>) {
+                return std::numeric_limits<i64>::max();
+            } else {
+                return std::numeric_limits<i64>::lowest();
+            }
         }
         i64 res = eval(node->line, x);
         if (l + 1 == r) {
@@ -52,9 +57,15 @@ class LiChao {
         }
         i64 mid = (l + r) >> 1;
         if (x < mid) {
-            res = max(res, query(node->l, l, mid, x));
+            i64 sub = query(node->l, l, mid, x);
+            if (cmp(sub, res)) {
+                res = sub;
+            }
         } else {
-            res = max(res, query(node->r, mid, r, x));
+            i64 sub = query(node->r, mid, r, x);
+            if (cmp(sub, res)) {
+                res = sub;
+            }
         }
         return res;
     }
