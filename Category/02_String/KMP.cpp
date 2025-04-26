@@ -53,8 +53,8 @@ int KMP(const string& s, const string& p) {
 
 // 返回文本串 s 中，模式串 p 所有成功匹配的下标（p[0] 在 s 中的下标）
 auto kmpSearch(const string& s, const string& p) {
+    auto pi = calcPi(p);
     int n = s.size();
-    vector<int> pi(n);
     vector<int> pos;
     int match = 0;
     for (int i = 0; i < n; i++) {
