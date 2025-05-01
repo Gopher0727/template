@@ -25,14 +25,30 @@ struct Point {
     friend istream& operator>>(istream& is, Point& p) { return is >> p.x >> p.y; }
     friend ostream& operator<<(ostream& os, const Point& p) { return os << "(" << p.x << ", " << p.y << ")"; }
 
-    T length(const Point& p) { return hypot(x, y); }
-    // 点积（内积）
-    friend T dot(const Point& a, const Point& b) { return a.x * b.x + a.y * b.y; }
+    T length() const { return hypot(x, y); }
+
+    friend T dot(const Point& a, const Point& b) { // 点积（内积）
+        return a.x * b.x + a.y * b.y;
+    }
     friend T square(const Point& p) { return dot(p, p); }
-    friend T distance(const Point& a, const Point& b) { return length(a - b); }
-    friend Point norm(const Point& p) { return p / length(p); }
+    friend T distance(const Point& a, const Point& b) { return hypot(a.x - b.x, a.y - b.y); }
+    friend Point norm(const Point& p) {
+        T len = hypot(p.x, p.y);
+        if (len == 0) {
+            return Point(0, 0);
+        }
+        return p / len;
+    }
     friend Point rotate(const Point& a) { return Point(-a.y, a.x); }
-    friend int sgn(const Point& a) { return a.y > 0 || (a.y == 0 && a.x > 0) ? 1 : -1; }
+    friend int sgn(const Point& a) {
+        if (a.y > 0 || (a.y == 0 && a.x > 0)) {
+            return 1;
+        }
+        if (a.y == 0 && a.x == 0) { // 原点
+            return 0;
+        }
+        return -1;
+    }
 };
 using Real = long double;
 using P = Point<Real>;

@@ -33,12 +33,9 @@ struct Point {
     }
     friend T dot(const Point& a, const Point& b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
 };
-Point cross(const Point &a, const Point &b) {
-    return {
-        a.y * b.z - a.z * b.y,
-        a.z * b.x - a.x * b.z,
-        a.x * b.y - a.y * b.x
-    };
+template <typename T>
+Point<T> cross(const Point<T>& a, const Point<T>& b) {
+    return {a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x};
 }
 using Real = long double;
 using P = Point<Real>;

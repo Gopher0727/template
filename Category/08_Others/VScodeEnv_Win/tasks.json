@@ -5,21 +5,34 @@
             "type": "shell",
             "label": "C++",
             "command": "clang++",
+            // "command": "g++", // 注意调试功能
             "args": [
-                "-std=c++26",
+                "-std=c++23",
                 // "-fsanitize=undefined", // win 开不了
                 // "-O2",
                 // "-pipe",
-                // "-Wno-vla # 禁用变量长度数组(VLA)的警告",
+                // "-Wno-vla", // 禁用变量长度数组(VLA)的警告
                 // "-fdiagnostics-color=always",
+                //
+                /* 使用 println() */
+                // "-stdlib=libc++",
+                // "-fexperimental-library",
+                //// 加入 libc++ 的 include 和 lib 路径
+                // "-isystem",
+                // "D:/SDK/MSYS2/mingw64/include/c++/v1",
+                // "-L",
+                // "D:/SDK/MSYS2/mingw64/lib",
+                // "-lc++",
+                // "-lc++abi",
+                //
                 "-g",
                 "-DLOCAL",
                 "-ID:/Code/OJ_Code/headers",
                 // "-Wconversion",
                 // "-Wall",
+                "${file}",
                 "-o",
                 "${workspaceFolder}/build/${fileBasenameNoExtension}.exe",
-                "${file}"
             ],
             "group": {
                 "kind": "build",
