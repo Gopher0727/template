@@ -12,7 +12,7 @@ public:
 
     // 获取子树大小（包括当前节点并以当前节点为根）
     vector<int> subTreeSize(int x) {
-        vector<int> _size(n, 1);
+        vector<int> siz(n, 1);
         vector<int> vis(n);
         stack<pair<int, int>> stk;
         stk.push({x, -1}); // 子节点，父节点
@@ -28,32 +28,32 @@ public:
             } else { // 当前节点及其子树已经完全访问，处理子树大小
                 for (int y : g[x]) {
                     if (y != pa) {
-                        _size[x] += _size[y];
+                        siz[x] += siz[y];
                     }
                 }
                 stk.pop();
             }
         }
-        return _size;
+        return siz;
     }
 
     // DFS: 树上两点路径
-    auto path(int st, int end) {
+    auto path(int x, int y) {
         vector<int> path;
-        auto f = [&](auto&& f, int u, int pa) {
-            if (u == st) {
+        auto f = [&](this auto&& f, int u, int pa) -> bool {
+            if (u == x) {
                 path.push_back(u);
                 return true;
             }
             for (int v : g[u]) {
-                if (v != pa && f(f, v, u)) {
+                if (v != pa && f(v, u)) {
                     path.push_back(u);
                     return true;
                 }
             }
             return false;
         };
-        f(f, end, -1);
+        f(y, -1);
         return path;
     }
 
@@ -62,15 +62,15 @@ public:
     auto move() {
         vector move(n, vector<int>(n));
         for (int i = 0; i < n; i++) {
-            auto build = [&](auto&& build, int u, int pa) -> void {
+            auto build = [&](this auto&& build, int u, int pa) -> void {
                 move[u][i] = pa;
                 for (int v : g[u]) {
                     if (v != pa) {
-                        build(build, v, u);
+                        build(v, u);
                     }
                 }
             };
-            build(build, i, i);
+            build(i, i);
         }
         return move;
     }
@@ -81,55 +81,31 @@ public:
 
 //// 树的直径：树上任意两点间的最大距离，也就是最长的简单路径。
 //
-// > 两次 DFS：考虑边权时，要求无负权边
-// 首先从任意节点 y 开始进行第一次 DFS，到达距离其最远的节点，记为 z，然后再从 z 开始做第二次 DFS，到达距离 z 最远的节点，
-// 记为 z'，则 \delta(z,z') 即为树的直径。
+// > 两次 DFS：
+// （※）考虑边权时，要求无负权边
+// 首先从任意节点 y 开始进行第一次 DFS，到达距离其最远的节点，记为 z，
+// 然后再从 z 开始做第二次 DFS，到达距离 z 最远的节点，记为 z'，则 \delta(z,z') 即为树的直径。
+//
+// 如果需要求出一条直径上所有的节点，则可以在第二次 DFS 的过程中，记录每个点的前序节点，
+// 即可从直径的一端一路向前，遍历直径上所有的节点。
 //
 // 【Note】在一棵树上，从任意节点 y 开始进行一次 DFS，到达的距离其最远的节点 z 必为直径的一端。
 // 【Note】若树上所有边边权均为正，则树的所有直径中点重合。
 //
-// 如果需要求出一条直径上所有的节点，则可以在第二次 DFS 的过程中，记录每个点的前序节点，即可从直径的一端一路向前，遍历直径上所有的节点。
-//
-//
-// > 树形 DP：可以在存在负权边的情况下求解出树的直径
+// > 树形 DP：
+// （※）可以在存在负权边的情况下求解出树的直径（只得到直径的长度）
 // 记录当 1 为树的根时，每个节点作为子树的根向下，所能延伸的最长路径长度 d1 与次长路径（与最长路径无公共边）长度 d2，
 // 那么直径就是对于每一个点，该点 d1 + d2 能取到的值中的最大值。
-// 如果需要求出一条直径上所有的节点，则可以在 DP 的过程中，记录下每个节点能向下延伸的最长路径与次长路径（定义同上）所对应的子节点，
+// 如果需要求出一条直径上所有的节点，则可以在 DP 的过程中，记录下每个节点能向下延伸的最长路径与次长路径所对应的子节点，
 // 在求 d 的同时记下对应的节点 u，使得 d = d1[u] + d2[u]，即可分别沿着从 u 开始的最长路径的次长路径对应的子节点一路向某个方向
 // （对于无根树，虽然这里指定了 1 为树的根，但仍需记录每点跳转的方向；对于有根树，一路向上跳即可），遍历直径上所有的节点。
 //
-// 我们定义 dp[u]：以 u 为根的子树中，从 u 出发的最长路径。那么容易得出转移方程：dp[u] = max(dp[u], dp[v] + w(u, v))，其中的 v
+// 我们定义 dp[u]：以 u 为根的子树中，从 u 出发的最长路径。那么容易得出转移方程：dp[u] = max(dp[u], dp[v]+w(u,v))，其中的 v
 // 为 u 的子节点，w(u, v) 表示所经过边的权重。对于树的直径，实际上是可以通过枚举从某个节点出发不同的两条路径相加的最大值求出。
-// 因此，在 DP 求解的过程中，我们只需要在更新 dp[u] 之前，计算 d = max(d, dp[u] + dp[v] + w(u, v)) 即可算出直径 d。
+// 因此，在 DP 求解的过程中，我们只需要在更新 dp[u] 之前，计算 d = max(d, dp[u]+dp[v]+w(u,v)) 即可算出直径 d。
 
 
-// 链：从子树中的叶子节点到当前节点的路径。把最长链的长度，作为 dfs 的返回值。
-// 根据这一定义，空节点的链长是 −1，叶子节点的链长是 0。
-//
-// 直径：等价于由两条（或者一条）链拼成的路径。
-// 我们枚举每个 node，假设直径在这里「拐弯」，也就是计算由左右两条从下面的叶节点到 node 的链的节点值之和，去更新答案的最大值。
-
-
-// 二叉树的直径
-int diameterOfBinaryTree(TreeNode* root) {
-    int ans = 0;
-    // ⚠注意：dfs 返回的是链的长度，不是直径的长度。
-    // ⚠注意：dfs 返回的是当前子树的最大链长（也可以理解为子树的高度），不包含当前节点和其父节点的这条边。
-    auto dfs = [&](this auto&& dfs, TreeNode* node) {
-        if (node == nullptr) {
-            return -1;
-        }
-        int L = dfs(node->left) + 1;
-        int R = dfs(node->right) + 1;
-        ans = max(ans, L + R);
-        return max(L, R);
-    };
-    dfs(root);
-    return ans;
-}
-
-
-// 树的直径与偏心距
+// 树的直径与偏心距（无边权）
 auto work = [&](const vector<vector<int>>& g) {
     int n = g.size();
 

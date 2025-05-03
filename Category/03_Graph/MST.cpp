@@ -1,10 +1,9 @@
 // 最小生成树（MST, Minimum spanning tree）
 //
+// 无向边
 
-// kruskal 能够处理有向边或者无向边，适用于稀疏图
-//
-// 结构体存边，对边进行排序，并初始化一个并查集，当 "边数 = 点数 - 1" 时停止。
-//
+// kruskal 适用于稀疏图
+
 struct Tree {
     int n;
     vector<tuple<i64, int, int>> edges;
@@ -31,8 +30,8 @@ struct Tree {
 };
 
 
-// Prim  无向边，适合于稠密图
-//
+// Prim 适合于稠密图
+
 struct Tree {
     int n;
     vector<vector<pair<int, i64>>> g;
