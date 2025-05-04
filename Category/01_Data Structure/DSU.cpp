@@ -41,17 +41,6 @@ struct DSU {
         return true;
     }
 
-    bool merge_x2y(int x, int y) {
-        int px = find(x), py = find(y);
-        if (px == py) {
-            return false;
-        }
-        pa[px] = py;
-        _size[py] += _size[px];
-        block--;
-        return true;
-    }
-
     bool same(int x, int y) { return find(x) == find(y); }
 
     int size(int x) { return _size[find(x)]; }

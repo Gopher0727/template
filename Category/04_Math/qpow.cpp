@@ -3,6 +3,7 @@
 //   把该图的邻接矩阵 M 取 k 次幂，那么 M[i][j] 就表示从 i 到 j 长度为 k 的路径的数目。时间复杂度是 O(n^3 log k)
 // > 置换
 
+
 // 乘法快速幂，带取模
 i64 qpow(i64 a, i64 b, int p, i64 res = 1) {
     a = (a % p + p) % p;
@@ -25,9 +26,9 @@ i64 qpow(i64 a, i64 b, i64 res = 1) {
 }
 
 // 矩阵快速幂（方阵）
-vector<vector<i64>> multiply(vector<vector<i64>>& a, vector<vector<i64>>& b) { // 矩阵乘法
+auto multiply(vector<vector<i64>>& a, vector<vector<i64>>& b) { // 矩阵乘法
     int m = a.size(), n = b[0].size(), k = a[0].size();
-    vector<vector<i64>> res(m, vector<i64>(n));
+    vector res(m, vector<i64>(n));
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
             for (int c = 0; c < k; c++) {
@@ -39,7 +40,7 @@ vector<vector<i64>> multiply(vector<vector<i64>>& a, vector<vector<i64>>& b) { /
     return res;
 }
 // a^n @ f，其中 @ 是矩阵乘法，f 为列向量
-vector<vector<i64>> qpow_mul(vector<vector<i64>> a, i64 b, vector<vector<i64>> f = {}) {
+auto qpow_mul(vector<vector<i64>> a, i64 b, vector<vector<i64>> f = {}) {
     int n = a.size();
     if (f.empty()) {
         f = vector(n, vector<i64>(n));

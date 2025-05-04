@@ -1,3 +1,26 @@
+// 将字符矩阵顺时针旋转 90 度
+auto f = [&](vector<string>& s) {
+    int n = s.size(), m = s[0].size();
+    vector<string> ns(m);
+    for (int i = n - 1; i >= 0; i--) {
+        for (int j = 0; j < m; j++) {
+            ns[j] += s[i][j];
+        }
+    }
+    s = std::move(ns);
+
+    // int n = s.size(), m = s[0].size();
+    // for (int i = 0; i < n; ++i) {
+    //     for (int j = i; j < m; ++j) {
+    //         swap(s[i][j], s[j][i]);
+    //     }
+    // }
+    // for (int i = 0; i < n; ++i) {
+    //     reverse(s[i].begin(), s[i].end());
+    // }
+};
+
+
 // v 需要增加多少才能被 r 整除
 //
 int d1 = (r - (v % r)) % r;
