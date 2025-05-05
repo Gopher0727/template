@@ -4,16 +4,16 @@ struct Fenwick {
 
     explicit Fenwick(int n = 0) : n(n), t(n) {}
 
-    void add(int k, const i64& val) {
-        for (int i = k + 1; i <= n; i += i & -i) {
-            t[i - 1] = t[i - 1] + val;
+    void add(int pos, const i64& val) {
+        for (int i = pos + 1; i <= n; i += i & -i) {
+            t[i - 1] += val;
         }
     }
 
-    // [0, k)
-    auto query(int k) {
+    // [0, pos)
+    auto query(int pos) {
         i64 ans = 0;
-        for (int i = k; i > 0; i &= i - 1) {
+        for (int i = pos; i > 0; i &= i - 1) {
             ans = ans + t[i - 1];
         }
         return ans;
@@ -23,12 +23,12 @@ struct Fenwick {
     auto query(int l, int r) { return query(r) - query(l); }
 
     int select(const i64& k) {
-        int x = 0;
         i64 cur = 0;
+        int x = 0;
         for (int i = 1 << std::__lg(n); i; i >>= 1) {
             if (x + i <= n && cur + t[x + i - 1] <= k) {
                 x += i;
-                cur = cur + t[x - 1];
+                cur += t[x - 1];
             }
         }
         return x;

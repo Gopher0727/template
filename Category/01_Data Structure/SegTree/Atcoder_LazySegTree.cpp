@@ -255,3 +255,5 @@ S mapping(F l, S r) {}
 F composition(F l, F r) {}
 
 F id() {}
+
+using SegTree = atcoder::lazy_segtree<S, op, e, F, mapping, composition, id>;

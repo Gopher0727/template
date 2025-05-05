@@ -1,11 +1,7 @@
 // 并查集 （适用于无向图）
 //
-// 只实现路径压缩的并查集复杂度是 O(nlogn) 的，这也是大多数情况下的实现方案
-// 只实现启发式合并（按深度合并）的并查集的复杂度也是 O(nlogn) 的，适用于可持久化的场景
-//
 // Link：
 // 【RMQ 标准算法和线性树上并查集】(https://ljt12138.blog.uoj.ac/blog/4874)
-//
 
 struct DSU {
     vector<int> pa, _size;
@@ -55,14 +51,7 @@ struct DSU {
     vector<int> _loop;
     int block;
 
-    explicit DSU(int n) {
-        pa.resize(n + 1);
-        iota(pa.begin(), pa.end(), 0);
-        _size.resize(n + 1, 1);
-        _edges.resize(n + 1, 1);
-        _loop.resize(n + 1, 1);
-        block = n;
-    }
+    explicit DSU(int n) : pa(n), _size(n, 1), _edges(n, 1), _loop(n, 1), block(n) { iota(pa.begin(), pa.end(), 0); }
 
     // int find(int x) { return x == pa[x] ? x : pa[x] = find(pa[x]); }
     int find(int x) {
@@ -105,6 +94,29 @@ struct DSU {
     bool loop(int x) { return _loop[find(x)]; }
 
     int edges(int x) { return _edges[find(x)]; }
+
+    vector<vector<int>> groups() {
+        int n = pa.size();
+        vector<int> cnt(n);
+        for (int i = 0; i < n; ++i) {
+            cnt[find(i)]++;
+        }
+
+        vector<vector<int>> res;
+        res.reserve(block);
+        vector<int> index(n, -1);
+        for (int i = 0; i < n; ++i) {
+            if (pa[i] == i) {
+                index[i] = res.size();
+                res.emplace_back();
+                res.back().reserve(cnt[i]);
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            res[index[pa[i]]].push_back(i);
+        }
+        return res;
+    }
 };
 
 
