@@ -81,17 +81,56 @@ public:
 
 //// 树的直径：树上任意两点间的最大距离，也就是最长的简单路径。
 //
-// > 两次 DFS：
+// > 两次 DFS / BFS：
 // （※）考虑边权时，要求无负权边
-// 首先从任意节点 y 开始进行第一次 DFS，到达距离其最远的节点，记为 z，
-// 然后再从 z 开始做第二次 DFS，到达距离 z 最远的节点，记为 z'，则 \delta(z,z') 即为树的直径。
+// 首先从任意节点 y 开始，到达距离其最远的节点，记为 z，
+// 然后再从 z 开始，到达距离 z 最远的节点，记为 z'，则 \delta(z,z') 即为树的直径。
 //
-// 如果需要求出一条直径上所有的节点，则可以在第二次 DFS 的过程中，记录每个点的前序节点，
-// 即可从直径的一端一路向前，遍历直径上所有的节点。
+// 如果需要求出一条直径上所有的节点，则可以记录每个点的前序节点，从直径的一端一路向前，遍历直径上所有的节点。
 //
-// 【Note】在一棵树上，从任意节点 y 开始进行一次 DFS，到达的距离其最远的节点 z 必为直径的一端。
+// 【Note】在一棵树上，从任意节点 y 开始，到达的距离其最远的节点 z 必为直径的一端。
 // 【Note】若树上所有边边权均为正，则树的所有直径中点重合。
-//
+
+auto work = [&](int u) {
+    vector<int> dis(n), pa(n);
+    int far = u;
+
+    auto dfs = [&](this auto&& dfs, int u) -> void {
+        for (int v : g[u]) {
+            if (v == pa[u]) {
+                continue;
+            }
+            pa[v] = u;
+            dis[v] = dis[u] + 1;
+            dfs(v);
+
+            if (dis[v] > dis[far]) {
+                far = v;
+            }
+        }
+    };
+
+    dis[u] = 0;
+    pa[u] = -1;
+    dfs(u);
+
+    int r = far;
+
+    dis[r] = 0;
+    pa[r] = -1;
+    dfs(r);
+
+    int s = far;
+
+    vector<int> path;
+    for (int i = s; i != -1; i = pa[i]) {
+        path.push_back(i);
+    }
+
+    return array {r, s};
+};
+
+
 // > 树形 DP：
 // （※）可以在存在负权边的情况下求解出树的直径（只得到直径的长度）
 // 记录当 1 为树的根时，每个节点作为子树的根向下，所能延伸的最长路径长度 d1 与次长路径（与最长路径无公共边）长度 d2，
@@ -104,58 +143,6 @@ public:
 // 为 u 的子节点，w(u, v) 表示所经过边的权重。对于树的直径，实际上是可以通过枚举从某个节点出发不同的两条路径相加的最大值求出。
 // 因此，在 DP 求解的过程中，我们只需要在更新 dp[u] 之前，计算 d = max(d, dp[u]+dp[v]+w(u,v)) 即可算出直径 d。
 
-
-// 树的直径与偏心距（无边权）
-auto work = [&](const vector<vector<int>>& g) {
-    int n = g.size();
-
-    auto bfs = [&](int s) {
-        int n = g.size();
-        vector<int> dis(n, -1);
-        dis[s] = 0;
-        queue<int> q;
-        q.push(s);
-        while (!q.empty()) {
-            int u = q.front();
-            q.pop();
-            for (auto v : g[u]) {
-                if (dis[v] == -1) {
-                    dis[v] = dis[u] + 1;
-                    q.push(v);
-                }
-            }
-        }
-        return dis;
-    };
-
-    auto d0 = bfs(0);
-
-    int far = 0;
-    for (int i = 0; i < n; i++) {
-        if (d0[i] > d0[far]) {
-            far = i;
-        }
-    }
-
-    auto d1 = bfs(far);
-
-    int end = far;
-    for (int i = 0; i < n; i++) {
-        if (d1[i] > d1[end]) {
-            end = i;
-        }
-    }
-
-    auto d2 = bfs(end);
-
-    vector<int> ecc(n);
-    int diam = 0;
-    for (int i = 0; i < n; i++) {
-        ecc[i] = max(d1[i], d2[i]);
-        diam = max(diam, ecc[i]);
-    }
-    return pair {diam, ecc};
-};
 
 
 //// 重心（centroid / cog，Center of gravity）

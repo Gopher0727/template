@@ -1,9 +1,12 @@
 ﻿// 李超线段树 （LiChao）
 //
-// 用来维护在平面直角坐标系上的线段关系，可以用于最大化 f(x)
+// 用来维护在平面直角坐标系上的线段关系
 
-template <class Cmp = std::less<i64>>
+template <class Cmp = std::less<>>
 class LiChao {
+    static_assert(std::is_same_v<Cmp, std::less<>> || std::is_same_v<Cmp, std::greater<>>, //
+              "LiChao<Cmp>: Cmp must be std::less<> or std::greater<>");
+
     const Cmp cmp = Cmp();
 
     struct Line { // 直线 f(x) = k * x + b
@@ -45,7 +48,7 @@ class LiChao {
 
     i64 query(Node* node, i64 l, i64 r, i64 x) const {
         if (node == nullptr) {
-            if constexpr (std::is_same_v<Cmp, std::less<i64>>) {
+            if constexpr (std::is_same_v<Cmp, std::less<>>) {
                 return std::numeric_limits<i64>::max();
             } else {
                 return std::numeric_limits<i64>::lowest();
