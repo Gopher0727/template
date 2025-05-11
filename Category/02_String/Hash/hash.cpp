@@ -10,7 +10,6 @@ hash<string>{} (s);
         // 比如： 数字 + 大写 + 小写
         // '0' ~ '9' => 1 ~ 10  'A' ~ 'Z' => 11 ~ 36    'a' ~ 'z' => 37 ~ 62
 */
-
 using ull = unsigned long long;
 static constexpr int N = 5e4 + 5;
 static constexpr int base = 131;
@@ -29,6 +28,7 @@ void build(const string& s) {
         h[i + 1] = h[i] * base + (s[i] - 'a' + 1);
     }
 }
+
 ull get(const string& s) {
     ull val = 0;
     for (char ch : s) {
@@ -36,10 +36,12 @@ ull get(const string& s) {
     }
     return val;
 }
+
 ull get(int l, int r) { // [l, r]
     return h[r + 1] - h[l] * p[r - l + 1];
 }
-bool IsPre(int l1, int r1, int l2, int r2) {
+
+bool isPre(int l1, int r1, int l2, int r2) {
     int len1 = r1 - l1 + 1;
     int len2 = r2 - l2 + 1;
     if (len1 > len2) {
@@ -51,9 +53,10 @@ bool IsPre(int l1, int r1, int l2, int r2) {
 
 // Double Hash
 //
-template <typename T, //
-          typename std::enable_if<std::is_same<T, std::string>::value || std::is_same<T, std::vector<int>>::value, bool>::type = true>
+template <typename T>
 class StringHash {
+    static_assert(std::is_same_v<T, string> || std::is_same_v<T, vector<int>>);
+
     static const int MOD1 = 1'070'777'777;
     static const int MOD2 = 1'000'000'007;
     vector<int> pow_base1, pow_base2;
@@ -85,7 +88,8 @@ public:
         long long h2 = ((pre_hash2[r + 1] - (long long) pre_hash2[l] * pow_base2[r - l + 1]) % MOD2 + MOD2) % MOD2;
         return h1 << 32 | h2;
     }
-    bool IsPre(int l1, int r1, int l2, int r2) {
+
+    bool isPre(int l1, int r1, int l2, int r2) {
         int len1 = r1 - l1 + 1;
         int len2 = r2 - l2 + 1;
         if (len1 > len2) {

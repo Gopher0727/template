@@ -51,7 +51,7 @@ struct DSU {
     vector<int> _loop;
     int block;
 
-    explicit DSU(int n) : pa(n), _size(n, 1), _edges(n, 1), _loop(n, 1), block(n) { iota(pa.begin(), pa.end(), 0); }
+    explicit DSU(int n) : pa(n), _size(n, 1), _edges(n), _loop(n), block(n) { iota(pa.begin(), pa.end(), 0); }
 
     // int find(int x) { return x == pa[x] ? x : pa[x] = find(pa[x]); }
     int find(int x) {
@@ -91,7 +91,9 @@ struct DSU {
 
     int size(int x) { return _size[find(x)]; }
 
-    bool loop(int x) { return _loop[find(x)]; }
+    bool self_loop(int x) { return _loop[find(x)]; }
+
+    bool loop(int x) { return _size[find(x)] == _edges[find(x)]; }
 
     int edges(int x) { return _edges[find(x)]; }
 
