@@ -17,7 +17,7 @@ public:
 
     int size() const { return p.size() + q.size(); }
 
-    T sum(int k) {
+    T query(int k) {
         while (p.size() < k) {
             if (q.empty()) {
                 break;

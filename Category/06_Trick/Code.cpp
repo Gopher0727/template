@@ -4,7 +4,7 @@ auto f = [&](vector<string>& s) {
     vector<string> ns(m);
     for (int i = n - 1; i >= 0; i--) {
         for (int j = 0; j < m; j++) {
-            ns[j] += s[i][j];
+            ns[j].push_back(s[i][j]);
         }
     }
     s = std::move(ns);
