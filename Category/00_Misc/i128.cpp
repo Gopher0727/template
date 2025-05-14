@@ -23,6 +23,21 @@ namespace Algo_i128 {
         return n;
     }
 
+    i128 mul128(i128 a, i128 b) {
+        if (a == 0 || b == 0) {
+            return 0;
+        }
+        i128 result = a * b;
+        if (result / b != a) {
+            throw std::overflow_error("i128 multiplication overflow");
+        }
+        return result;
+    }
+
+    i128 abs128(const i128 n) {
+        return n < 0 ? -n : n;
+    }
+
     i128 sqrt128(const i128 n) {
         i128 lo = 0, hi = 1E16;
         while (lo < hi) {
@@ -42,6 +57,14 @@ namespace Algo_i128 {
             std::swap(a, b);
         }
         return a;
+    }
+
+    i128 lcm128(i128 a, i128 b) {
+        if (a == 0 || b == 0) {
+            return 0;
+        }
+        i128 res = mul128(a / gcd128(a, b), b);
+        return abs128(res);
     }
 } // namespace Algo_i128
 using namespace Algo_i128;
