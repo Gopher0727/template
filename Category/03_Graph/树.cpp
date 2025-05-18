@@ -11,11 +11,11 @@ public:
     }
 
     // 获取子树大小（包括当前节点并以当前节点为根）
-    vector<int> subTreeSize(int x) {
+    vector<int> subTreeSize(int root) {
         vector<int> siz(n, 1);
         vector<int> vis(n);
-        stack<pair<int, int>> stk;
-        stk.push({x, -1}); // 子节点，父节点
+        stack<array<int, 2>> stk;
+        stk.push({root, -1}); // 子节点，父节点
         while (!stk.empty()) {
             auto [x, pa] = stk.top();
             if (vis[x] == 0) {
@@ -238,7 +238,7 @@ struct Tree {
         lg.resize(n + 1);
         dep.resize(n + 1);
         for (int i = 1; i <= n; i++) { // 预处理 log
-            lg[i] = lg[i - 1] + (1 << lg[i - 1] == i);
+            lg[i] = lg[i - 1] + ((1 << lg[i - 1]) == i);
         }
     }
 
@@ -292,7 +292,7 @@ struct Tree {
     // 树上路径交
     // 计算两条路径的交点数量，直接载入任意 LCA 封装即可。
     int intersection(int x, int y, int u, int v) {
-        vector<int> t = {lca(x, u), lca(x, v), lca(y, u), lca(y, v)};
+        array t = {lca(x, u), lca(x, v), lca(y, u), lca(y, v)};
         sort(t.begin(), t.end());
         int p0 = lca(x, y), p1 = lca(u, v);
         if (dep[t[0]] < min(dep[p0], dep[p1]) || dep[t[2]] < max(dep[p0], dep[p1])) {
@@ -318,7 +318,7 @@ struct Tree {
         lg.resize(n + 1);
         dep.resize(n + 1);
         for (int i = 1; i <= n; i++) { // 预处理 log
-            lg[i] = lg[i - 1] + (1 << lg[i - 1] == i);
+            lg[i] = lg[i - 1] + ((1 << lg[i - 1]) == i);
         }
     }
 

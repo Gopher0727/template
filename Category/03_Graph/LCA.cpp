@@ -1,67 +1,80 @@
-// 倍增法求 LCA
-//
-class TreeAncestor {
-    vector<int> depth;
-    vector<vector<int>> parent;
+// 带权图倍增查询 LCA 及两点间的距离
+struct LCA {
+    int n, LOG;
+    vector<vector<int>> up;
+    vector<int> dep;
+    vector<i64> dis;
+    vector<vector<pair<int, i64>>> adj;
 
-public:
-    explicit TreeAncestor(vector<pair<int, int>>& edges, int s = 0) {
-        int n = edges.size() + 1;
-        int m = bit_width(n * 1ull); // int m = 32 - __builtin_clz(n);
-
-        vector<vector<int>> g(n);
-        for (auto [x, y] : edges) {
-            g[x].push_back(y);
-            g[y].push_back(x);
+    explicit LCA(int n) : n(n) {
+        LOG = 1;
+        while ((1 << LOG) <= n) {
+            LOG++;
         }
+        up.assign(LOG, vector<int>(n, -1));
+        dep.assign(n, 0);
+        dis.assign(n, 0);
+        adj.assign(n, {});
+    }
 
-        depth.resize(n);
-        parent.resize(n, vector<int>(m, -1));
+    void addEdge(int u, int v, int w) {
+        adj[u].push_back({v, w});
+        adj[v].push_back({u, w});
+    }
 
-        auto dfs = [&](auto&& dfs, int x, int pa = -1) -> void {
-            parent[x][0] = pa;
-            for (int y : g[x]) {
-                if (y != pa) {
-                    depth[y] = depth[x] + 1;
-                    dfs(dfs, y, x);
-                }
-            }
-        };
-        dfs(dfs, s);
-
-        for (int i = 0; i < m - 1; i++) {
-            for (int x = 0; x < n; x++) {
-                int p = parent[x][i];
-                if (p != -1) {
-                    parent[x][i + 1] = parent[p][i];
-                }
+    void work(int root = 0) {
+        dfs(root, -1);
+        for (int k = 1; k < LOG; ++k) {
+            for (int v = 0; v < n; ++v) {
+                int mid = up[k - 1][v];
+                up[k][v] = (mid < 0 ? -1 : up[k - 1][mid]);
             }
         }
     }
 
-    int get_kth_ancestor(int node, int k) {
-        for (; k; k &= k - 1) {
-            node = parent[node][__builtin_ctz(k)];
+    void dfs(int v, int pa) {
+        up[0][v] = pa;
+        for (auto [to, w] : adj[v]) {
+            if (to == pa) {
+                continue;
+            }
+            dep[to] = dep[v] + 1;
+            dis[to] = dis[v] + w;
+            dfs(to, v);
         }
-        return node;
     }
 
-    int get_lca(int x, int y) {
-        if (depth[x] > depth[y]) {
-            swap(x, y);
-        }
-        y = get_kth_ancestor(y, depth[y] - depth[x]);
-        if (y == x) {
-            return x;
-        }
-        for (int i = parent[x].size() - 1; i >= 0; i--) {
-            int px = parent[x][i], py = parent[y][i];
-            if (px != py) {
-                x = px;
-                y = py;
+    int get_kth_ancestor(int v, int k) {
+        for (int i = 0; i < LOG; ++i) {
+            if (k >> i & 1) {
+                v = up[i][v];
+                if (v == -1) {
+                    break;
+                }
             }
         }
-        return parent[x][0];
+        return v;
+    }
+
+    int lca(int u, int v) {
+        if (dep[u] < dep[v]) {
+            swap(u, v);
+        }
+        u = get_kth_ancestor(u, dep[u] - dep[v]);
+        if (u == v) {
+            return u;
+        }
+        for (int k = LOG - 1; k >= 0; --k) {
+            if (up[k][u] != up[k][v]) {
+                u = up[k][u];
+                v = up[k][v];
+            }
+        }
+        return up[0][u];
+    }
+
+    auto dist(int u, int v) {
+        int w = lca(u, v);
+        return pair {dep[u] + dep[v] - 2 * dep[w], dis[u] + dis[v] - 2 * dis[w]};
     }
 };
-// The node-index starts from 0
