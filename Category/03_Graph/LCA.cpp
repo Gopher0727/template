@@ -7,10 +7,11 @@ struct LCA {
     vector<vector<pair<int, i64>>> adj;
 
     explicit LCA(int n) : n(n) {
-        LOG = 1;
-        while ((1 << LOG) <= n) {
-            LOG++;
-        }
+        // LOG = 1;
+        // while ((1 << LOG) <= n) {
+        //     LOG++;
+        // }
+        LOG = bit_width(static_cast<unsigned>(n));
         up.assign(LOG, vector<int>(n, -1));
         dep.assign(n, 0);
         dis.assign(n, 0);
