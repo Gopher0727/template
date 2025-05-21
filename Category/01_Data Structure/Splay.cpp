@@ -1,157 +1,213 @@
-namespace mySplay {
-    struct Node {
-        int s[2] {};
-        int pa, val, cnt, size;
+namespace Splay {
+    static constexpr int MAXN = 1E5 + 10;
+    int head = 0, cnt = 0;
+    int key[MAXN], pa[MAXN], ls[MAXN], rs[MAXN], siz[MAXN];
 
-        Node() = default;
-        Node(int p, int v) : pa(p), val(v) { cnt = size = 1; }
-    };
-
-    vector<Node> f;
-    int root = 0, idx = 0;
-
-    void pull(int x) {
-        f[x].size = f[f[x].s[0]].size + f[f[x].s[1]].size + f[x].cnt;
+    void pull(int i) {
+        siz[i] = siz[ls[i]] + siz[rs[i]] + 1;
     }
 
-    void rotate(int x) {
-        int y = f[x].pa, z = f[y].pa;
-        int k = f[y].s[1] == x;
-        // 冲突的子节点
-        f[y].s[k] = f[x].s[k ^ 1];
-        f[f[x].s[k ^ 1]].pa = y;
-        // 调换父子关系
-        f[x].s[k ^ 1] = y;
-        f[y].pa = x;
-        f[z].s[f[z].s[1] == y] = x;
-        f[x].pa = z;
-        pull(y);
-        pull(x);
+    // 返回是左儿子还是右儿子
+    int lr(int i) {
+        return rs[pa[i]] == i;
     }
 
-    // k > 0，把 x 转到 k 下面
-    // k = 0，把 x 转到根
-    void splay(int x, int k) {
-        while (f[x].pa != k) {
-            int y = f[x].pa, z = f[y].pa;
-            if (z != k) {
-                (f[y].s[0] == x) ^ (f[z].s[0] == y) ? rotate(x) : rotate(y);
+    void rotate(int i) {
+        int f = pa[i], g = pa[f], soni = lr(i), sonf = lr(f);
+        if (soni == 1) {
+            rs[f] = ls[i];
+            if (rs[f] != 0) {
+                pa[rs[f]] = f;
             }
-            rotate(x);
-        }
-        if (k == 0) {
-            root = x;
-        }
-    }
-
-    // 找到节点并旋转至根
-    void find(int v) {
-        int x = root;
-        while (f[x].s[v > f[x].val] && v != f[x].val) {
-            x = f[x].s[v > f[x].val];
-        }
-        splay(x, 0);
-    }
-
-    int getPre(int v) {
-        find(v);
-        int x = root;
-        if (f[x].val < v) {
-            return x;
-        }
-        x = f[x].s[0];
-        while (f[x].s[1]) {
-            x = f[x].s[1];
-        }
-        splay(x, 0);
-        return x;
-    }
-    int getNxt(int v) {
-        find(v);
-        int x = root;
-        if (f[x].val > v) {
-            return x;
-        }
-        x = f[x].s[1];
-        while (f[x].s[0]) {
-            x = f[x].s[0];
-        }
-        splay(x, 0);
-        return x;
-    }
-
-    void del(int v) {
-        int pre = getPre(v);
-        int nxt = getNxt(v);
-        splay(pre, 0);
-        splay(nxt, pre);
-        int d = f[nxt].s[0];
-        if (f[d].cnt > 1) {
-            f[d].cnt--;
-            splay(d, 0);
+            ls[i] = f;
         } else {
-            f[nxt].s[0] = 0;
-            splay(nxt, 0);
+            ls[f] = rs[i];
+            if (ls[f] != 0) {
+                pa[ls[f]] = f;
+            }
+            rs[i] = f;
         }
-    }
-
-    void insert(int v) {
-        int x = root, p = 0;
-        while (x && f[x].val != v) {
-            p = x;
-            x = f[x].s[v > f[x].val];
-        }
-        if (x) {
-            f[x].cnt++;
-        } else {
-            x = ++idx;
-            f[p].s[v > f[p].val] = x;
-            f[x] = Node(p, v);
-        }
-        splay(x, 0);
-    }
-
-    int getRank(int v) {
-        // find(v);
-        // return f[f[root].s[0]].size;
-        insert(v);
-        int res = f[f[root].s[0]].size;
-        del(v);
-        return res;
-    }
-    int getNum(int k) {
-        int x = root;
-        while (true) {
-            int y = f[x].s[0];
-            if (f[y].size + f[x].cnt < k) {
-                k -= f[y].size + f[x].cnt;
-                x = f[x].s[1];
-            } else if (f[y].size >= k) {
-                x = y;
+        if (g != 0) {
+            if (sonf == 1) {
+                rs[g] = i;
             } else {
-                break;
+                ls[g] = i;
             }
         }
-        splay(x, 0);
-        return f[x].val;
+        pa[f] = i;
+        pa[i] = g;
+        pull(f);
+        pull(i);
     }
 
-    auto init = []() {
-        const int N = 1e6 + 1e5;
-        f.resize(N);
+    // 把 i 节点变为 goal 节点的儿子（goal = 0 则表示把 i 节点变为整棵树的头节点）
+    void splay(int i, int goal) {
+        int f = pa[i], g = pa[f];
+        while (f != goal) {
+            if (g != goal) {
+                if (lr(i) == lr(f)) {
+                    rotate(f);
+                } else {
+                    rotate(i);
+                }
+            }
+            rotate(i);
+            f = pa[i];
+            g = pa[f];
+        }
+        if (goal == 0) {
+            head = i;
+        }
+    }
 
-        // 哨兵
-        insert(-2e9);
-        insert(2e9);
-
+    /**
+        有序表的实现，不做频次压缩
+    */
+    int find(int rnk) {
+        int i = head;
+        while (i != 0) {
+            if (siz[ls[i]] + 1 == rnk) {
+                return i;
+            } else if (siz[ls[i]] >= rnk) {
+                i = ls[i];
+            } else {
+                rnk -= siz[ls[i]] + 1;
+                i = rs[i];
+            }
+        }
         return 0;
-    }();
-};
+    }
+
+    void insert(int num) {
+        key[++cnt] = num;
+        siz[cnt] = 1;
+        if (head == 0) {
+            head = cnt;
+        } else {
+            int f = 0, i = head, son = 0;
+            while (i != 0) {
+                f = i;
+                if (key[i] <= num) {
+                    son = 1;
+                    i = rs[i];
+                } else {
+                    son = 0;
+                    i = ls[i];
+                }
+            }
+            if (son == 1) {
+                rs[f] = cnt;
+            } else {
+                ls[f] = cnt;
+            }
+            pa[cnt] = f;
+            splay(cnt, 0);
+        }
+    }
+
+    // 返回从 1 开始的排名
+    int rnk(int num) {
+        int i = head, last = head;
+        int ans = 0;
+        while (i != 0) {
+            last = i;
+            if (key[i] >= num) {
+                i = ls[i];
+            } else {
+                ans += siz[ls[i]] + 1;
+                i = rs[i];
+            }
+        }
+        splay(last, 0); // 保证复杂度
+        return ans + 1;
+    }
+
+    void remove(int num) {
+        int kth = rnk(num);
+        // 确定是否存在 num
+        if (kth != rnk(num + 1)) {
+            int i = find(kth);
+            splay(i, 0);
+            if (ls[i] == 0) {
+                head = rs[i];
+            } else if (rs[i] == 0) {
+                head = ls[i];
+            } else {
+                int j = find(kth + 1);
+                splay(j, i); // 提为 i 的右儿子
+                ls[j] = ls[i]; // 中序后继节点 j 的左孩子为空
+                pa[ls[j]] = j;
+                pull(j);
+                head = j;
+            }
+            pa[head] = 0;
+        }
+    }
+
+    int index(int x) {
+        int i = find(x);
+        splay(i, 0);
+        return key[i];
+    }
+
+    int pre(int num) {
+        int i = head, last = head;
+        int ans = INT_MIN;
+        while (i != 0) {
+            last = i;
+            if (key[i] >= num) {
+                i = ls[i];
+            } else {
+                ans = max(ans, key[i]);
+                i = rs[i];
+            }
+        }
+        splay(last, 0);
+        return ans;
+    }
+
+    int post(int num) {
+        int i = head, last = head;
+        int ans = INT_MAX;
+        while (i != 0) {
+            last = i;
+            if (key[i] <= num) {
+                i = rs[i];
+            } else {
+                ans = min(ans, key[i]);
+                i = ls[i];
+            }
+        }
+        splay(last, 0);
+        return ans;
+    }
+
+    // 删除小于 x 的所有节点：将某个节点旋转至根，将相应孩子节点置 0 即可
+    void del(int x) {
+        int i = head, ans = 0;
+        while (i != 0) {
+            if (key[i] >= x) {
+                ans = i;
+                i = ls[i];
+            } else {
+                i = rs[i];
+            }
+        }
+        if (ans == 0) {
+            head = 0;
+        } else {
+            splay(ans, 0);
+            ls[head] = 0;
+            pull(head);
+        }
+    }
+
+} // namespace Splay
 
 
 namespace Splay {
-    // 若要修改一个点的点权，应当先将其splay到根，然后修改，最后还要调用pull维护。
-    // 调用完splay之后根结点会改变，应该用splay的返回值更新根结点。
+    // 若要修改一个点的点权，应当先将其 splay 到根，然后修改，最后还要调用 pull 维护。
+    // 调用完 splay 之后根结点会改变，应该用 splay 的返回值更新根结点。
     const int MX = 110000;
 
     vector<array<int, 2>> ch;
@@ -176,12 +232,15 @@ namespace Splay {
         key[x] = val;
         return x;
     }
+
     bool son(int x) {
         return ch[pa[x]][1] == x;
     }
+
     void pull(int x) {
         size[x] = size[ch[x][0]] + size[ch[x][1]] + 1;
     }
+
     void push(int x) {
         if (rev[x]) {
             rev[x] = 0;
@@ -190,6 +249,7 @@ namespace Splay {
             rev[ch[x][1]] ^= 1;
         }
     }
+
     void rotate(int x) {
         int y = pa[x], z = pa[y], c = son(x);
         if (pa[y]) {
@@ -202,6 +262,7 @@ namespace Splay {
         pa[y] = x;
         pull(y);
     }
+
     void ascend(int x) {
         for (int y = pa[x]; y; rotate(x), y = pa[x]) {
             if (pa[y]) {
@@ -210,7 +271,8 @@ namespace Splay {
         }
         pull(x);
     }
-    // 没有push操作时，可以直接用ascend替换splay
+
+    // 没有 push 操作时，可以直接用 ascend 替换 splay
     int splay(int x) {
         int top = 0;
         for (int i = x; i; i = pa[i]) {
@@ -222,7 +284,8 @@ namespace Splay {
         ascend(x);
         return x;
     }
-    // 将以x为根的子树中的第k个结点旋转到根结点
+
+    // 将以 x 为根的子树中的第 k 个结点旋转到根结点
     int splay(int x, int k) {
         while (push(x), k != size[ch[x][0]] + 1) {
             if (k <= size[ch[x][0]])
@@ -233,6 +296,7 @@ namespace Splay {
         if (x) ascend(x);
         return x;
     }
+
     template <typename... T>
     int merge(int x, int y, T... args) {
         if constexpr (sizeof...(args) == 0) {
@@ -249,7 +313,8 @@ namespace Splay {
             return merge(merge(x, y), args...);
         }
     }
-    // 分成两个区间[1, pos - 1]和[pos, n]
+
+    // 分成两个区间 [1, pos-1] 和 [pos, n]
     auto split(int x, int pos) {
         if (pos == size[x] + 1) {
             return make_pair(x, 0);
@@ -260,11 +325,13 @@ namespace Splay {
         pull(x);
         return make_pair(y, x);
     }
+
     auto extract(int x, int L, int R) {
         auto [left, y] = split(x, L);
         auto [mid, right] = split(y, R - L + 2);
-        return make_tuple(left, mid, right);
+        return array {left, mid, right};
     }
+
     void traverse(int x) {
         if (x != 0) {
             traverse(ch[x][0]);
@@ -276,16 +343,19 @@ namespace Splay {
 
     int main() {
         vector<int> vec(50);
+
         int root = 0;
         for (int i = 1; i <= 10; ++i) {
             vec[i] = newNode(i);
             root = merge(root, vec[i]);
         }
-        traverse(get<1>(extract(root, 3, 10)));
+        traverse(extract(root, 3, 10)[1]);
         cout << "\n";
+
         return 0;
     }
-};
+}; // namespace Splay
+
 
 namespace SplayTree {
     struct Node {
@@ -379,16 +449,22 @@ namespace SplayTree {
         TreeNode* q = t->p;
         int x = !pos(t);
         q->ch[!x] = t->ch[x];
-        if (t->ch[x]) t->ch[x]->p = q;
+        if (t->ch[x]) {
+            t->ch[x]->p = q;
+        }
         t->p = q->p;
-        if (q->p) q->p->ch[pos(q)] = t;
+        if (q->p) {
+            q->p->ch[pos(q)] = t;
+        }
         t->ch[x] = q;
         q->p = t;
     }
 
     void splay(TreeNode* t) {
-        std::vector<TreeNode*> s;
-        for (TreeNode* i = t; i->p; i = i->p) s.push_back(i->p);
+        vector<TreeNode*> s;
+        for (TreeNode* i = t; i->p; i = i->p) {
+            s.push_back(i->p);
+        }
         while (!s.empty()) {
             push(s.back());
             s.pop_back();
@@ -396,10 +472,11 @@ namespace SplayTree {
         push(t);
         while (t->p) {
             if (t->p->p) {
-                if (pos(t) == pos(t->p))
+                if (pos(t) == pos(t->p)) {
                     rotate(t->p);
-                else
+                } else {
                     rotate(t);
+                }
             }
             rotate(t);
         }
@@ -411,7 +488,6 @@ namespace SplayTree {
             x->p = p;
             return;
         }
-
         push(t);
         if (x->val < t->val) {
             insert(t->ch[0], x, t);
@@ -446,14 +522,11 @@ namespace SplayTree {
                 i = i->ch[1];
             }
         }
-
         splay(j);
         if (!v) {
             return {j, nullptr};
         }
-
         splay(v);
-
         TreeNode* u = v->ch[0];
         if (u) {
             v->ch[0] = u->p = nullptr;
@@ -482,4 +555,4 @@ namespace SplayTree {
         r->p = i;
         return i;
     }
-};
+}; // namespace SplayTree
