@@ -8,13 +8,13 @@ struct Dinic {
     vector<vector<Edge>> graph;
     vector<int> level, it;
 
-    Dinic(int n) : n(n) {
+    explicit Dinic(int n) : n(n) {
         graph.assign(n, {});
         level.assign(n, 0);
         it.assign(n, 0);
     }
 
-    void add_edge(int s, int t, int cap) {
+    void addEdge(int s, int t, int cap) {
         Edge a = {t, (int) graph[t].size(), cap};
         Edge b = {s, (int) graph[s].size(), 0};
         graph[s].push_back(a);
@@ -40,8 +40,12 @@ struct Dinic {
     }
 
     int dfs(int u, int t, int flow) {
-        if (!flow) return 0;
-        if (u == t) return flow;
+        if (flow == 0) {
+            return 0;
+        }
+        if (u == t) {
+            return flow;
+        }
         for (int& i = it[u]; i < graph[u].size(); i++) {
             Edge& e = graph[u][i];
             if (e.cap > 0 && level[e.to] == level[u] + 1) {
@@ -56,7 +60,7 @@ struct Dinic {
         return 0;
     }
 
-    int max_flow(int s, int t) {
+    int maxFlow(int s, int t) {
         int flow = 0;
         while (bfs(s, t)) {
             fill(it.begin(), it.end(), 0);
