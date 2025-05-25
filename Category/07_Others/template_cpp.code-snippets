@@ -180,7 +180,7 @@
         "scope": "cpp",
         "prefix": "init",
         "body": [
-            "auto init = []() {",
+            "auto init = [] {",
             "    $0",
             "    return 0;",
             "}();"
@@ -190,7 +190,7 @@
         "scope": "cpp",
         "prefix": "initWithVal",
         "body": [
-            "auto $1 = [&]() {",
+            "auto $1 = [&] {",
             "    $0",
             "}();"
         ]
@@ -261,6 +261,19 @@
             "vector<int> ord(n);",
             "ranges::iota(ord, 0);",
             "ranges::sort(ord, [&](int i, int j)-> bool { return $0 ;});"
+        ]
+    },
+    "离散化": {
+        "scope": "cpp",
+        "prefix": "discret",
+        "body": [
+            "auto D = [&](vector<int>& a) {",
+            "    vector<int> na(a);",
+            "    ranges::sort(na);",
+            "    for (int& v : a) {",
+            "        v = ranges::lower_bound(na, v) - na.begin();",
+            "    }",
+            "};"
         ]
     }
 }
