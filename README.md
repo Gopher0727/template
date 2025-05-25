@@ -8,6 +8,8 @@ There are some [problems](https://docs.qq.com/sheet/DT3B6ZGRWeWtKcUdm).
 
 ## 其他链接
 
+- by GopherTeen: [GopherTeen/Python-Template](https://github.com/GopherTeen/Python-Template)
+
 - by Atcoder：[atcoder/ac-library](https://github.com/atcoder/ac-library)
 
 - by TheAlgorithms：[The Algorithms/Cpp](https://github.com/TheAlgorithms/C-Plus-Plus)
