@@ -9,6 +9,22 @@ bool isPrime(i64 n) {
 }
 
 
+// 记录一个数的所有因数
+auto factorize(i64 v) {
+    vector<int> fac;
+    for (int i = 1; 1ll * i * i <= v; i++) {
+        if (v % i == 0) {
+            fac.push_back(i);
+            if (1ll * i * i != v) {
+                fac.push_back(v / i);
+            }
+        }
+    }
+    // ranges::sort(fac);
+    return fac;
+}
+
+
 // 记录范围内的所有数的因数  2e5
 vector<vector<int>> factors;
 void sieve(int n) {
@@ -33,12 +49,13 @@ auto factorize(i64 x) {
     if (x > 1) {
         res[x]++;
     }
+    // return vector(res.begin(), res.end());
     return res;
 }
 
 
 // EXP[x] 为 x 分解质因数后，每个质因数的指数
-vector<vector<int>> EXP;
+vector<vector<array<int, 2>>> EXP;
 int m = 0;
 void sieve(int n) {
     if (n <= m) {
@@ -53,11 +70,11 @@ void sieve(int n) {
                 e++;
             }
             if (e) {
-                EXP[x].push_back(e);
+                EXP[x].push_back({i, e});
             }
         }
         if (a > 1) {
-            EXP[x].push_back(1);
+            EXP[x].push_back({a, 1});
         }
     }
     m = n;
