@@ -47,6 +47,18 @@ public:
     }
     void modify(int id, const Info& _init) { modify(id, _init, 1, 0, n - 1); }
 
+    Info query(int p, int o, int l, int r) {
+        if (l == r) {
+            return info[o];
+        }
+        int m = l + (r - l) / 2;
+        if (p <= m) {
+            return query(p, o << 1, l, m);
+        }
+        return query(p, o << 1 | 1, m + 1, r);
+    }
+    Info query(int p) { return query(p, 1, 0, n - 1); }
+
     Info query(int L, int R, int o, int l, int r) {
         if (L <= l && r <= R) {
             return info[o];

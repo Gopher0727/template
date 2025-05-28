@@ -1,5 +1,5 @@
 template <class Info, class Tag>
-class ZKWSegTree {
+class SegTree {
 private:
     int size;
     int height;
@@ -41,9 +41,9 @@ private:
     }
 
 public:
-    ZKWSegTree() = delete;
-    ZKWSegTree(int n, Info v = Info {}) : ZKWSegTree(vector(n, Info {})) {}
-    ZKWSegTree(const vector<Info>& _init) {
+    SegTree() = delete;
+    SegTree(int n, Info v = Info {}) : SegTree(vector(n, Info {})) {}
+    SegTree(const vector<Info>& _init) {
         init(_init.size());
         build(_init);
     }
