@@ -15,14 +15,34 @@ auto Change(const vector<int>& a) {
 }
 
 
+// A/B < P/Q < C/D
+// return {P, Q} -- 首先Q最小，其次P最小
+auto dfs = [&](auto&& dfs, i128 A, i128 B, i128 C, i128 D) -> pair<i128, i128> {
+    auto k = A / B;
+    if (k + 1 < (C + D - 1) / D) {
+        return {k + 1, 1ULL};
+    }
+
+    A -= k * B;
+    C -= k * D;
+
+    if (A == 0) {
+        auto p2 = D / C + 1;
+        return {k * p2 + 1, p2};
+    }
+
+    auto [p2, q2] = dfs(dfs, D, C, B, A);
+    return {k * p2 + q2, p2};
+};
+
+
 // 运算类
 //
-template <class T>
 struct Frac {
-    T x, y;
+    i64 x, y;
 
 public:
-    constexpr Frac(T x_ = 0, T y_ = 1) : x(x_), y(y_) {
+    constexpr Frac(i64 x_ = 0, i64 y_ = 1) : x(x_), y(y_) {
         if (y_ == 0) {
             throw "Denominator cannot be zero";
         }
@@ -34,10 +54,10 @@ public:
 
 public:
     // consteval
-    constexpr long double val() const { return static_cast<long double>(x) / y; }
+    constexpr long double val() const { return 1.l * x / y; }
 
     constexpr Frac norm() const {
-        T p = gcd(x, y);
+        i64 p = gcd(x, y);
         return {x / p, y / p};
     }
 
@@ -61,15 +81,6 @@ public:
     friend constexpr Frac operator*(const Frac& i, const Frac& j) { return i *= j; }
     friend constexpr Frac operator/(const Frac& i, const Frac& j) { return i /= j; }
 
-    friend constexpr strong_ordering operator<=>(const Frac& i, const Frac& j) { return 1ll * i.x * j.y <=> 1ll * i.y * j.x; }
-    friend constexpr bool operator==(const Frac& i, const Frac& j) { return 1ll * i.x * j.y == 1ll * i.y * j.x; }
-
-    friend constexpr auto& operator<<(ostream& os, const Frac& i) {
-        auto j = i.norm();
-        if (j.y == 1) {
-            return os << j.x;
-        } else {
-            return os << j.x << "/" << j.y;
-        }
-    }
+    friend constexpr strong_ordering operator<=>(const Frac& i, const Frac& j) { return i.x * j.y <=> i.y * j.x; }
+    friend constexpr bool operator==(const Frac& i, const Frac& j) { return i.x * j.y == i.y * j.x; }
 };
