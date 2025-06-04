@@ -14,15 +14,15 @@ public:
     vector<int> subTreeSize(int root) {
         vector<int> siz(n, 1);
         vector<int> vis(n);
-        stack<array<int, 2>> stk;
-        stk.push({root, -1}); // 子节点，父节点
+        vector<array<int, 2>> stk;
+        stk.push_back({root, -1}); // 子节点，父节点
         while (!stk.empty()) {
-            auto [x, pa] = stk.top();
+            auto [x, pa] = stk.back();
             if (vis[x] == 0) {
                 vis[x] = 1;
                 for (int y : g[x]) {
                     if (y != pa && vis[y] == 0) {
-                        stk.push({y, x});
+                        stk.push_back({y, x});
                     }
                 }
             } else { // 当前节点及其子树已经完全访问，处理子树大小
@@ -31,7 +31,7 @@ public:
                         siz[x] += siz[y];
                     }
                 }
-                stk.pop();
+                stk.pop_back();
             }
         }
         return siz;

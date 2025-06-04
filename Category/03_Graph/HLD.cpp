@@ -3,11 +3,10 @@
 // 1. 如果权值在边上的话，则先将权值压到深度大的点上，再建立线段树。
 // 2. 节点 x 的子树对应的 'DFS序' 区间为 [in[x], in[x] + siz[x] - 1]。
 // 3. seq 数组的作用是 将 DFS 序的时间戳（in[u] 的值）映射回原始节点编号。
-//
 
 struct HLD {
     int n;
-    int cur;
+    int t;
     vector<vector<int>> g;
     vector<int> pa, siz, dep, top;
     vector<int> in, out;
@@ -17,15 +16,15 @@ struct HLD {
 
     void init(int n) {
         this->n = n;
-        this->cur = 0;
+        this->t = 0;
         g.assign(n, {});
-        pa.resize(n);
-        siz.resize(n);
-        dep.resize(n);
-        top.resize(n);
-        in.resize(n);
-        out.resize(n);
-        seq.resize(n);
+        pa.assign(n, {});
+        siz.assign(n, {});
+        dep.assign(n, {});
+        top.assign(n, {});
+        in.assign(n, {});
+        out.assign(n, {});
+        seq.assign(n, {});
     }
 
     void addEdge(int u, int v) { g[u].push_back(v); }
@@ -55,13 +54,13 @@ struct HLD {
     }
 
     void dfs2(int u) {
-        in[u] = this->cur++;
+        in[u] = this->t++;
         seq[in[u]] = u;
         for (auto& v : g[u]) {
             top[v] = (v == g[u][0] ? top[u] : v);
             dfs2(v);
         }
-        out[u] = this->cur;
+        out[u] = this->t;
     }
 
     int lca(int u, int v) {
