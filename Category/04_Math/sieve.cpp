@@ -28,7 +28,7 @@ auto factorize(i64 v) {
 // 记录范围内的所有数的因数  2e5
 vector<vector<int>> factors;
 void sieve(int n) {
-    factors.resize(n + 1);
+    factors.assign(n + 1, {});
     for (int i = 1; i <= n; i++) {
         for (int j = i; j <= n; j += i) {
             factors[j].push_back(i);
@@ -56,13 +56,9 @@ auto factorize(i64 x) {
 
 // EXP[x] 为 x 分解质因数后，每个质因数的指数
 vector<vector<array<int, 2>>> EXP;
-int m = 0;
 void sieve(int n) {
-    if (n <= m) {
-        return;
-    }
-    EXP.resize(n + 1, {});
-    for (int x = max(m + 1, 2); x <= n; x++) {
+    EXP.assign(n + 1, {});
+    for (int x = 2; x <= n; x++) {
         int a = x;
         for (int i = 2; i * i <= a; i++) {
             int e = 0;
@@ -77,15 +73,13 @@ void sieve(int n) {
             EXP[x].push_back({a, 1});
         }
     }
-    m = n;
 }
 
 
 // 按从小到大的顺序生成回文数（1 ~ 1e9 之间）
 vector<int> palindrome;
 auto init = [] {
-    palindrome.emplace_back(0); // 哨兵
-
+    palindrome.push_back(0); // 哨兵
     for (int base = 1; base <= 10000; base *= 10) {
         // 生成奇数长度的回文数
         for (int i = base; i < base * 10; i++) {
@@ -93,7 +87,7 @@ auto init = [] {
             for (int t = i / 10; t; t /= 10) {
                 x = x * 10 + t % 10;
             }
-            palindrome.emplace_back(x);
+            palindrome.push_back(x);
         }
         // 生成偶数长度的回文数
         if (base <= 1000) {
@@ -102,12 +96,11 @@ auto init = [] {
                 for (int t = i; t; t /= 10) {
                     x = x * 10 + t % 10;
                 }
-                palindrome.emplace_back(x);
+                palindrome.push_back(x);
             }
         }
     }
     palindrome.emplace_back(1e9 + 1); // 哨兵
-
     return 0;
 }();
 
@@ -132,16 +125,16 @@ void sieve(int n) {
 
 // 线性筛  （LinearScreen / EulerScreen）  5e7
 // ———— 让每个合数只被标记一次
-vector<int> isPrime;
+vector<bool> isPrime;
 vector<int> primes;
 void sieve(int n) {
-    isPrime.assign(n + 1, 1);
-    isPrime[0] = isPrime[1] = 0;
+    isPrime.assign(n + 1, true);
+    isPrime[0] = isPrime[1] = false;
     for (int i = 2; i <= n; i++) {
         if (isPrime[i]) {
             primes.push_back(i);
         }
-        for (int& p : primes) {
+        for (auto p : primes) {
             if (i * p > n) {
                 break;
             }
@@ -156,12 +149,10 @@ void sieve(int n) {
 
 // 线性筛 + 最小质因数  1e8
 // 最小质因数 * 最大真因数
-vector<int> primes;
+vector<bool> primes;
 vector<int> minp;
 void sieve(int n) {
-    primes.clear();
     minp.assign(n + 1, 0);
-
     for (int i = 2; i <= n; i++) {
         if (minp[i] == 0) {
             minp[i] = i;
@@ -186,6 +177,7 @@ bool isPrime(int n) {
 
 
 // 欧拉函数（单个数）
+// pow(a, b) = pow(a, (b%phi[n])) (mod n)
 int phi(int n) {
     int res = n;
     for (int i = 2; i <= n / i; i++) {
@@ -204,16 +196,15 @@ int phi(int n) {
 
 
 // 线性筛 + 欧拉函数（从 1 到 i 中与 i 互质的数的个数）  1e7
-vector<int> isPrime;
+vector<bool> isPrime;
 vector<int> primes;
 vector<int> phi;
 void sieve(int n) {
-    isPrime.assign(n + 1, 1);
-    isPrime[0] = isPrime[1] = 0;
-    primes.clear();
-    phi.resize(n + 1);
-    phi[1] = 1;
+    isPrime.assign(n + 1, true);
+    phi.assign(n + 1, {});
 
+    isPrime[0] = isPrime[1] = false;
+    phi[1] = 1;
     for (int i = 2; i <= n; i++) {
         if (isPrime[i]) {
             primes.push_back(i);
@@ -293,7 +284,7 @@ int count_primes(int n) {
         fill(block.begin(), block.end(), 1);
 
         int start = k * S;
-        for (int& p : primes) {
+        for (auto p : primes) {
             int start_idx = (start + p - 1) / p;
             for (int j = max(start_idx, p) * p - start; j < S; j += p) {
                 block[j] = 0;

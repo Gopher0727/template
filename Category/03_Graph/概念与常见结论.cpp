@@ -24,3 +24,16 @@
 //
 // 图的半径：中心的偏心距
 //
+
+// 图的独立集：集合中的点互不相邻
+int independentSet(vector<vector<int>>& g) {
+    vector dp(n, array<int, 2>);
+    for (int i = 1; i < n; i++) {
+        dp[i][0] = max(dp[i - 1][0], dp[i - 1][1]);
+        dp[i][1] = 1;
+        for (int j : g[i]) {
+            dp[i][1] = max(dp[i][1], dp[j][0] + 1);
+        }
+    }
+    return max(dp[n - 1][0], dp[n - 1][1]);
+}

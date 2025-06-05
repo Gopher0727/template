@@ -1,3 +1,17 @@
+// 杨辉三角（左对齐）
+const int MX = 34;
+vector<int> c[MX];
+auto init = []() {
+    for (int i = 0; i < MX; i++) {
+        c[i].resize(i + 1, 1);
+        for (int j = 1; j < i; j++) {
+            c[i][j] = c[i - 1][j - 1] + c[i - 1][j];
+        }
+    }
+    return 0;
+}();
+
+
 // 自动扩容类 （Mint）
 //
 struct Comb {
@@ -65,53 +79,8 @@ struct Comb {
 } C;
 
 
-// 预处理阶乘及阶乘逆元，模数为质数
-//
-namespace Comb {
-    i64 qpow(i64 a, i64 b, int p) {
-        i64 res = 1;
-        a = (a % p + p) % p;
-        for (; b; b >>= 1, a = a * a % p) {
-            if (b & 1) {
-                res = a * res % p;
-            }
-        }
-        return res;
-    }
-
-    const int MX = 2e5 + 1;
-
-    vector<i64> Fac, iFac;
-    auto init = [] {
-        Fac.resize(MX); // Fac[i] = i!
-        iFac.resize(MX); // iFac[i] = i!^-1
-
-        Fac[0] = 1;
-        for (int i = 1; i < MX; i++) {
-            Fac[i] = Fac[i - 1] * i % MOD;
-        }
-        // 连续阶乘的逆元 从右往左 线性递推
-        iFac[MX - 1] = qpow(Fac[MX - 1], MOD - 2, MOD);
-        for (int i = MX - 1; i; i--) {
-            iFac[i - 1] = iFac[i] * i % MOD;
-        }
-        return 0;
-    }();
-
-    i64 binom(int n, int m) {
-        return n < m || m < 0 ? 0 : Fac[n] * iFac[m] % MOD * iFac[n - m] % MOD;
-    }
-    i64 perm(int n, int m) {
-        return n < m || m < 0 ? 0 : Fac[n] * iFac[n - m] % MOD;
-    }
-    i64 catalan(int n) {
-        return n < 0 ? 0 : binom(2 * n, n) - binom(2 * n, n - 1);
-    }
-};
-using namespace Comb;
-
-
 // 直接实现，且不取模
+// binom(n, m) 适用于 m 的范围正常，但 n 的范围较大，整体数值范围在 long long 以内
 i64 binom(int n, int m) {
     if (n < m || m < 0) {
         return 0;
@@ -124,18 +93,18 @@ i64 binom(int n, int m) {
 }
 
 
-// 预处理连续一组数的逆元，直接实现，模数为质数
-//
+// 预处理连续一组数的逆元，模数为质数
+// binom(n, m) 适用于 m 的范围正常，但 n 的范围较大
 namespace Comb {
-    // 求连续一组数的逆元
     const int MX = 2E5 + 1;
 
     vector<int> inv;
     auto Inv = []() {
         inv.resize(MX + 1);
         inv[1] = 1;
+        // inv[i] = p / i * inv[p % i]
         for (int i = 2; i <= MX; i++) {
-            inv[i] = p - inv[p % i] * 1ll * (p / i) % p;
+            inv[i] = p - 1ll * inv[p % i] * (p / i) % p;
         }
         return inv;
     }();
@@ -153,12 +122,6 @@ namespace Comb {
 using namespace Comb;
 
 
-// 逆元：
-// https://www.cnblogs.com/zjp-shadow/p/7773566.html
-//
-// 根据费马小定理，利用快速幂求解逆元  inv(i) = qpow(i, mod-2, mod)
-
-
 //// 组合数取模：
 // Lucas 定理：（p 大概 1E6 范围，且为质数）
 //
@@ -167,16 +130,21 @@ using namespace Comb;
 // Lucas(n, m) = C(n%p, m%p) * Lucas(n/p, m/p) (mod p)，其中 Lucas(x, 0) = 1 (mod p)
 //
 int Lucas(i64 n, i64 k, int p) {
-    int res = 1;
+    int ans = 1;
     while (n > 0 || k > 0) {
         int ni = n % p;
         int ki = k % p;
-        if (ki > ni) {
+        if (ni < ki) {
             return 0;
         }
-        res = res * 1ll * binom(ni, ki) % p;
+        ans = 1ll * ans * binom(ni, ki) % p;
         n /= p;
         k /= p;
     }
-    return res;
+    return ans;
+}
+
+// 当模数为 2 时，判断组合数奇偶性
+bool check(i64 n, i64 i) {
+    return (n & i) == i;
 }

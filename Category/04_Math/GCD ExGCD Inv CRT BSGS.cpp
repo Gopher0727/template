@@ -1,81 +1,3 @@
-// Stein 法 (Binary GCD)：不断去除因子 2 以达到降低常数的目的。
-//
-int SteinGCD(int a, int b) {
-    a = abs(a), b = abs(b);
-    int az = __builtin_ctz(a), bz = __builtin_ctz(b);
-    int z = min(az, bz);
-    b >>= bz;
-    while (a) {
-        a >>= az;
-        int diff = b - a;
-        az = __builtin_ctz(diff);
-        if (a < b) {
-            b = a;
-        }
-        a = abs(diff);
-    }
-    return b << z;
-}
-
-
-// 基于值域预处理的快速 GCD
-// Link: https://www.luogu.com.cn/article/6jezrwtl
-//
-// 1.记录 n 的最小素因子 lpf(n) = p1 和下一个数 pa[n] = n / p1^b1，类似于链表一样存储所有数的素因子分解
-// 2.并入共有的素因子： 从小到大枚举 a，b 的素因子，如果存在共有的素因子，则将对应素因子的幂次的最小值并入
-vector<int> primes, vis, lpf, pa;
-void sieve(int n) {
-    vis.resize(n + 1);
-    lpf.resize(n + 1);
-    pa.resize(n + 1);
-
-    for (int i = 2; i <= n; i++) {
-        if (!vis[i]) {
-            primes.emplace_back(i);
-            lpf[i] = i;
-            pa[i] = 1;
-        }
-        for (int p : primes) {
-            if (i * p > n) {
-                break;
-            }
-            vis[i * p] = 1;
-            if (i % p == 0) {
-                lpf[i * p] = lpf[i];
-                pa[i * p] = pa[i];
-                break;
-            } else {
-                lpf[i * p] = p;
-                pa[i * p] = i;
-            }
-        }
-    }
-}
-auto init = []() {
-    sieve(1e6 + 10);
-    return 0;
-}();
-int gcd(int a, int b) {
-    a = abs(a), b = abs(b);
-    if (a == 0 || b == 0) {
-        return a + b;
-    }
-    int res = 1;
-    while (a != 1 && b != 1) {
-        if (lpf[a] == lpf[b]) {
-            res *= min(a / pa[a], b / pa[b]);
-            a = pa[a];
-            b = pa[b];
-        } else if (lpf[a] < lpf[b]) {
-            a = pa[a];
-        } else {
-            b = pa[b];
-        }
-    }
-    return res;
-}
-
-
 // 欧几里得算法：求两个数的最大公约数（辗转相除法）
 // gcd(a, b) = gcd(b, a % b)
 
@@ -86,22 +8,20 @@ int gcd(int a, int b) {
 
 
 // 扩展欧几里得算法：
-// · 判断方程 ax+by=c 是否有解
-// · 求 ax+by=c 的任意一组解、通解、最小整数解
-// · 求逆元
-
-
-// b * x1 + (a % b) * y1 = gcd(a, b)
-// 即 b * x1 + (a - a / b * b) * y1 = gcd(a, b)
-// 即 a * y1 + b * (x1 - a / b * y1) = gcd(a, b)
-// 因而有，x = y1, y = x1 - a / b * y1
+// a * x1 + b * y1 = gcd(a, b)
+// -> b * x1 + (a % b) * y1 = gcd(a, b)
+// -> b * x1 + (a - a / b * b) * y1 = gcd(a, b)
+// -> a * y1 + b * (x1 - a / b * y1) = gcd(a, b)
+// ==> x = y1, y = x1 - a / b * y1
 
 
 // 求解形如 ax+by=c 的不定方程的任意一组解
 template <typename T>
 auto exgcd(T a, T b, T& x, T& y) {
     if (b == 0) {
-        return x = 1, y = 0, a;
+        x = 1;
+        y = 0;
+        return a;
     }
     T g = exgcd(b, a % b, y, x);
     y -= a / b * x;
@@ -156,16 +76,14 @@ auto sol(T a, T b, T m) {
 
 
 // 求逆元
-template <typename T>
-array<T, 3> exgcd(T a, T b) {
+auto exgcd(i64 a, i64 b) {
     if (b == 0) {
-        return {a, 1, 0};
+        return array {a, 1ll, 0ll};
     }
     auto [g, x, y] = exgcd(b, a % b);
-    return {g, y, x - a / b * y};
+    return array {g, y, x - a / b * y};
 }
-template <typename T>
-auto getInv(T a, T m) {
+auto getInv(i64 a, i64 m) {
     auto [g, x, y] = exgcd(a, m);
     return g == 1 ? (x % m + m) % m : -1;
 }
@@ -215,11 +133,12 @@ auto findMinX(vector<U>& num, vector<U>& rem) {
 
 
 // ExCRT 扩展中国剩余定理
-//
 template <typename T>
 auto exgcd(T a, T b, T& x, T& y) {
     if (b == 0) {
-        return x = 1, y = 0, a;
+        x = 1;
+        y = 0;
+        return a;
     }
     T g = exgcd(b, a % b, y, x);
     y -= a / b * x;
@@ -256,25 +175,20 @@ T excrt(vector<U>& num, vector<U>& rem) {
 
 
 // 离散对数（BSGS，BabyStepGiantStep）
-//
 // 以 O(sqrt(p)) 的复杂度求解 a^x = b (mod p)。
 // 其中标准 BSGS 算法不能计算 a 与 p 互质的情况，而 exbsgs 则可以。
-//
 namespace BSGS {
     i64 a, b, p;
     map<i64, i64> f;
 
-    i64 gcd(i64 a, i64 b) {
-        return b > 0 ? gcd(b, a % b) : a;
-    }
-
-    i64 ps(i64 n, i64 k, int p) {
-        i64 r = 1;
-        for (; k; k >>= 1) {
-            if (k & 1) r = r * n % p;
-            n = n * n % p;
+    i64 qpow(i64 a, i64 b, int p, i64 res = 1) {
+        a = (a % p + p) % p;
+        for (; b; b >>= 1, a = a * a % p) {
+            if (b & 1) {
+                res = a * res % p;
+            }
         }
-        return r;
+        return res;
     }
 
     void exgcd(i64 a, i64 b, i64& x, i64& y) {
@@ -302,7 +216,7 @@ namespace BSGS {
             b = b * a % p;
             f[b] = i;
         }
-        i64 tmp = ps(a, m, p);
+        i64 tmp = qpow(a, m, p);
         b = 1;
         for (int i = 1; i <= m; i++) {
             b = b * tmp % p;
@@ -341,3 +255,78 @@ namespace BSGS {
 } // namespace BSGS
 using namespace BSGS;
 
+
+// Stein 法 (Binary GCD)
+// 不断去除因子 2 以降低常数
+int SteinGCD(int a, int b) {
+    a = abs(a), b = abs(b);
+    int az = __builtin_ctz(a), bz = __builtin_ctz(b);
+    int z = min(az, bz);
+    b >>= bz;
+    while (a) {
+        a >>= az;
+        int diff = b - a;
+        az = __builtin_ctz(diff);
+        if (a < b) {
+            b = a;
+        }
+        a = abs(diff);
+    }
+    return b << z;
+}
+
+
+// 基于值域预处理的快速 GCD
+// Link: https://www.luogu.com.cn/article/6jezrwtl
+//
+// 1.记录 n 的最小素因子 spf(n) = p1 和下一个数 pa[n] = n / p1^b1，类似于链表一样存储所有数的素因子分解
+// 2.并入共有的素因子： 从小到大枚举 a，b 的素因子，如果存在共有的素因子，则将对应素因子的幂次的最小值并入
+vector<int> primes, vis, spf, pa;
+auto sieve = []() {
+    const int N = 1E6 + 10;
+
+    vis.assign(N + 1, {});
+    spf.assign(N + 1, {});
+    pa.assign(N + 1, {});
+    for (int i = 2; i <= N; i++) {
+        if (!vis[i]) {
+            primes.push_back(i);
+            spf[i] = i;
+            pa[i] = 1;
+        }
+        for (int p : primes) {
+            if (i * p > N) {
+                break;
+            }
+            vis[i * p] = 1;
+            if (i % p == 0) {
+                spf[i * p] = spf[i];
+                pa[i * p] = pa[i];
+                break;
+            } else {
+                spf[i * p] = p;
+                pa[i * p] = i;
+            }
+        }
+    }
+    return 0;
+}();
+int gcd(int a, int b) {
+    a = abs(a), b = abs(b);
+    if (a == 0 || b == 0) {
+        return a + b;
+    }
+    int res = 1;
+    while (a != 1 && b != 1) {
+        if (spf[a] == spf[b]) {
+            res *= min(a / pa[a], b / pa[b]);
+            a = pa[a];
+            b = pa[b];
+        } else if (spf[a] < spf[b]) {
+            a = pa[a];
+        } else {
+            b = pa[b];
+        }
+    }
+    return res;
+}
