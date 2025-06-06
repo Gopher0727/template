@@ -13,7 +13,7 @@ auto dijkstra = [&](int s = 0) -> void {
         if (d > dis[u]) {
             continue;
         }
-        for (auto& [v, w] : g[u]) {
+        for (auto [v, w] : g[u]) {
             if (dis[v] > d + w) {
                 dis[v] = d + w;
                 pq.push({dis[v], v});
@@ -36,7 +36,7 @@ auto plain_dijkstra = [&](int s = 0) {
             }
         }
         vis[u] = true;
-        for (auto& [v, w] : g[u]) {
+        for (auto [v, w] : g[u]) {
             if (dis[v] > dis[u] + w) {
                 dis[v] = dis[u] + w;
             }
@@ -62,11 +62,11 @@ auto plain_dijkstra = [&](int s = 0) {
 // 可以利用队列维护需要进行松弛的节点。
 
 void spfa(int s) {
+    vector<int> dis(n, 1E9);
     vector<bool> inq(n);
     vector<int> cnt(n);
-    vector<int> dis(n, 1E9);
-    inq[s] = true;
     dis[s] = 0;
+    inq[s] = true;
 
     queue<int> q;
     q.push(s);

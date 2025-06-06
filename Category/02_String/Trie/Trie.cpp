@@ -1,66 +1,60 @@
-class Trie {
-private:
-    Trie* children[70] {}; // todo 根据 |Σ| 调整
-    bool isEnd = false;
-    int cnt = 0;
+static constexpr int MX = 2E5 + 10;
 
-    int get(char x) {
-        if (x >= 'A' && x <= 'Z') {
-            return x - 'A';
-        } else if (x >= 'a' && x <= 'z') {
-            return x - 'a' + 26;
+int trie[26][MX] {};
+int cnt[MX] {};
+int tot {};
+bool isEnd[MX] {};
+
+int f(char ch) {
+    return ch - 'a';
+}
+
+void insert(const string& s) {
+    int p = 0;
+    for (char ch : s) {
+        int o = f(ch);
+        if (!trie[o][p]) {
+            trie[o][p] = ++tot;
         }
-        return x - '0' + 52;
+        p = trie[o][p];
+        cnt[p]++;
     }
+    isEnd[p] = true;
+}
 
-public:
-    Trie() = default;
-
-    void insert(const string& s) {
-        Trie* node = this;
-        for (char ch : s) {
-            if (node->children[get(ch)] == nullptr) {
-                node->children[get(ch)] = new Trie();
-            }
-            node = node->children[get(ch)];
-            node->cnt++;
+bool find(const string& s) {
+    int p = 0;
+    for (char ch : s) {
+        int o = f(ch);
+        if (!trie[o][p]) {
+            return false;
         }
-        node->isEnd = true;
+        p = trie[o][p];
     }
+    return isEnd[p];
+}
 
-    // 查询 s 是否在模式串中出现
-    bool find(const string& s) {
-        Trie* node = this;
-        for (char ch : s) {
-            if (node->children[get(ch)] == nullptr) {
-                return false;
-            }
-            node = node->children[get(ch)];
+bool startsWith(const string& s) {
+    int p = 0;
+    for (char ch : s) {
+        int o = f(ch);
+        if (!trie[o][p]) {
+            return false;
         }
-        return node->isEnd;
+        p = trie[o][p];
     }
+    return true;
+}
 
-    // 查询 s 是否是某个模式串的前缀
-    bool startsWith(const string& s) {
-        Trie* node = this;
-        for (char ch : s) {
-            if (node->children[get(ch)] == nullptr) {
-                return false;
-            }
-            node = node->children[get(ch)];
+// 以 s（非空）为前缀的模式串的个数
+int getCnt(const string& s) {
+    int p = 0;
+    for (char ch : s) {
+        int o = f(ch);
+        if (!trie[o][p]) {
+            return 0;
         }
-        return true;
+        p = trie[o][p];
     }
-
-    // 以 s 为前缀的模式串的个数
-    int getCnt(const string& s) {
-        Trie* node = this;
-        for (char ch : s) {
-            if (node->children[get(ch)] == nullptr) {
-                return 0;
-            }
-            node = node->children[get(ch)];
-        }
-        return node->cnt;
-    }
-};
+    return cnt[p];
+}
