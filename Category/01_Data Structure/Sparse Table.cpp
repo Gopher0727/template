@@ -13,7 +13,7 @@ public:
         }
         for (int i = 1; i <= len; i++) {
             for (int j = 0; j + (1 << i) - 1 < n; j++) {
-                st[i][j] = max(st[i - 1][j], st[i - 1][j + (1 << (i - 1))]);
+                st[i][j] = Op(st[i - 1][j], st[i - 1][j + (1 << (i - 1))]);
             }
         }
     }
@@ -21,7 +21,7 @@ public:
     // [l, r]
     int query(int l, int r) {
         int s = __lg(r - l + 1);
-        return max(st[s][l], st[s][r - (1 << s) + 1]);
+        return Op(st[s][l], st[s][r - (1 << s) + 1]);
     }
 };
 

@@ -345,28 +345,30 @@ Mint linearRecurrence(Poly p, Poly q, i64 n) {
     return p[0] / q[0];
 }
 
-struct Combinatorics {
+// 自动扩容类 （Mint）
+//
+struct Comb {
     int n;
-    vector<Mint> _fac, _invfac, _inv;
+    vector<Mint> _fac, _ifac, _inv;
 
-    Combinatorics() : n {0}, _fac {1}, _invfac {1}, _inv {0} {}
-    Combinatorics(int n) : Combinatorics() { init(n); }
+    explicit Comb() : n {0}, _fac {1}, _ifac {1}, _inv {0} {}
+    explicit Comb(int n) : Comb() { init(n); }
 
     void init(int m) {
         if (m <= n) {
             return;
         }
         _fac.resize(m + 1);
-        _invfac.resize(m + 1);
+        _ifac.resize(m + 1);
         _inv.resize(m + 1);
 
         for (int i = n + 1; i <= m; i++) {
             _fac[i] = _fac[i - 1] * i;
         }
-        _invfac[m] = _fac[m].inv();
+        _ifac[m] = _fac[m].inv();
         for (int i = m; i > n; i--) {
-            _invfac[i - 1] = _invfac[i] * i;
-            _inv[i] = _invfac[i] * _fac[i - 1];
+            _ifac[i - 1] = _ifac[i] * i;
+            _inv[i] = _ifac[i] * _fac[i - 1];
         }
         n = m;
     }
@@ -377,11 +379,11 @@ struct Combinatorics {
         }
         return _fac[m];
     }
-    Mint invfac(int m) {
+    Mint ifac(int m) {
         if (m > n) {
             init(2 * m);
         }
-        return _invfac[m];
+        return _ifac[m];
     }
     Mint inv(int m) {
         if (m > n) {
@@ -389,23 +391,23 @@ struct Combinatorics {
         }
         return _inv[m];
     }
-    Mint comb(int n, int m) {
+    Mint binom(int n, int m) {
         if (n < m || m < 0) {
             return 0;
         }
-        return fac(n) * invfac(m) * invfac(n - m);
+        return fac(n) * ifac(m) * ifac(n - m);
     }
     Mint perm(int n, int m) {
         if (n < m || m < 0) {
             return 0;
         }
-        return fac(n) * invfac(n - m);
+        return fac(n) * ifac(n - m);
     }
     Mint catalan(int n) {
         if (n <= 0) {
             return 0;
         }
-        return comb(2 * n, n) - comb(2 * n, n - 1);
+        return binom(2 * n, n) - binom(2 * n, n - 1);
     }
 } C;
 
@@ -417,7 +419,7 @@ Poly get(int n, int m) {
         auto f = get(n, m - 1);
         Mint p = 1;
         for (int i = 0; i <= n; i++) {
-            f[n - i] += C.comb(n, i) * p;
+            f[n - i] += C.binom(n, i) * p;
             p *= m;
         }
         return f;
@@ -433,11 +435,11 @@ Poly get(int n, int m) {
         pw[i] = pw[i - 1] * (m / 2);
     }
     for (int i = 0; i <= n; i++) {
-        pw[i] *= C.invfac(i);
+        pw[i] *= C.ifac(i);
     }
     fm = fm.mulT(pw);
     for (int i = 0; i <= n; i++) {
-        fm[i] *= C.invfac(i);
+        fm[i] *= C.ifac(i);
     }
     return f + fm;
 }
