@@ -27,7 +27,7 @@ auto exgcd(T a, T b, T& x, T& y) {
     y -= a / b * x;
     return g;
 }
-auto calc = [&](int a, int b, int c) {
+auto calc = [](int a, int b, int c) {
     int u = 1, v = 1;
     if (a < 0) { // 负数特判（不一定有用）
         a = -a;

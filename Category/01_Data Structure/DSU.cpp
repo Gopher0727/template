@@ -4,10 +4,10 @@
 // 【RMQ 标准算法和线性树上并查集】(https://ljt12138.blog.uoj.ac/blog/4874)
 
 struct DSU {
-    vector<int> pa, _size;
+    vector<int> pa, siz;
     int block;
 
-    explicit DSU(int n) : pa(n), _size(n, 1), block(n) { iota(pa.begin(), pa.end(), 0); }
+    explicit DSU(int n) : pa(n), siz(n, 1), block(n) { iota(pa.begin(), pa.end(), 0); }
 
     // int find(int x) { return x == pa[x] ? x : pa[x] = find(pa[x]); }
     int find(int x) {
@@ -28,30 +28,30 @@ struct DSU {
         if (px == py) {
             return false;
         }
-        if (_size[px] > _size[py]) {
+        if (siz[px] > siz[py]) {
             swap(px, py);
         }
         pa[px] = py;
-        _size[py] += _size[px];
+        siz[py] += siz[px];
         block--;
         return true;
     }
 
     bool same(int x, int y) { return find(x) == find(y); }
 
-    int size(int x) { return _size[find(x)]; }
+    int size(int x) { return siz[find(x)]; }
 };
 
 
 // DSU++
 struct DSU {
     vector<int> pa;
-    vector<int> _size;
+    vector<int> siz;
     vector<int> _edges;
     vector<int> _loop;
     int block;
 
-    explicit DSU(int n) : pa(n), _size(n, 1), _edges(n), _loop(n), block(n) { iota(pa.begin(), pa.end(), 0); }
+    explicit DSU(int n) : pa(n), siz(n, 1), _edges(n), _loop(n), block(n) { iota(pa.begin(), pa.end(), 0); }
 
     // int find(int x) { return x == pa[x] ? x : pa[x] = find(pa[x]); }
     int find(int x) {
@@ -81,7 +81,7 @@ struct DSU {
         }
         pa[y] = x;
         _loop[x] |= _loop[y];
-        _size[x] += _size[y];
+        siz[x] += siz[y];
         _edges[x] += _edges[y];
         block--;
         return true;
@@ -89,11 +89,11 @@ struct DSU {
 
     bool same(int x, int y) { return find(x) == find(y); }
 
-    int size(int x) { return _size[find(x)]; }
+    int size(int x) { return siz[find(x)]; }
 
     bool self_loop(int x) { return _loop[find(x)]; }
 
-    bool loop(int x) { return _size[find(x)] == _edges[find(x)]; }
+    bool loop(int x) { return siz[find(x)] == _edges[find(x)]; }
 
     int edges(int x) { return _edges[find(x)]; }
 
