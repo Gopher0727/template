@@ -1,70 +1,83 @@
-vector<int> rev;
 vector<Mint> roots {0, 1};
-constexpr Mint findPrimitiveRoot() {
+vector<int> rev;
+
+const Mint primitiveRoot = []() {
     Mint i = 2;
     int k = __builtin_ctz(MOD - 1);
     while (true) {
-        if (qpow(i, (MOD - 1) / 2).val() != 1) {
+        if (qpow(i, (MOD - 1) / 2) != 1) {
             break;
         }
-        i += 1;
+        i++;
     }
     return qpow(i, (MOD - 1) >> k);
-}
-constexpr Mint primitiveRoot = findPrimitiveRoot();
-// constexpr Mint primitiveRoot {31}; // todo
+}();
 
-constexpr void dft(vector<Mint>& a) {
+void dft(vector<Mint>& a) {
     int n = a.size();
-    if (rev.size() != n) {
-        int k = __builtin_ctz(n) - 1;
-        rev.resize(n);
-        for (int i = 0; i < n; i++) {
-            rev[i] = rev[i >> 1] >> 1 | (i & 1) << k;
-        }
-    }
-    for (int i = 0; i < n; i++) {
-        if (rev[i] < i) {
-            std::swap(a[i], a[rev[i]]);
-        }
-    }
+    assert((n & (n - 1)) == 0);
+
+    // 预处理单位根 roots 数组
     if (roots.size() < n) {
-        int k = __builtin_ctz(roots.size());
         roots.resize(n);
-        while ((1 << k) < n) {
+        for (int k = __builtin_ctz(roots.size()); (1 << k) < n; k++) {
             auto e = qpow(primitiveRoot, 1 << (__builtin_ctz(MOD - 1) - k - 1));
             for (int i = 1 << (k - 1); i < (1 << k); i++) {
                 roots[2 * i] = roots[i];
                 roots[2 * i + 1] = roots[i] * e;
             }
-            k++;
         }
     }
+
+    // 位逆序置换 (Bit-Reversal Permutation)
+    if (rev.size() != n) {
+        rev.resize(n);
+        int k = __builtin_ctz(n) - 1;
+        for (int i = 0; i < n; i++) {
+            rev[i] = rev[i >> 1] >> 1 | (i & 1) << k;
+        }
+    }
+
+    // 重排
+    for (int i = 0; i < n; i++) {
+        if (rev[i] < i) {
+            swap(a[i], a[rev[i]]);
+        }
+    }
+
+    // 核心操作：蝶形合并
     for (int k = 1; k < n; k *= 2) {
         for (int i = 0; i < n; i += 2 * k) {
             for (int j = 0; j < k; j++) {
-                Mint u = a[i + j], v = a[i + j + k] * roots[k + j];
-                a[i + j] = u + v, a[i + j + k] = u - v;
+                Mint u = a[i + j];
+                Mint v = a[i + j + k] * roots[k + j];
+                a[i + j] = u + v;
+                a[i + j + k] = u - v;
             }
         }
     }
 }
-constexpr void idft(vector<Mint>& a) {
+
+void idft(vector<Mint>& a) {
     int n = a.size();
-    std::reverse(a.begin() + 1, a.end());
+
+    // 在模数意义下，复数域的 “取共轭” 对应把根的幂次取反
+    // 就是把所有的旋转因子变成对应的逆元 w^-j
+    reverse(a.begin() + 1, a.end());
     dft(a);
-    Mint inv = (1 - MOD) / n;
+    Mint inv = Mint(1 - MOD) / n; // 隐含了 reverse 带来的整体的 -1
     for (int i = 0; i < n; i++) {
         a[i] *= inv;
     }
 }
 
 const Mint inv2 = qpow(Mint(2), MOD - 2);
+
 struct Poly : public vector<Mint> {
     Poly() : vector<Mint>() {}
     explicit constexpr Poly(int n) : vector<Mint>(n) {}
     explicit constexpr Poly(const vector<Mint>& a) : vector<Mint>(a) {}
-    constexpr Poly(const initializer_list<Mint>& a) : vector<Mint>(a) {}
+    explicit constexpr Poly(const initializer_list<Mint>& a) : vector<Mint>(a) {}
     template <class InputIt, class = _RequireInputIter<InputIt>>
     explicit constexpr Poly(InputIt first, InputIt last) : vector<Mint>(first, last) {}
     template <class F>
@@ -85,6 +98,7 @@ public:
         }
         return res;
     }
+
     constexpr friend Poly operator-(const Poly& a, const Poly& b) {
         Poly res(std::max(a.size(), b.size()));
         for (int i = 0; i < a.size(); i++) {
@@ -95,13 +109,15 @@ public:
         }
         return res;
     }
+
     constexpr friend Poly operator-(const Poly& a) {
-        vector<Mint> res(a.size());
-        for (int i = 0; i < int(res.size()); i++) {
+        Poly res(a.size());
+        for (int i = 0; i < res.size(); i++) {
             res[i] = -a[i];
         }
-        return Poly(res);
+        return res;
     }
+
     constexpr friend Poly operator*(Poly a, Poly b) {
         if (a.size() == 0 || b.size() == 0) {
             return Poly();
@@ -133,24 +149,28 @@ public:
         a.resize(tot);
         return a;
     }
+
     constexpr friend Poly operator*(Mint a, Poly b) {
-        for (int i = 0; i < int(b.size()); i++) {
+        for (int i = 0; i < b.size(); i++) {
             b[i] *= a;
         }
         return b;
     }
+
     constexpr friend Poly operator*(Poly a, Mint b) {
-        for (int i = 0; i < int(a.size()); i++) {
+        for (int i = 0; i < a.size(); i++) {
             a[i] *= b;
         }
         return a;
     }
+
     constexpr friend Poly operator/(Poly a, Mint b) {
-        for (int i = 0; i < int(a.size()); i++) {
+        for (int i = 0; i < a.size(); i++) {
             a[i] /= b;
         }
         return a;
     }
+
     constexpr Poly& operator+=(Poly b) { return (*this) = (*this) + b; }
     constexpr Poly& operator-=(Poly b) { return (*this) = (*this) - b; }
     constexpr Poly& operator*=(Poly b) { return (*this) = (*this) * b; }
@@ -159,38 +179,40 @@ public:
 
 public:
     constexpr Poly shift(int k) const {
+        auto b = *this;
         if (k >= 0) {
-            auto b = *this;
             b.insert(b.begin(), k, 0);
             return b;
-        } else if (this->size() <= -k) {
+        } else if (b.size() <= -k) {
             return Poly();
         } else {
-            return Poly(this->begin() + (-k), this->end());
+            return Poly(b.begin() - k, b.end());
         }
     }
 
     constexpr Poly trunc(int k) const {
-        Poly f = *this;
-        f.resize(k);
-        return f;
+        Poly b = *this;
+        b.resize(k);
+        return b;
     }
 
     constexpr Poly derivative() const {
-        if (this->empty()) {
+        auto& b = *this;
+        if (b.empty()) {
             return Poly();
         }
-        Poly res(this->size() - 1);
-        for (int i = 0; i < this->size() - 1; ++i) {
-            res[i] = (i + 1) * (*this)[i + 1];
+        Poly res(b.size() - 1);
+        for (int i = 0; i < b.size() - 1; i++) {
+            res[i] = (i + 1) * b[i + 1];
         }
         return res;
     }
 
     constexpr Poly integral() const {
-        Poly res(this->size() + 1);
-        for (int i = 0; i < this->size(); ++i) {
-            res[i + 1] = (*this)[i] / (i + 1);
+        auto& b = *this;
+        Poly res(b.size() + 1);
+        for (int i = 0; i < b.size(); i++) {
+            res[i + 1] = b[i] / (i + 1);
         }
         return res;
     }
@@ -218,16 +240,16 @@ public:
     }
 
     constexpr Poly pow(int k, int m) const {
+        auto& b = *this;
         int i = 0;
-        while (i < this->size() && (*this)[i].val() == 0) {
+        while (i < b.size() && b[i].val() == 0) {
             i++;
         }
-        if (i == this->size() || 1LL * i * k >= m) {
+        if (i == b.size() || 1LL * i * k >= m) {
             return Poly(m);
         }
-        Mint v = (*this)[i];
-        auto f = shift(-i) * v.inv();
-        return (f.log(m - i * k) * k).exp(m - i * k).shift(i * k) * qpow(v, k);
+        auto f = shift(-i) * b[i].inv();
+        return (f.log(m - i * k) * k).exp(m - i * k).shift(i * k) * qpow(b[i], k);
     }
 
     constexpr Poly sqrt(int m) const {
@@ -442,19 +464,4 @@ Poly get(int n, int m) {
         fm[i] *= C.ifac(i);
     }
     return f + fm;
-}
-
-void solve() {
-    int n;
-    cin >> n;
-
-    vector<Mint> a(n);
-    for (auto& v : a) {
-        cin >> v;
-    }
-
-    Poly p(a);
-    for (auto& v : p.inv(n)) {
-        cout << v << " ";
-    }
 }
