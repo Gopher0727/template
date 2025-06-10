@@ -1,80 +1,80 @@
+template <typename T>
 class SparseTable { // 用于解决可重复贡献问题，需要空间较大
 private:
     int n, len;
-    function<int(int, int)> Op; // max, min, gcd, 按位 &, 按位 | -> [](int a, int b) { return max(a, b); }
-    vector<vector<int>> st;
+    vector<vector<T>> g;
+    function<T(T, T)> Op; // max, min, gcd, 按位 &, 按位 | -> [](int a, int b) { return max(a, b); }
 
 public:
-    SparseTable(int n, auto&& Op) : n(n), len(__lg(n)), Op(Op), st(len + 1, vector<int>(n)) {}
-
-    void init(const vector<int>& vec) {
+    SparseTable(const vector<T>& a, auto&& op) : n(a.size()), len(__lg(n)), g(len + 1, vector<T>(n)), Op(Op) {
         for (int i = 0; i < n; i++) {
-            st[0][i] = vec[i];
+            g[0][i] = a[i];
         }
         for (int i = 1; i <= len; i++) {
             for (int j = 0; j + (1 << i) - 1 < n; j++) {
-                st[i][j] = Op(st[i - 1][j], st[i - 1][j + (1 << (i - 1))]);
+                g[i][j] = Op(g[i - 1][j], g[i - 1][j + (1 << (i - 1))]);
             }
         }
     }
 
     // [l, r]
-    int query(int l, int r) {
+    T query(int l, int r) {
         int s = __lg(r - l + 1);
-        return Op(st[s][l], st[s][r - (1 << s) + 1]);
+        return Op(g[s][l], g[s][r - (1 << s) + 1]);
     }
 };
 
 
-// 二维 SparseTable 表
-vector<vector<int>> log_;
-vector<vector<vector<vector<int>>>> st;
+template <typename T>
+class SparseTable {
+private:
+    int n, m, K, L;
+    vector<int> logRow, logCol;
+    vector<vector<vector<vector<T>>>> g;
+    function<T(T, T)> Op;
 
-// 初始化 log 表
-void initlog_(int n) {
-    log_.resize(n + 1, vector<int>(n + 1, 0));
-    for (int i = 2; i <= n; i++) {
-        for (int j = 2; j <= n; j++) {
-            log_[i][j] = log_[i / 2][j] + 1;
+public:
+    SparseTable(const vector<vector<T>>& a, auto&& Op) : n(a.size()), m(a[0].size()), K(__lg(n)), L(__lg(m)), Op(Op) {
+        logRow.assign(n + 1, 0);
+        for (int i = 2; i <= n; i++) {
+            logRow[i] = logRow[i / 2] + 1;
         }
-    }
-}
 
-// 初始化 SparseTable 表
-void initSparseTable(const vector<vector<int>>& arr, int n) {
-    st.resize(n, vector<vector<vector<int>>>(n, vector<vector<int>>(log_[n][n] + 1, vector<int>(log_[n][n] + 1))));
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            st[i][j][0][0] = arr[i][j];
+        logCol.assign(m + 1, 0);
+        for (int j = 2; j <= m; j++) {
+            logCol[j] = logCol[j / 2] + 1;
         }
-    }
-    for (int k = 1; (1 << k) <= n; k++) {
-        for (int i = 0; i + (1 << k) - 1 < n; i++) {
-            for (int j = 0; j + (1 << k) - 1 < n; j++) {
-                st[i][j][k][0] = min(st[i][j][k-1][0], st[i + (1 << (k-1))][j][k-1][0]);
-                st[i][j][0][k] = min(st[i][j][0][k-1], st[i][j + (1 << (k-1))][0][k-1]);
+
+        g.assign(K + 1, vector(L + 1, vector(n, vector<T>(m))));
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                g[0][0][i][j] = a[i][j];
             }
         }
-    }
-    for (int k = 1; (1 << k) <= n; k++) {
-        for (int l = 1; (1 << l) <= n; l++) {
-            for (int i = 0; i + (1 << k) - 1 < n; i++) {
-                for (int j = 0; j + (1 << l) - 1 < n; j++) {
-                    int min1 = min(st[i][j][k-1][l], st[i + (1 << (k-1))][j][k-1][l]);
-                    int min2 = min(st[i][j][k][l-1], st[i][j + (1 << (l-1))][k][l-1]);
-                    st[i][j][k][l] = min(min1, min2);
+        for (int k = 1; k <= K; k++) {
+            for (int i = 0; i + (1 << k) <= n; i++) {
+                for (int j = 0; j < m; j++) {
+                    g[k][0][i][j] = Op(g[k - 1][0][i][j], g[k - 1][0][i + (1 << (k - 1))][j]);
+                }
+            }
+        }
+        for (int l = 1; l <= L; ++l) {
+            for (int k = 0; k <= K; k++) {
+                for (int i = 0; i + (1 << k) <= n; i++) {
+                    for (int j = 0; j + (1 << l) <= m; j++) {
+                        g[k][l][i][j] = Op(g[k][l - 1][i][j], g[k][l - 1][i][j + (1 << (l - 1))]);
+                    }
                 }
             }
         }
     }
-}
 
-// 查询矩形区域的最小值
-int query(int x1, int y1, int x2, int y2) {
-    int k = log_[x2 - x1 + 1][y2 - y1 + 1];
-    int l = log_[y2 - y1 + 1][x2 - x1 + 1];
-    int min1 = min(st[x1][y1][k][l], st[x2 - (1 << k) + 1][y1][k][l]);
-    int min2 = min(st[x1][y2 - (1 << l) + 1][k][l], st[x2 - (1 << k) + 1][y2 - (1 << l) + 1][k][l]);
-    return min(min1, min2);
-}
+    // [x1..x2] x [y1..y2]
+    T query(int x1, int y1, int x2, int y2) const {
+        int k = logRow[x2 - x1 + 1];
+        int l = logCol[y2 - y1 + 1];
+        int dx = (x2 - x1 + 1) - (1 << k);
+        int dy = (y2 - y1 + 1) - (1 << l);
+        return Op(Op(g[k][l][x1][y1], g[k][l][x1 + dx][y1]), Op(g[k][l][x1][y1 + dy], g[k][l][x1 + dx][y1 + dy]));
+    }
+};
