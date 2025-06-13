@@ -6,56 +6,59 @@
 //
 // dfn[x]：时间戳，节点 x 第一次被访问的顺序
 // low[x]：追溯值，从节点 x 出发，所能访问到的最早时间戳
-//
 
 struct Cut {
     int n;
+    int clk;
+    int root;
     vector<vector<int>> g;
-    vector<int> isCut;
-    vector<int> low, dfn;
-    int clk, root;
+    vector<int> dfn;
+    vector<int> low;
+    vector<bool> isCut;
 
     explicit Cut(int n) { init(n); }
 
     void init(int n) {
         this->n = n;
+        clk = 0;
         g.assign(n, {});
-        isCut.assign(n, 0);
         low.assign(n, 0);
         dfn.assign(n, -1);
-        clk = 0;
+        isCut.assign(n, false);
     }
 
-    void addEdge(int u, int v) { g[u].push_back(v); }
-
-    void work() {
-        for (int i = 0; i < n; ++i) {
-            root = i;
-            if (dfn[i] == -1) {
-                Tarjan(i, -1);
-            }
-        }
+    void addEdge(int u, int v) {
+        g[u].push_back(v);
+        g[v].push_back(u);
     }
 
-private:
     void Tarjan(int u, int pa) {
-        low[u] = dfn[u] = clk++;
-        int child = 0;
+        dfn[u] = low[u] = clk++;
+        int son = 0;
         for (int v : g[u]) {
             if (dfn[v] == -1) {
-                child++;
+                son++;
                 Tarjan(v, u);
                 low[u] = min(low[u], low[v]);
                 // 求割边去掉等于的情况即可
                 if (u != root && dfn[u] <= low[v]) {
-                    isCut[u] = 1;
+                    isCut[u] = true;
                 }
             } else if (v != pa && dfn[v] < dfn[u]) {
                 low[u] = min(low[u], dfn[v]);
             }
         }
-        if (u == root && child >= 2) {
-            isCut[u] = 1;
+        if (u == root && son >= 2) {
+            isCut[u] = true;
+        }
+    }
+
+    void work() {
+        for (int i = 0; i < n; i++) {
+            root = i;
+            if (dfn[i] == -1) {
+                Tarjan(i, -1);
+            }
         }
     }
 };
@@ -68,27 +71,34 @@ private:
 //     2> 缩点之后，重建拓扑图，递推
 //
 // col[x]：即 color，记录所属的连通块
-//
+
 struct SCC {
     int n;
+    int clk;
+    int cnt;
     vector<vector<int>> g;
-    vector<int> dfn, low, col;
+    vector<int> dfn;
+    vector<int> low;
+    vector<int> col;
     vector<int> stk;
-    int clk, cnt;
 
     explicit SCC(int n) { init(n); }
 
     void init(int n) {
         this->n = n;
-        g.resize(n);
-        low.resize(n);
-        dfn.assign(n, -1);
-        col.assign(n, -1);
         clk = 0;
         cnt = 0;
+        g.assign(n, {});
+        dfn.assign(n, -1);
+        low.assign(n, {});
+        col.assign(n, -1);
+        stk.clear();
     }
 
-    void addEdge(int u, int v) { g[u].push_back(v); }
+    void addEdge(int u, int v) {
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }
 
     void Tarjan(int u) {
         dfn[u] = low[u] = clk++;
@@ -118,8 +128,9 @@ struct SCC {
                 Tarjan(i);
             }
         }
-        vector<int> siz(cnt); // siz 每个 scc 中点的数量
+
         vector<vector<int>> adj(cnt);
+        vector<int> siz(cnt); // siz 每个 scc 中点的数量
         for (int i = 0; i < n; i++) {
             int u = col[i];
             siz[u]++;
@@ -140,30 +151,39 @@ struct SCC {
 // 求解图中全部割边、划分边双（颜色相同的点位于同一个边双连通分量中）  O(N+M)
 // > 对于一个边双，删去任意边后依旧联通；
 // > 对于边双中的任意两点，一定存在两条不相交的路径连接这两个点（路径上可以有公共点，但是没有公共边）。
-//
+
 struct EBCC {
     int n;
+    int clk;
+    int cnt;
     vector<vector<int>> g;
-    vector<int> dfn, low, col, stk;
+    vector<int> dfn;
+    vector<int> low;
+    vector<int> col;
+    vector<int> stk;
     set<array<int, 2>> bridge;
-    int now, cnt;
 
     explicit EBCC(int n) { init(n); }
 
     void init(int n) {
         this->n = n;
-        g.assign(n + 1, {});
-        low.assign(n + 1, 0);
-        dfn.assign(n + 1, -1);
-        col.assign(n + 1, -1);
-        now = 0;
+        clk = 0;
         cnt = 0;
+        g.assign(n + 1, {});
+        dfn.assign(n + 1, -1);
+        low.assign(n + 1, 0);
+        col.assign(n + 1, -1);
+        stk.clear();
+        bridge.clear();
     }
 
-    void addEdge(int u, int v) { g[u].push_back(v); }
+    void addEdge(int u, int v) {
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }
 
     void Tarjan(int u, int pa) {
-        dfn[u] = low[u] = now++;
+        dfn[u] = low[u] = clk++;
         stk.push_back(u);
         for (auto v : g[u]) {
             if (v == pa) {
@@ -179,8 +199,8 @@ struct EBCC {
             }
         }
         if (dfn[u] == low[u]) {
-            int pre;
             cnt++;
+            int pre;
             do {
                 pre = stk.back();
                 col[pre] = cnt;
@@ -195,8 +215,9 @@ struct EBCC {
                 Tarjan(i, 0);
             }
         }
-        vector<int> siz(cnt + 1); // siz 每个 scc 中点的数量
+
         vector<vector<int>> adj(cnt + 1);
+        vector<int> siz(cnt + 1); // siz 每个 scc 中点的数量
         for (int i = 1; i <= n; i++) {
             siz[col[i]]++;
             for (auto j : g[i]) {
@@ -214,21 +235,25 @@ struct EBCC {
 set<pair<int, int>> E;
 struct EBCC {
     int n;
+    int clk;
+    int cnt;
     vector<vector<int>> adj;
+    vector<int> dfn;
+    vector<int> low;
+    vector<int> col;
     vector<int> stk;
-    vector<int> dfn, low, col;
-    int cur, cnt;
 
     explicit EBCC(int n) { init(n); }
 
     void init(int n) {
         this->n = n;
+        clk = 0;
+        cnt = 0;
         adj.assign(n, {});
         dfn.assign(n, -1);
-        low.resize(n);
+        low.assign(n, {});
         col.assign(n, -1);
         stk.clear();
-        cur = cnt = 0;
     }
 
     void addEdge(int u, int v) {
@@ -237,9 +262,8 @@ struct EBCC {
     }
 
     void Tarjan(int x, int p) {
-        dfn[x] = low[x] = cur++;
+        dfn[x] = low[x] = clk++;
         stk.push_back(x);
-
         for (auto y : adj[x]) {
             if (y == p) {
                 continue;
@@ -253,7 +277,6 @@ struct EBCC {
                 low[x] = min(low[x], dfn[y]);
             }
         }
-
         if (dfn[x] == low[x]) {
             int y;
             do {
@@ -286,7 +309,7 @@ struct EBCC {
             g.siz[col[i]]++;
             for (auto j : adj[i]) {
                 if (col[i] < col[j]) {
-                    g.edges.emplace_back(col[i], col[j]);
+                    g.edges.push_back({col[i], col[j]});
                 } else if (i < j) {
                     g.cnte[col[i]]++;
                 }
@@ -301,31 +324,39 @@ struct EBCC {
 //
 // 求解图中全部割点、划分点双（颜色相同的点位于同一个点双连通分量中）  O(N+M)
 // > 每一个割点至少属于两个点双
+
 struct VBCC {
     int n;
-    vector<vector<int>> g, col;
-    vector<int> dfn, low, stk;
-    int now, cnt;
-    vector<bool> point; // 记录是否为割点
+    int clk;
+    int cnt;
+    vector<vector<int>> g;
+    vector<vector<int>> col;
+    vector<int> dfn;
+    vector<int> low;
+    vector<int> stk;
+    vector<bool> isCut; // 记录是否为割点
 
-    explicit VBCC(int n) : n(n) {
+    explicit VBCC(int n) { init(n); }
+
+    void init(int n) {
+        this->n = n;
+        cnt = 0;
+        clk = 0;
         g.resize(n + 1);
+        col.resize(2 * n + 1);
         dfn.resize(n + 1);
         low.resize(n + 1);
-        col.resize(2 * n + 1);
-        point.resize(n + 1);
         stk.clear();
-        cnt = now = 0;
+        isCut.resize(n + 1);
     }
 
-    void add(int x, int y) {
-        if (x == y) return; // 手动去除重边
+    void addEdge(int x, int y) {
         g[x].push_back(y);
         g[y].push_back(x);
     }
 
     void Tarjan(int x, int root) {
-        low[x] = dfn[x] = now++;
+        low[x] = dfn[x] = clk++;
         stk.push_back(x);
         if (x == root && !g[x].size()) { // 特判孤立点
             ++cnt;
@@ -340,7 +371,7 @@ struct VBCC {
                 if (dfn[x] <= low[y]) {
                     flag++;
                     if (x != root || flag > 1) {
-                        point[x] = true; // 标记为割点
+                        isCut[x] = true; // 标记为割点
                     }
                     int pre = 0;
                     cnt++;
@@ -357,6 +388,14 @@ struct VBCC {
         }
     }
 
+    void work() {
+        for (int i = 1; i <= n; ++i) { // 避免图不连通
+            if (!dfn[i]) {
+                Tarjan(i, i);
+            }
+        }
+    }
+
     pair<int, vector<vector<int>>> rebuild() { // [新图的顶点数量, 新图]
         work();
         vector<vector<int>> adj(cnt + 1);
@@ -365,20 +404,12 @@ struct VBCC {
                 continue;
             }
             for (auto j : col[i]) {
-                if (point[j]) { // 如果 j 是割点
-                    adj[i].push_back(point[j]);
-                    adj[point[j]].push_back(i);
+                if (isCut[j]) {
+                    adj[i].push_back(isCut[j]);
+                    adj[isCut[j]].push_back(i);
                 }
             }
         }
         return {cnt, adj};
-    }
-
-    void work() {
-        for (int i = 1; i <= n; ++i) { // 避免图不连通
-            if (!dfn[i]) {
-                Tarjan(i, i);
-            }
-        }
     }
 };
