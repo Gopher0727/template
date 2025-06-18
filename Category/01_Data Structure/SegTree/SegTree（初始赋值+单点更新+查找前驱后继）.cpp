@@ -32,22 +32,24 @@ public:
         build(build, 1, 0, n - 1);
     }
 
-    void modify(int id, const Info& _init, int o, int l, int r) {
+    void modify(int p, const Info& _init, int o, int l, int r) {
+        assert(0 <= p && p < n);
         if (l == r) {
             info[o] = _init;
             return;
         }
         int m = l + (r - l) / 2;
-        if (id <= m) {
-            modify(id, _init, o << 1, l, m);
+        if (p <= m) {
+            modify(p, _init, o << 1, l, m);
         } else {
-            modify(id, _init, o << 1 | 1, m + 1, r);
+            modify(p, _init, o << 1 | 1, m + 1, r);
         }
         pull(o);
     }
-    void modify(int id, const Info& _init) { modify(id, _init, 1, 0, n - 1); }
+    void modify(int p, const Info& _init) { modify(p, _init, 1, 0, n - 1); }
 
     Info query(int p, int o, int l, int r) {
+        assert(0 <= p && p < n);
         if (l == r) {
             return info[o];
         }
@@ -60,6 +62,7 @@ public:
     Info query(int p) { return query(p, 1, 0, n - 1); }
 
     Info query(int L, int R, int o, int l, int r) {
+        assert(0 <= L && L <= R && R < n);
         if (L <= l && r <= R) {
             return info[o];
         }
@@ -77,6 +80,7 @@ public:
     Info queryAll() { return info[1]; }
 
     int findFirst(int L, int R, auto&& pred, int o, int l, int r) {
+        assert(0 <= L && L <= R && R < n);
         if (l > R || r < L || !pred(info[o])) {
             return -1;
         }
@@ -93,6 +97,7 @@ public:
     int findFirst(int l, int r, auto&& pred) { return findFirst(l, r, pred, 1, 0, n - 1); }
 
     int findLast(int L, int R, auto&& pred, int o, int l, int r) {
+        assert(0 <= L && L <= R && R < n);
         if (l > R || r < L || !pred(info[o])) {
             return -1;
         }

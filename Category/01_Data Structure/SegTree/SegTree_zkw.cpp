@@ -48,14 +48,14 @@ public:
         build(_init);
     }
 
-    void modify(int pos, const Info& info) {
-        pos += size;
+    void modify(int p, const Info& info) {
+        p += size;
         for (int i = height; i > 0; i--) {
-            push(pos >> i);
+            push(p >> i);
         }
-        info[pos] = info;
-        for (pos /= 2; pos; pos /= 2) {
-            pull(pos);
+        info[p] = info;
+        for (p /= 2; p; p /= 2) {
+            pull(p);
         }
     }
 
@@ -89,12 +89,12 @@ public:
         }
     }
 
-    Info query(int pos) {
-        pos += size;
+    Info query(int p) {
+        p += size;
         for (int i = height; i > 0; i--) {
-            push(pos >> i);
+            push(p >> i);
         }
-        return info[pos];
+        return info[p];
     }
 
     Info query(int l, int r) {
@@ -139,7 +139,7 @@ public:
         }
         return hi;
     }
-    int findFirst(int pos, auto&& pred) { return findFirst(pos, size - 1, pred); }
+    int findFirst(int p, auto&& pred) { return findFirst(p, size - 1, pred); }
 
     int findLast(int l, int r, auto&& pred) {
         int lo = l - 1, hi = r + 1;
@@ -156,7 +156,7 @@ public:
         }
         return lo;
     }
-    int findLast(int pos, auto&& pred) { return findLast(0, pos, pred); }
+    int findLast(int p, auto&& pred) { return findLast(0, p, pred); }
 };
 
 struct Tag {
