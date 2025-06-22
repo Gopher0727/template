@@ -1,21 +1,18 @@
 {
     //* window
     "window.commandCenter": false,
-    //* workspace
-    "security.workspace.trust.untrustedFiles": "open",
     //* explorer
     "explorer.confirmDragAndDrop": false,
     "explorer.confirmPasteNative": false,
-    //* update
-    "update.mode": "manual",
-    "update.enableWindowsBackgroundUpdates": false,
     //* workbench
     // "workbench.editor.enablePreview": false,
     "workbench.tree.indent": 12,
-    "workbench.iconTheme": "material-icon-theme",
     "workbench.startupEditor": "none",
     "workbench.list.smoothScrolling": true,
     "workbench.layoutControl.enabled": false,
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.editor.empty.hint": "hidden",
+    "workbench.colorTheme": "Catppuccin Mocha",
     //* extensions
     "extensions.closeExtensionDetailsOnViewChange": true,
     //* editor
@@ -146,7 +143,4 @@
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "git.openRepositoryInParentFolders": "never",
-    //* other
-    "lldb.suppressUpdateNotifications": true,
-    "workbench.colorTheme": "Catppuccin Mocha",
 }

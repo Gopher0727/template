@@ -21,4 +21,18 @@ if exist "%fileType%" (
 )
 echo Files .cpp has been cleared.
 
+REM 删除当前目录下的所有 .py 文件
+set "fileType=*.py"
+if exist "%fileType%" (
+    del /f /q %fileType%
+)
+echo Files .py has been cleared.
+
+REM 删除当前目录下的所有 .exe 文件
+set "fileType=*.exe"
+if exist "%fileType%" (
+    del /f /q %fileType%
+)
+echo Files .exe has been cleared.
+
 endlocal

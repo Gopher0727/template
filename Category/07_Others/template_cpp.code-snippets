@@ -275,5 +275,14 @@
             "    }",
             "};"
         ]
-    }
+    },
+    // "priority_queue": {
+    //     "scope": "cpp",
+    //     "prefix": "priority_queue",
+    //     "body": [
+    //         "#include <ext/pb_ds/priority_queue.hpp>",
+    //         "",
+    //         "__gnu_pbds::priority_queue<$1, ${2:less<>}, __gnu_pbds::pairing_heap_tag> pq;"
+    //     ]
+    // },
 }

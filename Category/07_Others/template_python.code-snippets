@@ -13,7 +13,7 @@
             "from operator import add, iand, ior, mul, xor",
             "from string import ascii_letters, ascii_lowercase, ascii_uppercase",
             "from timeit import timeit",
-            "from typing import List",
+            "from typing import List, NamedTuple, Optional, Tuple, cast",
             "",
             "# from pkg_resources import working_set",
             "from more_itertools import distinct_combinations, distinct_permutations, distribute, divide, factor, intersperse, is_sorted, locate, longest_common_prefix, minmax, nth_combination, nth_permutation, partition, sieve, sliding_window, substrings, substrings_indexes, totient",

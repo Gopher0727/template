@@ -75,11 +75,11 @@ public:
         return *this;
     }
 
-    friend constexpr Frac operator+(const Frac& i, const Frac& j) { return i += j; }
-    friend constexpr Frac operator-(const Frac& i, const Frac& j) { return i -= j; }
-    friend constexpr Frac operator-(const Frac& i) { return Frac(-i.x, i.y); }
-    friend constexpr Frac operator*(const Frac& i, const Frac& j) { return i *= j; }
-    friend constexpr Frac operator/(const Frac& i, const Frac& j) { return i /= j; }
+    friend constexpr Frac operator+(Frac i, const Frac& j) { return i += j; }
+    friend constexpr Frac operator-(Frac i, const Frac& j) { return i -= j; }
+    friend constexpr Frac operator-(Frac i) { return Frac(-i.x, i.y); }
+    friend constexpr Frac operator*(Frac i, const Frac& j) { return i *= j; }
+    friend constexpr Frac operator/(Frac i, const Frac& j) { return i /= j; }
 
     friend constexpr strong_ordering operator<=>(const Frac& i, const Frac& j) { return i.x * j.y <=> i.y * j.x; }
     friend constexpr bool operator==(const Frac& i, const Frac& j) { return i.x * j.y == i.y * j.x; }
