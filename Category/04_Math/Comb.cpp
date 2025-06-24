@@ -99,15 +99,16 @@ namespace Comb {
     const int MX = 2E5 + 1;
 
     vector<int> inv;
-    auto Inv = []() {
+    auto __getInv = []() {
         inv.resize(MX + 1);
         inv[1] = 1;
         // inv[i] = p / i * inv[p % i]
         for (int i = 2; i <= MX; i++) {
-            inv[i] = p - 1ll * inv[p % i] * (p / i) % p;
+            inv[i] = MOD - 1ll * inv[MOD % i] * (MOD / i) % MOD;
         }
         return inv;
     }();
+
     i64 binom(int n, int m) {
         if (n < m || m < 0) {
             return 0;

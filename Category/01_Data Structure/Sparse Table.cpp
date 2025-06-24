@@ -6,7 +6,7 @@ private:
     function<T(T, T)> Op; // max, min, gcd, 按位 &, 按位 | -> [](int a, int b) { return max(a, b); }
 
 public:
-    SparseTable(const vector<T>& a, auto&& op) : n(a.size()), len(__lg(n)), g(len + 1, vector<T>(n)), Op(Op) {
+    SparseTable(const vector<T>& a, auto&& op) : n(a.size()), len(__lg(n)), g(len + 1, vector<T>(n)), Op(op) {
         for (int i = 0; i < n; i++) {
             g[0][i] = a[i];
         }

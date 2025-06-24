@@ -24,15 +24,15 @@ struct DSU {
     }
 
     bool merge(int x, int y) {
-        int px = find(x), py = find(y);
-        if (px == py) {
+        x = find(x), y = find(y);
+        if (x == y) {
             return false;
         }
-        if (siz[px] > siz[py]) {
-            swap(px, py);
+        if (siz[x] > siz[y]) {
+            swap(x, y);
         }
-        pa[px] = py;
-        siz[py] += siz[px];
+        pa[x] = y;
+        siz[y] += siz[x];
         block--;
         return true;
     }
@@ -42,13 +42,12 @@ struct DSU {
     int size(int x) { return siz[find(x)]; }
 };
 
-
-// DSU++
+// DSU++ 无重边
 struct DSU {
     vector<int> pa;
     vector<int> siz;
     vector<int> _edges;
-    vector<int> _loop;
+    vector<bool> _loop;
     int block;
 
     explicit DSU(int n) : pa(n), siz(n, 1), _edges(n), _loop(n), block(n) { iota(pa.begin(), pa.end(), 0); }
@@ -69,20 +68,20 @@ struct DSU {
 
     bool merge(int x, int y) {
         if (x == y) {
-            _loop[find(x)] = 1;
+            _loop[find(x)] = true;
         }
         x = find(x), y = find(y);
         _edges[x]++;
         if (x == y) {
             return false;
         }
-        if (x < y) {
+        if (siz[x] > siz[y]) {
             swap(x, y);
         }
-        pa[y] = x;
-        _loop[x] |= _loop[y];
-        siz[x] += siz[y];
-        _edges[x] += _edges[y];
+        pa[x] = y;
+        siz[y] += siz[x];
+        _edges[y] += _edges[x];
+        _loop[y] |= _loop[x];
         block--;
         return true;
     }
@@ -91,31 +90,25 @@ struct DSU {
 
     int size(int x) { return siz[find(x)]; }
 
+    // 判断连通块里有无自环
     bool self_loop(int x) { return _loop[find(x)]; }
 
-    bool loop(int x) { return siz[find(x)] == _edges[find(x)]; }
+    // 判断连通块是否成环（包括自环）
+    bool loop(int x) { return siz[find(x)] <= _edges[find(x)]; }
 
     int edges(int x) { return _edges[find(x)]; }
 
     vector<vector<int>> groups() {
         int n = pa.size();
-        vector<int> cnt(n);
-        for (int i = 0; i < n; ++i) {
-            cnt[find(i)]++;
-        }
-
         vector<vector<int>> res;
-        res.reserve(block);
-        vector<int> index(n, -1);
-        for (int i = 0; i < n; ++i) {
-            if (pa[i] == i) {
-                index[i] = res.size();
-                res.emplace_back();
-                res.back().reserve(cnt[i]);
+        vector<int> idx(n, -1);
+        for (int i = 0; i < n; i++) {
+            int root = find(i);
+            if (idx[root] == -1) {
+                idx[root] = res.size();
+                res.push_back({});
             }
-        }
-        for (int i = 0; i < n; ++i) {
-            res[index[pa[i]]].push_back(i);
+            res[idx[root]].push_back(i);
         }
         return res;
     }
