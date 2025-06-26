@@ -106,14 +106,13 @@ void quick_sort(vector<int>& a, int low = 0, int high = -1) {
 // 桶排序
 void bucket_sort(vector<int>& a) {
     vector<vector<int>> buckets(20); // 数据范围 0 ~ 199
-    for (int& v : a) {
+    for (int v : a) {
         buckets[v / 10].push_back(v);
     }
-
+    // 桶内部排序
     for (auto& bucket : buckets) {
-        ranges::sort(bucket); // 桶内部排序
+        ranges::sort(bucket);
     }
-
     a.clear();
     for (auto& bucket : buckets) {
         for (int v : bucket) {
@@ -123,19 +122,18 @@ void bucket_sort(vector<int>& a) {
 }
 
 // 计数排序：需要一个额外空间存储待排序数组中相应元素的个数，还需要计算前缀和解决元素重复的情况
+// 也可以给索引排序
 void counting_sort(vector<int>& a) {
-    int w = ranges::max(a);
+    int n = a.size(), w = ranges::max(a);
     vector<int> cnt(w + 1);
-    for (int& v : a) {
+    vector<int> b(n);
+    for (int v : a) {
         cnt[v]++;
     }
     for (int i = 1; i <= w; i++) {
         cnt[i] += cnt[i - 1];
     }
-
-    int n = a.size();
-    vector<int> b(n);
-    for (int& v : a | views::reverse) {
+    for (int v : a | views::reverse) {
         b[--cnt[v]] = v;
     }
     a = std::move(b);
@@ -194,7 +192,7 @@ void heap_sort(vector<int>& a) {
 
 // 测试验证
 void solve() {
-    mt19937_64 gen(chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count());
+    mt19937 gen(chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count());
     uniform_int_distribution<int> dis(1, 100);
 
     for (int i = 0; i < 10; i++) {

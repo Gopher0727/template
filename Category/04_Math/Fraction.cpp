@@ -17,21 +17,18 @@ auto Change(const vector<int>& a) {
 
 // A/B < P/Q < C/D
 // return {P, Q} -- 首先Q最小，其次P最小
-auto dfs = [&](auto&& dfs, i128 A, i128 B, i128 C, i128 D) -> pair<i128, i128> {
+auto dfs = [&](this auto&& dfs, i128 A, i128 B, i128 C, i128 D) -> pair<i128, i128> {
     auto k = A / B;
     if (k + 1 < (C + D - 1) / D) {
         return {k + 1, 1ULL};
     }
-
     A -= k * B;
     C -= k * D;
-
     if (A == 0) {
         auto p2 = D / C + 1;
         return {k * p2 + 1, p2};
     }
-
-    auto [p2, q2] = dfs(dfs, D, C, B, A);
+    auto [p2, q2] = dfs(D, C, B, A);
     return {k * p2 + q2, p2};
 };
 
