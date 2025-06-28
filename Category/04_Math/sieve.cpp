@@ -1,22 +1,22 @@
 // 暴力判断一个数是否是质数
-bool isPrime(i64 n) {
-    for (int i = 2; i * 1ll * i <= n; i++) {
-        if (n % i == 0) {
+bool isPrime(i64 x) {
+    for (int i = 2; 1ll * i * i <= x; i++) {
+        if (x % i == 0) {
             return false;
         }
     }
-    return n >= 2;
+    return x >= 2;
 }
 
 
 // 记录一个数的所有因数
-auto factorize(i64 v) {
+auto factorize(i64 x) {
     vector<int> fac;
-    for (int i = 1; 1ll * i * i <= v; i++) {
-        if (v % i == 0) {
+    for (int i = 1; 1ll * i * i <= x; i++) {
+        if (x % i == 0) {
             fac.push_back(i);
-            if (1ll * i * i != v) {
-                fac.push_back(v / i);
+            if (1ll * i * i != x) {
+                fac.push_back(x / i);
             }
         }
     }
@@ -25,7 +25,7 @@ auto factorize(i64 v) {
 }
 
 
-// 记录范围内的所有数的因数  2e5
+// 记录范围内的所有数的因数  1e6
 vector<vector<int>> factors;
 void sieve(int n) {
     factors.assign(n + 1, {});
@@ -39,18 +39,18 @@ void sieve(int n) {
 
 // 找到一个数的所有质因数
 auto factorize(i64 x) {
-    map<int, int> res;
-    for (int i = 2; i * 1ll * i <= x; i++) {
+    map<int, int> cnt;
+    for (int i = 2; 1ll * i * i <= x; i++) {
         while (x % i == 0) {
             x /= i;
-            res[i]++;
+            cnt[i]++;
         }
     }
     if (x > 1) {
-        res[x]++;
+        cnt[x]++;
     }
-    // return vector(res.begin(), res.end());
-    return res;
+    // return vector(cnt.begin(), cnt.end());
+    return cnt;
 }
 
 
@@ -105,37 +105,39 @@ auto init = [] {
 }();
 
 
-// 埃氏筛  ErlichScreen  2e7
-vector<int> isPrime;
+// 埃氏筛  ErlichScreen  1e8
+vector<bool> isPrime;
 vector<int> primes;
 void sieve(int n) {
-    isPrime.assign(n + 1, 1);
-    isPrime[0] = isPrime[1] = 0;
+    isPrime.assign(n + 1, true);
+    primes.clear();
+    isPrime[0] = isPrime[1] = false;
     for (int i = 2; i <= n; i++) {
         if (!isPrime[i]) {
             continue;
         }
         primes.push_back(i);
-        for (auto j = i * 1ll * i; j <= n; j += i) {
-            isPrime[j] = 0;
+        for (auto j = 1ll * i * i; j <= n; j += i) {
+            isPrime[j] = false;
         }
     }
 }
 
 
-// 线性筛  （LinearScreen / EulerScreen）  5e7
+// 线性筛  LinearScreen / EulerScreen  2e8
 // ———— 让每个合数只被标记一次
 vector<bool> isPrime;
 vector<int> primes;
 void sieve(int n) {
     isPrime.assign(n + 1, true);
+    primes.clear();
     isPrime[0] = isPrime[1] = false;
     for (int i = 2; i <= n; i++) {
         if (isPrime[i]) {
             primes.push_back(i);
         }
         for (auto p : primes) {
-            if (i * p > n) {
+            if (1ll * i * p > n) {
                 break;
             }
             isPrime[i * p] = 0;
@@ -149,9 +151,10 @@ void sieve(int n) {
 
 // 线性筛 + 最小质因数  1e8
 // 最小质因数 * 最大真因数
-vector<bool> primes;
+vector<int> primes;
 vector<int> minp;
 void sieve(int n) {
+    primes.clear();
     minp.assign(n + 1, 0);
     for (int i = 2; i <= n; i++) {
         if (minp[i] == 0) {
@@ -159,50 +162,51 @@ void sieve(int n) {
             primes.push_back(i);
         }
         for (auto p : primes) {
-            if (i * p > n) {
+            if (1ll * i * p > n) {
                 break;
             }
             minp[i * p] = p;
-            // 当 minp[i]（即 i 的当前最小质因数）等于当前的质数 p 时，
-            // 就没有必要继续用更大的质数去更新了
             if (p == minp[i]) {
                 break;
             }
         }
     }
 }
-bool isPrime(int n) {
-    return n >= 0 && minp[n] == n;
+bool isPrime(int x) {
+    return x >= 2 && minp[x] == x;
 }
 
 
 // 欧拉函数（单个数）
-// pow(a, b) = pow(a, (b%phi[n])) (mod n)
-int phi(int n) {
-    int res = n;
-    for (int i = 2; i <= n / i; i++) {
-        if (n % i == 0) {
-            while (n % i == 0) {
-                n /= i;
+/*
+· 从 1 到 i 中与 i 互质的数的个数
+· pow(a, b) = pow(a, (b%phi[n])) (mod n)
+*/
+int phi(int x) {
+    int res = x;
+    for (int i = 2; 1ll * i * i <= x; i++) {
+        if (x % i == 0) {
+            while (x % i == 0) {
+                x /= i;
             }
             res = res / i * (i - 1);
         }
     }
     if (n > 1) {
-        res = res / n * (n - 1);
+        res = res / x * (x - 1);
     }
     return res;
 }
 
 
-// 线性筛 + 欧拉函数（从 1 到 i 中与 i 互质的数的个数）  1e7
+// 线性筛 + 欧拉函数  1e8
 vector<bool> isPrime;
 vector<int> primes;
 vector<int> phi;
 void sieve(int n) {
     isPrime.assign(n + 1, true);
-    phi.assign(n + 1, {});
-
+    primes.clear();
+    phi.assign(n + 1, 0);
     isPrime[0] = isPrime[1] = false;
     phi[1] = 1;
     for (int i = 2; i <= n; i++) {
@@ -211,54 +215,125 @@ void sieve(int n) {
             phi[i] = i - 1;
         }
         for (auto p : primes) {
-            if (i * p > n) {
+            auto t = 1ll * i * p;
+            if (t > n) {
                 break;
             }
-            isPrime[i * p] = false;
+            isPrime[t] = false;
             if (i % p == 0) {
-                phi[i * p] = phi[i] * p;
+                phi[t] = phi[i] * p;
                 break;
             }
-            phi[i * p] = phi[i] * (p - 1);
+            phi[t] = phi[i] * (p - 1);
         }
     }
 }
 
 
-// 线性筛 + 最小质因数 + 欧拉函数（从 1 到 i 中与 i 互质的数的个数）
+// 莫比乌斯函数（单个数）
+/*
+· 如果 n = 1, 则 μ(n) = 1
+· 如果 n 是平方因子自由的（即 n 不被任何平方数除尽）, 且 n 有 k 个不同的素因子，则 μ(n) = pow(-1, k)
+· 如果 n 不是平方因子自由的（即 n 被某个平方数除尽）, 则 μ(n) = 0
+*/
+int mobius(int x) {
+    if (x == 1) {
+        return 1;
+    }
+    int cnt = 0;
+    int a = x;
+    for (int i = 2; 1ll * i * i <= a; i++) {
+        if (a % i == 0) {
+            int e = 0;
+            while (a % i == 0) {
+                a /= i;
+                e++;
+            }
+            if (e > 1) {
+                return 0;
+            }
+            cnt++;
+        }
+    }
+    if (a > 1) {
+        cnt++;
+    }
+    return (cnt % 2 == 0 ? 1 : -1);
+}
+
+
+// 线性筛 + 莫比乌斯函数  1e8
+vector<bool> isPrime;
+vector<int> primes;
+vector<int> mu;
+void sieve(int n) {
+    isPrime.assign(n + 1, true);
+    primes.clear();
+    mu.assign(n + 1, 0);
+    isPrime[0] = isPrime[1] = false;
+    mu[1] = 1;
+    for (int i = 2; i <= n; i++) {
+        if (isPrime[i]) {
+            primes.push_back(i);
+            mu[i] = -1;
+        }
+        for (auto p : primes) {
+            auto t = 1ll * i * p;
+            if (t > n) {
+                break;
+            }
+            isPrime[t] = false;
+            if (i % p == 0) {
+                mu[t] = 0;
+                break;
+            }
+            mu[t] = -mu[i];
+        }
+    }
+}
+
+
+// 线性筛 + 最小质因数 + 欧拉函数 + 莫比乌斯函数  2e7
+vector<bool> isPrime;
 vector<int> primes;
 vector<int> minp;
 vector<int> phi;
+vector<int> mu;
 void sieve(int n) {
+    isPrime.assign(n + 1, true);
     primes.clear();
     minp.assign(n + 1, 0);
-    phi.resize(n + 1);
+    phi.assign(n + 1, 0);
+    mu.assign(n + 1, 0);
+    isPrime[0] = isPrime[1] = false;
     phi[1] = 1;
-
+    mu[1] = 1;
     for (int i = 2; i <= n; i++) {
-        if (minp[i] == 0) {
+        if (isPrime[i]) { // minp[i] == 0
             primes.push_back(i);
             minp[i] = i;
             phi[i] = i - 1;
+            mu[i] = -1;
         }
         for (auto p : primes) {
-            if (i * p > n) {
+            auto t = 1ll * i * p;
+            if (t > n) {
                 break;
             }
-            minp[i * p] = p;
-            if (p == minp[i]) {
-                phi[i * p] = phi[i] * p;
+            isPrime[t] = false;
+            minp[t] = p;
+            if (p == minp[i]) { // i % p == 0
+                phi[t] = phi[i] * p;
+                mu[t] = 0;
                 break;
             }
-            phi[i * p] = phi[i] * (p - 1);
+            phi[t] = phi[i] * (p - 1);
+            mu[t] = -mu[i];
         }
     }
     // for (int i = 2; i <= n; i++) {
     //     phi[i] += phi[i - 1];
     // }
-}
-bool isPrime(int n) {
-    return n >= 0 && minp[n] == n;
 }
 
 
