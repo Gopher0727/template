@@ -149,6 +149,24 @@ void sieve(int n) {
 }
 
 
+// 区间筛 [L, R]
+auto rangeSieve(i64 L, i64 R) {
+    // 预处理 sqrt(R) 以内的素数
+    sieve(sqrt(R) + 1);
+
+    isPrime.assign(R - L + 1, true);
+    for (i64 p : primes) {
+        for (i64 j = max(p, (L + p - 1) / p) * p; j <= R; j += p) {
+            isPrime[j - L] = false;
+        }
+    }
+    if (L == 1) {
+        isPrime[0] = false;
+    }
+    return isPrime; // isPrime[i] 表示 L+i 是否是素数
+}
+
+
 // 线性筛 + 最小质因数  1e8
 // 最小质因数 * 最大真因数
 vector<int> primes;
