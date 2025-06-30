@@ -1,8 +1,3 @@
-// 并查集 （适用于无向图）
-//
-// Link：
-// 【RMQ 标准算法和线性树上并查集】(https://ljt12138.blog.uoj.ac/blog/4874)
-
 struct DSU {
     vector<int> pa, siz;
     int block;
@@ -42,11 +37,10 @@ struct DSU {
     int size(int x) { return siz[find(x)]; }
 };
 
+
 // DSU++ 无重边
 struct DSU {
-    vector<int> pa;
-    vector<int> siz;
-    vector<int> _edges;
+    vector<int> pa, siz, _edges;
     vector<bool> _loop;
     int block;
 

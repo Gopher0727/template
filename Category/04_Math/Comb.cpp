@@ -13,7 +13,6 @@ auto init = []() {
 
 
 // 自动扩容类 （Mint）
-//
 struct Comb {
     int n;
     vector<Mint> _fac, _ifac, _inv;
@@ -28,7 +27,6 @@ struct Comb {
         _fac.resize(m + 1);
         _ifac.resize(m + 1);
         _inv.resize(m + 1);
-
         for (int i = n + 1; i <= m; i++) {
             _fac[i] = _fac[i - 1] * i;
         }
@@ -79,7 +77,7 @@ struct Comb {
 } C;
 
 
-// 直接实现，且不取模
+// 少量调用，直接实现，且不取模
 // binom(n, m) 适用于 m 的范围正常，但 n 的范围较大，整体数值范围在 long long 以内
 i64 binom(int n, int m) {
     if (n < m || m < 0) {
@@ -99,7 +97,7 @@ namespace Comb {
     const int MX = 2E5 + 1;
 
     vector<int> inv;
-    auto __getInv = []() {
+    auto __get = []() {
         inv.resize(MX + 1);
         inv[1] = 1;
         // inv[i] = p / i * inv[p % i]

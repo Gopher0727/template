@@ -1,17 +1,17 @@
 // 一般图最大匹配（Graph 带花树算法）
 //
 // 与二分图匹配的差别在于图中可能存在奇环，时间复杂度与边的数量无关  O(N^3)
-//
+
 struct Graph {
     int n;
-    vector<vector<int>> e;
+    vector<vector<int>> g;
 
 public:
-    explicit Graph(int n) : n(n), e(n) {}
+    explicit Graph(int n) : n(n), g(n) {}
 
     void addEdge(int u, int v) {
-        e[u].push_back(v);
-        e[v].push_back(u);
+        g[u].push_back(v);
+        g[v].push_back(u);
     }
 
     vector<int> work(int m, const auto& init) {
@@ -29,10 +29,11 @@ public:
         };
 
         auto lca = [&](int u, int v) {
-            u = find(u);
-            v = find(v);
+            u = find(u), v = find(v);
             while (u != v) {
-                if (dep[u] < dep[v]) swap(u, v);
+                if (dep[u] < dep[v]) {
+                    swap(u, v);
+                }
                 u = find(link[match[u]]);
             }
             return u;
@@ -74,7 +75,7 @@ public:
                 if (u >= m) {
                     y = u;
                 }
-                for (auto v : e[u]) {
+                for (auto v : g[u]) {
                     if (vis[v] == -1) {
                         vis[v] = 0;
                         link[v] = u;
@@ -114,7 +115,7 @@ public:
         auto greedy = [&]() {
             for (int u = 0; u < n; ++u) {
                 if (match[u] != -1) continue;
-                for (auto v : e[u]) {
+                for (auto v : g[u]) {
                     if (match[v] == -1) {
                         match[u] = v;
                         match[v] = u;

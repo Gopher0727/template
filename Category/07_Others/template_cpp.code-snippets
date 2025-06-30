@@ -11,7 +11,9 @@
             "#define debug(...) void(0)",
             "#endif",
             "using i64 = long long;",
-            "\n$0\n",
+            "",
+            "$0",
+            "",
             "#ifdef LOCAL",
             "int main() {",
             "    //",
@@ -23,8 +25,6 @@
         "scope": "cpp",
         "prefix": "acm",
         "body": [
-            "// Date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}  ${CURRENT_DAY_NAME}",
-            "",
             "#include <bits/stdc++.h>",
             "",
             "#ifdef LOCAL",
@@ -52,8 +52,6 @@
         "scope": "cpp",
         "prefix": "acms",
         "body": [
-            "// Date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}  ${CURRENT_DAY_NAME}",
-            "",
             "#include <bits/stdc++.h>",
             "",
             "#ifdef LOCAL",
@@ -259,21 +257,8 @@
         "prefix": "order",
         "body": [
             "vector<int> ord(n);",
-            "ranges::iota(ord, 0);",
-            "ranges::sort(ord, [&](int i, int j)-> bool { return $0 ;});"
-        ]
-    },
-    "离散化": {
-        "scope": "cpp",
-        "prefix": "discret",
-        "body": [
-            "auto D = [&](vector<int>& a) {",
-            "    vector<int> na(a);",
-            "    ranges::sort(na);",
-            "    for (int& v : a) {",
-            "        v = ranges::lower_bound(na, v) - na.begin();",
-            "    }",
-            "};"
+            "iota(ord.begin(), ord.end(), 0);",
+            "sort(ord.begin(), ord.end(), [&](int i, int j)-> bool { return $0 ;});"
         ]
     },
     // "priority_queue": {

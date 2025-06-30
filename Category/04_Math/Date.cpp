@@ -4,9 +4,11 @@ namespace Date { // 基姆拉尔森公式
     bool isLeap(int y) {
         return y % 400 == 0 || (y % 4 == 0 && y % 100 != 0);
     }
+
     int daysInMonth(int y, int m) {
         return d[m - 1] + (isLeap(y) && m == 2);
     }
+
     int getDay(int y, int m, int d) {
         int ans = 0;
         for (int i = 1970; i < y; i++) {

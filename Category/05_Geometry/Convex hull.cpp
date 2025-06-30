@@ -41,7 +41,7 @@ auto cross(Point a, Point b) {
     return a.x * b.y - a.y * b.x;
 }
 auto getHull(vector<Point>& vec) {
-    ranges::sort(vec, [&](auto a, auto b) {
+    sort(vec.begin(), vec.end(), [&](auto a, auto b) {
         if (a.x == b.x) {
             return a.y < b.y;
         }
@@ -83,7 +83,7 @@ auto rot(const Point& p) {
     return Point(-p.y(), p.x());
 }
 auto complexHull(vector<Point> a) {
-    ranges::sort(a, [&](auto a, auto b) {
+    sort(a.begin(), a.end(), [&](auto a, auto b) {
         if (a.x() != b.x()) {
             return a.x() < b.x();
         } else {
@@ -102,12 +102,12 @@ auto complexHull(vector<Point> a) {
         l.push_back(p);
         h.push_back(p);
     }
-    ranges::reverse(h);
+    reverse(h.begin(), h.end());
     h.insert(h.end(), l.begin() + 1, l.end() - 1);
     return h;
 }
 int sgn(Point p) {
-    if (p.y() > 0 || (p.y() == 0 && p.x() < 0)) {
+    if (p.y() > 0 || p.y() == 0 && p.x() < 0) {
         return 0;
     } else {
         return 1;

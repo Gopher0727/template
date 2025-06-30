@@ -17,19 +17,18 @@ auto zfunc(const string& s) {
 }
 
 
-/*
-朴素算法：
-vector<int> zfunc(string s) {
-    int n = s.size();
-    vector<int> z(n);
-    for (int i = 1; i < n; i++) {
-        while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
-            z[i]++;
-        }
-    }
-    return z;
-}
-*/
+// 朴素算法：
+// vector<int> zfunc(string s) {
+//     int n = s.size();
+//     vector<int> z(n);
+//     for (int i = 1; i < n; i++) {
+//         while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
+//             z[i]++;
+//         }
+//     }
+//     return z;
+// }
+
 
 // 对于 i，称闭区间 [i, i+z[i]-1] 为 i 的匹配段（Z-box），相当于一段窗口
 auto zfunc(const string& s) {

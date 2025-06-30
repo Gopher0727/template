@@ -1,5 +1,4 @@
 // 单字符分割字符串
-//
 auto split(const string& s, char sep) {
     vector<string> res;
     string sub;
