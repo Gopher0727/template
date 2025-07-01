@@ -158,10 +158,9 @@ public:
     }
     friend constexpr ostream& operator<<(ostream& os, const DynModInt& v) { return os << v.val(); }
 };
-// MOD
-
 template <uint32_t Id>
-Barrett DynModInt<Id>::bt = MOD;
+Barrett DynModInt<Id>::bt = 998244353;
 using Mint = DynModInt<0>;
 
 // qpow 取模时，第一个参数应为 Mint 类型
+// Mint::setMod()

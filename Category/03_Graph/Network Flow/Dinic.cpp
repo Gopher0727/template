@@ -1,24 +1,23 @@
 struct Edge {
     int to, rev;
-    int cap;
+    i64 cap;
 };
 
 struct Dinic {
     int n;
-    vector<vector<Edge>> graph;
-    vector<int> level, it;
+    vector<vector<Edge>> g;
+    vector<int> level;
+    vector<int> it;
 
     explicit Dinic(int n) : n(n) {
-        graph.assign(n, {});
+        g.assign(n, {});
         level.assign(n, 0);
         it.assign(n, 0);
     }
 
-    void addEdge(int s, int t, int cap) {
-        Edge a = {t, (int) graph[t].size(), cap};
-        Edge b = {s, (int) graph[s].size(), 0};
-        graph[s].push_back(a);
-        graph[t].push_back(b);
+    void addEdge(int s, int t, i64 cap) {
+        g[s].push_back({t, (int) g[t].size(), cap});
+        g[t].push_back({s, (int) g[s].size() - 1, 0});
     }
 
     bool bfs(int s, int t) {
@@ -29,7 +28,7 @@ struct Dinic {
         while (!q.empty()) {
             int u = q.front();
             q.pop();
-            for (const Edge& e : graph[u]) {
+            for (const Edge& e : g[u]) {
                 if (level[e.to] < 0 && e.cap > 0) {
                     level[e.to] = level[u] + 1;
                     q.push(e.to);
@@ -39,20 +38,19 @@ struct Dinic {
         return level[t] >= 0;
     }
 
-    int dfs(int u, int t, int flow) {
+    i64 dfs(int u, int t, i64 flow) {
         if (flow == 0) {
             return 0;
         }
         if (u == t) {
             return flow;
         }
-        for (int& i = it[u]; i < graph[u].size(); i++) {
-            Edge& e = graph[u][i];
+        for (int& i = it[u]; i < g[u].size(); i++) {
+            Edge& e = g[u][i];
             if (e.cap > 0 && level[e.to] == level[u] + 1) {
-                int pushed = dfs(e.to, t, min(flow, e.cap));
-                if (pushed) {
+                if (i64 pushed = dfs(e.to, t, min(flow, e.cap))) {
                     e.cap -= pushed;
-                    graph[e.to][e.rev].cap += pushed;
+                    g[e.to][e.rev].cap += pushed;
                     return pushed;
                 }
             }
@@ -60,11 +58,11 @@ struct Dinic {
         return 0;
     }
 
-    int maxFlow(int s, int t) {
-        int flow = 0;
+    i64 maxFlow(int s, int t) {
+        i64 flow = 0;
         while (bfs(s, t)) {
             fill(it.begin(), it.end(), 0);
-            while (int pushed = dfs(s, t, 1e9)) {
+            while (i64 pushed = dfs(s, t, 1e9)) {
                 flow += pushed;
             }
         }
