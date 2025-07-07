@@ -1,26 +1,18 @@
 // 序列自动机
-
-// 构造
-// a 是字符集，|s| = n，nxt[i][ch] 表示 i 之后的字符 ch 的最近位置
-// 0 为根节点，可以建立一个 DAG
-for (int i = n - 1; i >= 0; i--) {
-    for (auto j : a) {
-        nxt[i][j] = nxt[i + 1][j];
-    }
-    nxt[i][ch] = i + 1;
-}
-
-// 扩展构建
-// 字符集较大时，可以套用持久化，在叶子节点上放一个 id，表示出边
-// 相关例题： 字符串 K 小子序列，可持久化序列自动机，维护节点大小
-// 一步一步(从首到尾)走，有序确定
-// https://www.luogu.com/paste/t9xrb852
-
+//
 // > 判断是否是原字符串的子序列
 // > 求子序列个数
 // > 求两串的公共子序列个数
 // > 求字符串的回文子序列个数
 // > 求 A、B 最长公共子序列 S，使得 C 是 S 的子序列
 
-// 例题
-// https://www.luogu.com.cn/problem/CF17C
+auto create(const string& s) {
+    int n = s.size();
+    vector nxt(n + 1, array<int, 26> {});
+    nxt[n].fill(n);
+    for (int i = n - 1; i >= 0; i--) {
+        nxt[i] = nxt[i + 1];
+        nxt[i][s[i] - 'a'] = i;
+    }
+    return nxt;
+}

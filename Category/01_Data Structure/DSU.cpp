@@ -40,8 +40,7 @@ struct DSU {
 
 // DSU++ 无重边
 struct DSU {
-    vector<int> pa, siz, _edges;
-    vector<bool> _loop;
+    vector<int> pa, siz, _edges, _loop;
     int block;
 
     explicit DSU(int n) : pa(n), siz(n, 1), _edges(n), _loop(n), block(n) { iota(pa.begin(), pa.end(), 0); }

@@ -9,3 +9,16 @@ auto init = []() {
     }
     return 0;
 }();
+
+
+auto base_repr(int v, int base) {
+    assert(v >= 0 && base >= 2 && base <= 36);
+    string s;
+    while (v) {
+        int d = v % base;
+        s += (d < 10 ? '0' + d : 'A' + d - 10);
+        v /= base;
+    }
+    reverse(s.begin(), s.end());
+    return s;
+}
