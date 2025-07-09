@@ -1,239 +1,191 @@
 struct TrieNode {
-    TrieNode* son[2] {};
+    array<int, 2> son {-1, -1};
     int cnt = 0;
-    int mn = numeric_limits<int>::max(); // 子树最小值
+    i64 mn = numeric_limits<i64>::max(); // 子树里的最小值
 };
+
 template <integral T>
 class Trie {
-    static constexpr int N = []() constexpr {
-        if constexpr (is_same_v<T, int>) {
-            return 31;
-        } else if constexpr (is_same_v<T, i64>) {
-            return 63;
+    static constexpr int N = [] constexpr {
+        if constexpr (is_same_v<T, int> || is_same_v<T, i64>) {
+            return sizeof(T) * 8;
         } else {
-            static_assert(sizeof(T) == 4 || sizeof(T) == 8, "Unsupported integral type");
+            static_assert("Unsupported integral type");
         }
     }();
 
-    TrieNode* root = new TrieNode();
+    vector<TrieNode> trie;
 
 public:
-    auto bin(T v) {
-        string s(N, ' ');
-        for (int i = 0; i < s.size(); i++) {
-            s[i] = (v >> (N - 1 - i) & 1) + '0';
-        }
-        return s;
+    Trie() { trie.push_back(TrieNode()); }
+
+    // n: 预分配的节点数
+    void reserve(int n) { trie.reserve(n * (N + 1)); }
+
+    int newNode() {
+        trie.push_back(TrieNode());
+        return trie.size() - 1;
     }
 
-    auto insert(T v) {
-        auto o = this->root;
-        if (v < o->mn) {
-            o->mn = v;
-        }
+    void insert(i64 x) {
+        int p = 0;
+        trie[p].cnt++;
+        trie[p].mn = min(trie[p].mn, x);
         for (int i = N - 1; i >= 0; i--) {
-            int b = v >> i & 1;
-            if (o->son[b] == nullptr) {
-                o->son[b] = new TrieNode();
+            int o = x >> i & 1;
+            if (trie[p].son[o] == -1) {
+                trie[p].son[o] = newNode();
             }
-            o = o->son[b];
-            o->cnt++;
-            if (v < o->mn) {
-                o->mn = v;
-            }
+            p = trie[p].son[o];
+            trie[p].cnt++;
+            trie[p].mn = min(trie[p].mn, x);
         }
-        return o;
     }
 
-    auto remove(T v) {
-        auto o = this->root;
+    // ! remove 中没有维护 mn
+    void remove(i64 x) {
+        int p = 0;
+        trie[p].cnt--;
         for (int i = N - 1; i >= 0; i--) {
-            o = o->son[v >> i & 1];
-            o->cnt--;
+            int o = x >> i & 1;
+            if (trie[p].son[o] == -1) {
+                trie[p].son[o] = newNode();
+            }
+            p = trie[p].son[o];
+            trie[p].cnt--;
         }
-        return o;
     }
 
-    //// 采用上面的 remove 时，注意判断条件的修改，如：o->son[b] == nullptr || o->son[b]->cnt == 0
-    // void remove(T v) {
-    //     vector<pair<TrieNode*, int>> path;
-    //     TrieNode* o = root;
-    //     for (int i = N - 1; i >= 0; i--) {
-    //         int b = (v >> i) & 1;
-    //         path.emplace_back(o, b);
-    //         if (o->son[b] == nullptr) {
-    //             return;
-    //         }
-    //         o = o->son[b];
-    //         o->cnt--;
-    //     }
-    //     for (int i = path.size() - 1; i >= 0; i--) {
-    //         auto [pa, b] = path[i];
-    //         TrieNode* child = pa->son[b];
-    //         if (child->cnt == 0) {
-    //             delete child;
-    //             pa->son[b] = nullptr;
-    //             pa->mn = numeric_limits<int>::max();
-    //             for (int j : {0, 1}) {
-    //                 if (pa->son[j] != nullptr) {
-    //                     if (pa->son[j]->mn < pa->mn) {
-    //                         pa->mn = pa->son[j]->mn;
-    //                     }
-    //                 }
-    //             }
-    //         } else {
-    //             // If child still exists, check if its mn needs update
-    //             if (child->mn == v) {
-    //                 // Recompute mn for the child if necessary
-    //                 // This part might need a more sophisticated approach
-    //                 // For simplicity, we assume mn is correctly maintained during insert/delete
-    //             }
-    //         }
-    //     }
-
-    //     // Update root's mn in case all children were deleted
-    //     root->mn = numeric_limits<int>::max();
-    //     for (int j = 0; j < 2; j++) {
-    //         if (root->son[j]) {
-    //             if (root->son[j]->mn < root->mn) {
-    //                 root->mn = root->son[j]->mn;
-    //             }
-    //         }
-    //     }
-    // }
-
-    // 要求 trie 树非空
-    auto minXor(T v) {
-        auto o = this->root;
-        T ans {};
+    // 也可以用哈希表
+    i64 maxXor(i64 x) const {
+        i64 ans = 0;
+        int p = 0;
         for (int i = N - 1; i >= 0; i--) {
-            int b = v >> i & 1;
-            if (o->son[b] == nullptr && o->son[b]->cnt > 0) {
-                ans |= 1 << i;
-                b ^= 1;
+            int o = x >> i & 1;
+            if (trie[p].son[o ^ 1] != -1 && trie[trie[p].son[o ^ 1]].cnt > 0) {
+                ans |= 1ll << i;
+                o ^= 1;
             }
-            o = o->son[b];
+            p = trie[p].son[o];
         }
         return ans;
     }
 
-    // 要求 trie 树非空
-    auto maxXor(T v) {
-        auto o = this->root;
-        T ans {};
+    i64 minXor(i64 x) const {
+        i64 ans = 0;
+        int p = 0;
         for (int i = N - 1; i >= 0; i--) {
-            int b = v >> i & 1;
-            if (o->son[b ^ 1] != nullptr && o->son[b ^ 1]->cnt > 0) {
-                ans |= 1 << i;
-                b ^= 1;
+            int o = x >> i & 1;
+            if (trie[p].son[o] == -1 || trie[trie[p].son[o]].cnt <= 0) {
+                ans |= 1ll << i;
+                o ^= 1;
             }
-            o = o->son[b];
+            p = trie[p].son[o];
         }
         return ans;
     }
 
-    // 返回 v 与 trie 上所有数的第 k 大异或值
-    // k 从 1 开始
-    // 如果 k 超过 trie 中元素个数，返回 0
-    auto kth_maxXor(int v, int k) {
-        auto o = this->root;
-        T ans {};
+    // 返回 x 与 trie 上所有数的第 k 大异或值
+    // k 从 1 开始，超过总数则返回 0
+    i64 kth_maxXor(i64 x, int k) const {
+        i64 ans = 0;
+        int p = 0;
         for (int i = N - 1; i >= 0; i--) {
-            int b = v >> i & 1;
-            if (o->son[b ^ 1] != nullptr && o->son[b ^ 1]->cnt > 0) {
-                if (k <= o->son[b ^ 1]->cnt) {
-                    ans |= 1 << i;
-                    b ^= 1;
-                } else {
-                    k -= o->son[b ^ 1]->cnt;
-                }
+            int o = x >> i & 1;
+            int cnt = (trie[p].son[o ^ 1] == -1 ? 0 : trie[trie[p].son[o ^ 1]].cnt);
+            if (k <= cnt) {
+                ans |= 1ll << i;
+                o ^= 1;
+            } else {
+                k -= cnt;
             }
-            o = o->son[b];
-        }
-        return ans;
-    }
-
-    // v 与 trie 上所有不超过 limit 的数的最大异或值
-    // 不存在时返回 -1
-    auto maxXorWithLimit(int v, int limit) {
-        auto o = this->root;
-        if (o->mn > limit) {
-            return -1;
-        }
-        T ans {};
-        for (int i = N - 1; i >= 0; i--) {
-            int b = v >> i & 1;
-            if (o->son[b ^ 1] != nullptr && o->son[b ^ 1]->cnt > 0 && o->son[b ^ 1]->mn <= limit) {
-                ans |= 1 << i;
-                b ^= 1;
-            }
-            o = o->son[b];
-        }
-        return ans;
-    }
-
-    // 求与 v 异或值不超过 limit 的元素个数
-    // 核心原理是，当 limit+1 的某一位是 1 的时候，若该位异或值取 0，则后面的位是可以取任意数字的
-    // 如果在 limit 上而不是 limit+1 上讨论，就要单独处理走到叶子的情况了（恰好等于 limit）
-    auto cntXorWithLimit(int v, int limit) {
-        limit++;
-        auto o = this->root;
-        T cnt {};
-        for (int i = N - 1; i >= 0; i--) {
-            int b = v >> i & 1;
-            if (limit >> i & 1) {
-                if (o->son[b] != nullptr && o->son[b]->cnt > 0) {
-                    cnt += o->son[b]->cnt;
-                }
-                b ^= 1;
-            }
-            if (o->son[b] == nullptr) {
-                return;
-            }
-            o = o->son[b];
-        }
-        return cnt;
-    }
-
-    // v 与 trie 上所有数异或不超过 limit 的最大异或值
-    // 不存在时返回 -1
-    // 原理同 cntXorWithLimit
-    auto maxXorWithLimitXor(int v, int limit) {
-        limit++;
-        auto o = this->root;
-        auto lastO = new Trie(), lastI = -2, lastAns = 0;
-        T ans {};
-        for (int i = N - 1; i >= 0; i--) {
-            int b = v >> i & 1;
-            if (limit >> i & 1) {
-                if (o->son[b] != nullptr && o->son[b]->cnt > 0) {
-                    lastO = o->son[b];
-                    lastI = i - 1;
-                    lastAns = ans;
-                }
-                if (o->son[b ^ 1] != nullptr && o->son[b ^ 1]->cnt > 0) {
-                    ans |= 1 << i;
-                }
-                b ^= 1;
-            }
-            if (o->son[b] == nullptr) {
+            p = trie[p].son[o];
+            if (p == -1) {
                 break;
             }
-            o = o->son[b];
         }
-        if (lastI < -1) {
+        return ans;
+    }
+
+    // 统计与 x 异或值 ≤ limit 的元素个数
+    // 也可以用哈希表
+    i64 countXorWithLimit(i64 x, i64 limit) const {
+        // 核心原理是，当 limit+1 的某一位是 1 的时候，若该位异或值取 0，则后面的位是可以取任意数字的
+        // 如果在 limit 上而不是 limit+1 上讨论，就要单独处理走到叶子的情况了（恰好等于 limit）
+        limit++;
+        i64 ans = 0;
+        int p = 0;
+        for (int i = N - 1; i >= 0 && p != -1; i--) {
+            int o = x >> i & 1;
+            if (limit >> i & 1) {
+                if (trie[p].son[o] != -1) {
+                    ans += trie[trie[p].son[o]].cnt;
+                }
+                o ^= 1;
+            }
+            p = trie[p].son[o];
+        }
+        return ans;
+    }
+
+    // x 与 trie 上所有 ≤ limit 的数的最大异或值
+    // 不存在时返回 -1
+    i64 maxXorWithLimit(i64 x, i64 limit) const {
+        if (trie[0].mn > limit) {
             return -1;
         }
-
-        ans = lastAns;
-        o = lastO;
-        for (int i = lastI; i >= 0; i--) {
-            int b = v >> i & 1;
-            if (o->son[b ^ 1] != nullptr && o->son[b ^ 1]->cnt > 0) {
-                ans |= 1 << i;
-                b ^= 1;
+        i64 ans = 0;
+        int p = 0;
+        for (int i = N - 1; i >= 0; --i) {
+            int o = (x >> i) & 1;
+            if (trie[p].son[o ^ 1] != -1 && trie[trie[p].son[o ^ 1]].cnt > 0 && trie[trie[p].son[o ^ 1]].mn <= limit) {
+                ans |= 1ll << i;
+                o ^= 1;
             }
-            o = o->son[b];
+            p = trie[p].son[o];
+        }
+        return ans;
+    }
+
+    // x 与 trie 上所有数的异或 <= limit 的最大异或值
+    // 不存在时返回 -1
+    i64 maxXorWithLimitXor(i64 x, i64 limit) const {
+        limit++;
+        i64 ans = 0;
+        int p = 0;
+        // 记录最后一次我们“仍能走 0 分支”，但 limit 那位是 1 的情况
+        int last_p = -1, last_i = -1;
+        i64 last_ans = 0;
+        for (int i = N - 1; i >= 0 && p != -1; i--) {
+            int o = x >> i & 1;
+            if (limit >> i & 1) {
+                // 分两种：如果走 son[o]，当前位异或 0，依然 < limit 在这位的 1
+                if (trie[p].son[o] != -1) {
+                    last_p = trie[p].son[o];
+                    last_i = i - 1;
+                    last_ans = ans;
+                }
+                // 如果走 son[o^1]，当前位异或 1
+                if (trie[p].son[o ^ 1] != -1) {
+                    ans |= 1ll << i;
+                }
+                // 实际走的还是 o^1
+                o ^= 1;
+            }
+            p = trie[p].son[o];
+        }
+        if (last_p == -1) {
+            return -1;
+        }
+        ans = last_ans;
+        p = last_p;
+        for (int i = last_i; i >= 0; i--) {
+            int o = x >> i & 1;
+            if (trie[p].son[o ^ 1] != -1 && trie[trie[p].son[o ^ 1]].cnt > 0) {
+                ans |= 1ll << i;
+                o ^= 1;
+            }
+            p = trie[p].son[o];
         }
         return ans;
     }
@@ -242,29 +194,35 @@ public:
     // Boruvka 算法，分治连边
     auto xorMST(const vector<T>& a) {
         T ans {};
-        auto f = [&](auto&& f, int p) -> void {
+        auto dfs = [&](auto&& dfs, auto& a, int p) {
             if (a.empty() || p < 0) {
                 return;
             }
             vector<T> b[2];
+            b[0].reserve(a.size());
+            b[1].reserve(a.size());
             for (auto& v : a) {
                 b[v >> p & 1].push_back(v);
             }
-            if (b[0].empty() && b[1].empty()) {
-                auto t = new Trie();
-                for (auto& v : b[0]) {
-                    t->insert(v);
+            if (!b[0].empty() && !b[1].empty()) {
+                if (b[0].size() > b[1].size()) {
+                    swap(b[0], b[1]);
                 }
-                T minXor = numeric_limits<int>::max();
-                for (auto& v : b[1]) {
-                    minXor = min(minXor, t->minXor(v));
+                Trie<T> t;
+                t.reserve(b[0].size());
+                for (auto& x : b[0]) {
+                    t.insert(x);
+                }
+                T minXor = numeric_limits<T>::max();
+                for (auto& x : b[1]) {
+                    minXor = min(minXor, t.minXor(x));
                 }
                 ans += minXor;
             }
-            f(f, b[0], p - 1);
-            f(f, b[1], p - 1);
+            dfs(dfs, b[0], p - 1);
+            dfs(dfs, b[1], p - 1);
         };
-        f(f, N - 1);
+        dfs(dfs, a, N - 1);
         return ans;
     }
 };
