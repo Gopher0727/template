@@ -4,7 +4,8 @@
 ## 一些结论
 
 > 第 k 个不是完全平方数的数字  $n = \lfloor k + \sqrt k + 0.5 \rfloor$。
-> 
+>
+> 记 x < y < z，有 x ^ z > min(x ^ y, y ^ z)
 
 
 ## 费马小定理

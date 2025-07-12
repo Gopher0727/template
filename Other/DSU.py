@@ -23,7 +23,7 @@ class DSU:
         self._edges[x] += 1
         if x == y:
             return False
-        if self.siz[x] < self.siz[y]:
+        if self.siz[x] > self.siz[y]:
             x, y = y, x
         self.parent[x] = y
         self.siz[y] += self.siz[x]

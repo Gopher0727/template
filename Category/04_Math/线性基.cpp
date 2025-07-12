@@ -3,8 +3,7 @@
 template <typename T>
 struct xorBasis {
     static_assert(is_same_v<T, int> || is_same_v<T, long long>, "T must be int or long long");
-
-    static constexpr int B = sizeof(T) * 8;
+    const int B = sizeof(T) * 8;
 
     array<T, B> b {};
     int cnt = 0;

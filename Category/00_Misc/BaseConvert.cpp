@@ -11,7 +11,7 @@ auto init = []() {
 }();
 
 
-auto base_repr(int v, int base) {
+auto base_repr(i64 v, int base) {
     assert(v >= 0 && base >= 2 && base <= 36);
     string s;
     while (v) {

@@ -1,23 +1,17 @@
+static constexpr i64 inf = 1E18;
+
 struct TrieNode {
     array<int, 2> son {-1, -1};
     int cnt = 0;
     i64 mn = numeric_limits<i64>::max(); // 子树里的最小值
 };
 
-template <integral T>
 class Trie {
-    static constexpr int N = [] constexpr {
-        if constexpr (is_same_v<T, int> || is_same_v<T, i64>) {
-            return sizeof(T) * 8;
-        } else {
-            static_assert("Unsupported integral type");
-        }
-    }();
-
     vector<TrieNode> trie;
+    int N = 0;
 
 public:
-    Trie() { trie.push_back(TrieNode()); }
+    Trie(int n) : N(n) { trie.push_back(TrieNode()); }
 
     // n: 预分配的节点数
     void reserve(int n) { trie.reserve(n * (N + 1)); }
@@ -58,6 +52,9 @@ public:
 
     // 也可以用哈希表
     i64 maxXor(i64 x) const {
+        if (trie.size() == 1) {
+            return -inf;
+        }
         i64 ans = 0;
         int p = 0;
         for (int i = N - 1; i >= 0; i--) {
@@ -72,6 +69,9 @@ public:
     }
 
     i64 minXor(i64 x) const {
+        if (trie.size() == 1) {
+            return inf;
+        }
         i64 ans = 0;
         int p = 0;
         for (int i = N - 1; i >= 0; i--) {
@@ -192,6 +192,7 @@ public:
 
     // 完全图，边权为 a[u]^a[v]，求 MST
     // Boruvka 算法，分治连边
+    template <integral T>
     auto xorMST(const vector<T>& a) {
         T ans {};
         auto dfs = [&](auto&& dfs, auto& a, int p) {
@@ -208,7 +209,7 @@ public:
                 if (b[0].size() > b[1].size()) {
                     swap(b[0], b[1]);
                 }
-                Trie<T> t;
+                Trie t(30); // todo
                 t.reserve(b[0].size());
                 for (auto& x : b[0]) {
                     t.insert(x);
