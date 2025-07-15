@@ -1,48 +1,6 @@
 // dijkstra
 // 求解 `非负权重加权有向图` 上 `单源最短路`
-
-// 堆优化 稀疏图
-vector<i64> dis(n, inf);
-auto dijkstra = [&](int s = 0) -> void {
-    priority_queue<pair<i64, int>, vector<pair<i64, int>>, greater<>> pq;
-    pq.push({0, s}); // dis[k], k
-    dis[s] = 0;
-    while (!pq.empty()) {
-        auto [d, u] = pq.top();
-        pq.pop();
-        if (d > dis[u]) {
-            continue;
-        }
-        for (auto [v, w] : g[u]) {
-            if (dis[v] > d + w) {
-                dis[v] = d + w;
-                pq.push({dis[v], v});
-            }
-        }
-    }
-};
-
-
-// 朴素 稠密图
-vector<i64> dis(n, inf);
-vector<bool> vis(n);
-auto plain_dijkstra = [&](int s = 0) {
-    dis[s] = 0;
-    for (int i = 0; i < n - 1; i++) {
-        int u = -1;
-        for (int j = 0; j < n; j++) {
-            if (!vis[j] && (u == -1 || dis[j] < dis[u])) {
-                u = j;
-            }
-        }
-        vis[u] = true;
-        for (auto [v, w] : g[u]) {
-            if (dis[v] > dis[u] + w) {
-                dis[v] = dis[u] + w;
-            }
-        }
-    }
-};
+// ⚠ 注意存入优先队列的元素顺序
 
 
 // 0-1 BFS 本质是对 Dijkstra 算法的优化。
@@ -50,11 +8,9 @@ auto plain_dijkstra = [&](int s = 0) {
 // 这样可以保证队首总是最小的，就不需要最小堆了。
 
 
-
 // BellmanFord  可以处理有负权，但不能有负环
 //
 // 时间复杂度 O(nm)
-
 
 
 // SPFA
@@ -63,11 +19,10 @@ auto plain_dijkstra = [&](int s = 0) {
 
 void spfa(int s) {
     vector<int> dis(n, 1E9);
-    vector<bool> inq(n);
-    vector<int> cnt(n);
     dis[s] = 0;
+    vector<bool> inq(n);
     inq[s] = true;
-
+    vector<int> cnt(n);
     queue<int> q;
     q.push(s);
     while (!q.empty()) {
@@ -90,7 +45,6 @@ void spfa(int s) {
     }
     return true;
 }
-
 
 
 // Floyd-Warshall

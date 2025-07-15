@@ -4,6 +4,7 @@
 //
 // 【Note】摩尔投票可以并发执行
 
+// 不存在返回 -1
 int f(const vector<int>& a) {
     int cand = -1;
     int cnt = 0;
@@ -20,9 +21,6 @@ int f(const vector<int>& a) {
                 cand = -1;
             }
         }
-    }
-    if (cand == -1) {
-        return -1;
     }
     return cand;
 }

@@ -1,6 +1,4 @@
 ---
-Language: Cpp
-
 BasedOnStyle: Google  # Microsoft # LLVM # Google
 
 # 对齐

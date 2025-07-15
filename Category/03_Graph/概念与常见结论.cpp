@@ -37,3 +37,6 @@ int independentSet(vector<vector<int>>& g) {
     }
     return max(dp[n - 1][0], dp[n - 1][1]);
 }
+
+// 树上最长回文子序列 O(n^2)
+// https://codeforces.com/contest/1771/problem/D

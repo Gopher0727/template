@@ -11,13 +11,13 @@ auto init = []() {
 }();
 
 
-auto base_repr(i64 v, int base) {
-    assert(v >= 0 && base >= 2 && base <= 36);
+auto base_repr(i64 x, int base) {
+    assert(x >= 0 && base >= 2 && base <= 36);
     string s;
-    while (v) {
-        int d = v % base;
+    while (x) {
+        int d = x % base;
         s += (d < 10 ? '0' + d : 'A' + d - 10);
-        v /= base;
+        x /= base;
     }
     reverse(s.begin(), s.end());
     return s;
