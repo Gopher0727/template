@@ -1,18 +1,19 @@
+template <typename T>
 struct Fenwick {
     int n;
-    vector<i64> t;
+    vector<T> t;
 
     explicit Fenwick(int n = 0) : n(n), t(n) {}
 
-    void add(int pos, const i64& val) {
+    void add(int pos, T val) {
         for (int i = pos + 1; i <= n; i += i & -i) {
-            t[i - 1] += val;
+            t[i - 1] = t[i - 1] + val;
         }
     }
 
     // [0, pos)
-    i64 query(int pos) {
-        i64 ans = 0;
+    T query(int pos) {
+        T ans {};
         for (int i = pos; i > 0; i &= i - 1) {
             ans = ans + t[i - 1];
         }
@@ -20,21 +21,29 @@ struct Fenwick {
     }
 
     // [l, r)
-    i64 query(int l, int r) { return query(r) - query(l); }
+    T query(int l, int r) { return query(r) - query(l); }
 
-    int select(const i64& k) {
-        i64 cur = 0;
+    int select(const T& k) {
+        T cur {};
         int x = 0;
         for (int i = 1 << std::__lg(n); i; i >>= 1) {
             if (x + i <= n && cur + t[x + i - 1] <= k) {
                 x += i;
-                cur += t[x - 1];
+                cur = cur + t[x - 1];
             }
         }
         return x;
     }
 };
-// The node index starts from 0.
+
+struct Info {
+    int x = 0;
+};
+Info operator+(const Info& a, const Info& b) {
+    Info c;
+    c.x = a.x ^ b.x;
+    return c;
+}
 
 
 struct Fenwick_2D {
