@@ -248,15 +248,16 @@
         "prefix": "random",
         "body": [
             "mt19937_64 gen(chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count());",
-            "uniform_int_distribution<int> dis(8e8, 9e8);",
-            "auto rnd = dis(gen); // 固定值"
+            "uniform_int_distribution<int> disInt(8e8, 9e8);",
+            "uniform_real_distribution<int> disReal(8e8, 9e8);",
+            "auto rnd = disInt(gen); // 固定值"
         ]
     },
     "下标排序": {
         "scope": "cpp",
         "prefix": "order",
         "body": [
-            "vector<int> ord(n);",
+            "vector<int> ord($1);",
             "iota(ord.begin(), ord.end(), 0);",
             "sort(ord.begin(), ord.end(), [&](int i, int j)-> bool { return $0 ;});"
         ]

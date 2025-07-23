@@ -24,6 +24,7 @@
             "fmax = lambda x, y: x if x >= y else y",
             "fmin = lambda x, y: y if x >= y else x",
             "",
+            "# https://github.com/GopherTeen/template",
             ""
         ]
     },
@@ -31,8 +32,6 @@
         "scope": "python",
         "prefix": "acm",
         "body": [
-            "# Date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}  ${CURRENT_DAY_NAME}",
-            "",
             "import sys",
             "",
             "input = lambda: sys.stdin.readline().strip()",
@@ -48,6 +47,7 @@
             "fmax = lambda x, y: x if x >= y else y",
             "fmin = lambda x, y: y if x >= y else x",
             "",
+            "# https://github.com/GopherTeen/template",
             "",
             "def solve():",
             "    $0",
@@ -63,8 +63,6 @@
         "scope": "python",
         "prefix": "acms",
         "body": [
-            "# Date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}  ${CURRENT_DAY_NAME}",
-            "",
             "import sys",
             "",
             "input = lambda: sys.stdin.readline().strip()",
@@ -80,6 +78,7 @@
             "fmax = lambda x, y: x if x >= y else y",
             "fmin = lambda x, y: y if x >= y else x",
             "",
+            "# https://github.com/GopherTeen/template",
             "",
             "def solve():",
             "    $0",

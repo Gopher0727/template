@@ -105,7 +105,7 @@ auto init = [] {
 }();
 
 
-// 埃氏筛  ErlichScreen  1e8
+// 埃氏筛  Eratosthenes  1e8
 vector<bool> isPrime;
 vector<int> primes;
 void sieve(int n) {
@@ -277,6 +277,16 @@ int mobius(int x) {
         cnt++;
     }
     return (cnt % 2 == 0 ? 1 : -1);
+}
+
+
+// 快速写法
+vector<int> mu(n + 1, 1);
+mu[1] = 0;
+for (int i = 1; i <= n; i++) {
+    for (int j = i * 2; j <= n; j += i) {
+        mu[j] -= mu[i];
+    }
 }
 
 

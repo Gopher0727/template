@@ -84,7 +84,7 @@ def generate_palindromes():
     return palindrome
 
 
-# 埃氏筛  ErlichScreen
+# 埃氏筛  Eratosthenes
 def sieve(n: int):
     isPrime = [True] * (n + 1)
     isPrime[0] = isPrime[1] = False
