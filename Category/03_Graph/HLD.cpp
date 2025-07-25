@@ -4,6 +4,10 @@
 // 2. 节点 x 的子树对应的 'DFS序' 区间为 [in[x], in[x] + siz[x] - 1]。
 // 3. seq 数组的作用是 将 DFS 序的时间戳（in[u] 的值）映射回原始节点编号。
 
+// 时间戳：
+// 可以通过 in[u] < in[v] ≤ out[v] ≤ out[u] 来判断 u 是否为 v 的祖先节点。
+// 由于 in[v] ≤ out[v] 恒成立，上式可以简化为 in[u] < in[v] ≤ out[u]。
+
 struct HLD {
     int n;
     int t;
