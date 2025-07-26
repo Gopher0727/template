@@ -12,7 +12,7 @@
 // 【图解单调栈】(https://leetcode.cn/problems/next-greater-node-in-linked-list/solutions/2217563/tu-jie-dan-diao-zhan-liang-chong-fang-fa-v9ab/)
 //
 
-static constexpr int inf = numeric_limits<int>::max() / 2;
+static constexpr int inf = 1E9;
 
 auto monotoneStack(vector<int>& a) {
     // 求左侧严格小于 a[i] 的最近位置 left[i]，这样 a[i] 就是区间 [left[i]+1, i] 内最小的元素（之一）
@@ -20,15 +20,13 @@ auto monotoneStack(vector<int>& a) {
     // 不存在时 left[i] = -1
     {
         int n = a.size();
-        vector<int> left(n);
-        stack<int> stk;
-        stk.push(-1); // 栈底哨兵
-        for (int i = 0; i < n; ++i) {
-            while (stk.size() > 1 && a[stk.top()] >= a[i]) {
-                stk.pop();
+        vector<int> left(n), stk {-1};
+        for (int i = 0; i < n; i++) {
+            while (stk.size() > 1 && a[stk.back()] >= a[i]) {
+                stk.pop_back();
             }
-            left[i] = stk.top();
-            stk.push(i);
+            left[i] = stk.back();
+            stk.push_back(i);
         }
     }
 
@@ -37,15 +35,13 @@ auto monotoneStack(vector<int>& a) {
     // 不存在时 right[i] = n
     {
         int n = a.size();
-        vector<int> right(n);
-        stack<int> stk;
-        stk.push(n);
-        for (int i = n - 1; i >= 0; --i) {
-            while (stk.size() > 1 && a[stk.top()] >= a[i]) {
-                stk.pop();
+        vector<int> right(n), stk {n};
+        for (int i = n - 1; i >= 0; i--) {
+            while (stk.size() > 1 && a[stk.back()] >= a[i]) {
+                stk.pop_back();
             }
-            right[i] = stk.top();
-            stk.push(i);
+            right[i] = stk.back();
+            stk.push_back(i);
         }
     }
 
@@ -54,15 +50,14 @@ auto monotoneStack(vector<int>& a) {
         int n = a.size();
         vector<int> left(n); // a[left[i]] < a[i]
         vector<int> right(n, n); // a[right[i]] <= a[i]
-        stack<int> stk;
-        stk.push(-1);
-        for (int i = 0; i < n; ++i) {
-            while (stk.size() > 1 && a[i] <= a[stk.top()]) {
-                right[stk.top()] = i;
-                stk.pop();
+        vector<int> stk {-1};
+        for (int i = 0; i < n; i++) {
+            while (stk.size() > 1 && a[i] <= a[stk.back()]) {
+                right[stk.back()] = i;
+                stk.pop_back();
             }
-            left[i] = stk.top();
-            stk.push(i);
+            left[i] = stk.back();
+            stk.push_back(i);
         }
     }
     // 不需要栈的写法
@@ -71,17 +66,16 @@ auto monotoneStack(vector<int>& a) {
 
         // left[i] 为左侧严格小于 a[i] 的最近元素位置（不存在时为 -1）
         vector<int> left(n);
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n; i++) {
             int j = i - 1;
             while (j >= 0 && a[j] >= a[i]) {
                 j = left[j];
             }
             left[i] = j;
         }
-
         // right[i] 为右侧小于等于 a[i] 的最近元素位置（不存在时为 n）
         vector<int> right(n);
-        for (int i = n - 1; i >= 0; --i) {
+        for (int i = n - 1; i >= 0; i--) {
             int j = i + 1;
             while (j < n && a[j] > a[i]) {
                 j = right[j];
@@ -93,7 +87,7 @@ auto monotoneStack(vector<int>& a) {
     {
         int n = a.size();
         vector<int> left(n), right(n, n);
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n; i++) {
             int j = i - 1;
             while (j >= 0 && a[j] >= a[i]) {
                 right[j] = i;
@@ -104,16 +98,16 @@ auto monotoneStack(vector<int>& a) {
     }
 
     // 求出 left, right
-    vector<int> left, right;
     // EXTRA: 求所有长为 i 的子区间的最小值的最大值
+    vector<int> left, right;
     {
         int n = a.size();
         vector<int> ans(n + 1, -inf);
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n; i++) {
             int sz = right[i] - left[i] - 1;
             ans[sz] = max(ans[sz], a[i]);
         }
-        for (int i = n - 1; i > 0; --i) {
+        for (int i = n - 1; i > 0; i--) {
             ans[i] = max(ans[i], ans[i + 1]);
         }
         // ans[1:]
@@ -125,20 +119,18 @@ auto monotoneStack(vector<int>& a) {
 // 如果没有，那么结果为 n
 auto find2Greater(vector<int>& a) {
     int n = a.size();
-    vector<int> right(n, n);
-    vector<int> right2(n, n);
-    stack<int> s, t;
-    for (int i = 0; i < n; ++i) {
-        while (!t.empty() && a[t.top()] < a[i]) {
-            right2[t.top()] = i;
-            t.pop();
+    vector<int> right(n, n), right2(n, n), s, t;
+    for (int i = 0; i < n; i++) {
+        while (!t.empty() && a[t.back()] < a[i]) {
+            right2[t.back()] = i;
+            t.pop_back();
         }
-        while (!s.empty() && a[s.top()] < a[i]) {
-            right[s.top()] = i;
-            t.push(s.top());
-            s.pop();
+        while (!s.empty() && a[s.back()] < a[i]) {
+            right[s.back()] = i;
+            t.push_back(s.back());
+            s.pop_back();
         }
-        s.push(i);
+        s.push_back(i);
     }
     return pair(right, right2);
 }
@@ -150,8 +142,8 @@ auto maximalRectangleArea(vector<vector<int>>& mat) {
     int n = mat.size(), m = mat[0].size();
     // heights[i][j] 表示从 (i,j) 往上看的高度（连续 1 的长度），mat[i][j] = 0 时为 0
     vector heights(n, vector<int>(m));
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
             if (mat[i][j] == target) {
                 if (i == 0) {
                     heights[i][j] = 1;
@@ -165,34 +157,34 @@ auto maximalRectangleArea(vector<vector<int>>& mat) {
     int ans = 0;
     for (auto& hs : heights) {
         vector<int> left(m);
-        stack<array<int, 2>> s; // h, i
-        s.push({-1, -1});
-        for (int j = 0; j < m; ++j) {
+        vector<array<int, 2>> s; // h, i
+        s.push_back({-1, -1});
+        for (int j = 0; j < m; j++) {
             while (true) {
-                if (s.top()[0] < hs[j]) {
-                    left[j] = s.top()[1];
+                if (s.back()[0] < hs[j]) {
+                    left[j] = s.back()[1];
                     break;
                 }
-                s.pop();
+                s.pop_back();
             }
-            s.push({hs[j], j});
+            s.push_back({hs[j], j});
         }
 
         vector<int> right(m);
-        stack<array<int, 2>> t;
-        t.push({-1, m});
-        for (int j = m - 1; j >= 0; --j) {
+        vector<array<int, 2>> t;
+        t.push_back({-1, m});
+        for (int j = m - 1; j >= 0; j--) {
             while (true) {
-                if (t.top()[0] < hs[j]) {
-                    right[j] = t.top()[1];
+                if (t.back()[0] < hs[j]) {
+                    right[j] = t.back()[1];
                     break;
                 }
-                t.pop();
+                t.pop_back();
             }
-            t.push({hs[j], j});
+            t.push_back({hs[j], j});
         }
 
-        for (int j = 0; j < m; ++j) {
+        for (int j = 0; j < m; j++) {
             ans = max(ans, (right[j] - left[j] - 1) * hs[j]);
         }
     }
@@ -206,9 +198,9 @@ auto cntSubmat(vector<vector<int>>& mat) {
     vector<int> heights(m);
     for (auto& row : mat) {
         vector<int> sum(m);
-        stack<array<int, 2>> stk;
-        stk.push({-1, -1});
-        for (int j = 0; j < m; ++j) {
+        vector<array<int, 2>> stk;
+        stk.push_back({-1, -1});
+        for (int j = 0; j < m; j++) {
             int& h = heights[j];
             if (row[j] == 0) {
                 h = 0;
@@ -216,7 +208,7 @@ auto cntSubmat(vector<vector<int>>& mat) {
                 h++;
             }
             while (true) {
-                if (auto [th, pre] = stk.top(); th < h) {
+                if (auto [th, pre] = stk.back(); th < h) {
                     if (pre < 0) {
                         sum[j] = (j + 1) * h;
                     } else {
@@ -225,9 +217,9 @@ auto cntSubmat(vector<vector<int>>& mat) {
                     ans += sum[j];
                     break;
                 }
-                stk.pop();
+                stk.pop_back();
             }
-            stk.push({h, j});
+            stk.push_back({h, j});
         }
     }
     return ans;
@@ -263,22 +255,21 @@ auto removeDuplicateLetters(string s) {
 // 如果不存在，返回 [-1,-1]
 auto longestSubarrayWithLowerSum(vector<int>& a, int lowerSum) {
     int n = a.size();
-    stack<int> stk;
-    stk.push(0);
+    vector<int> stk {0};
 
     vector<int> pre(n + 1);
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; i++) {
         pre[i + 1] = pre[i] + a[i];
-        if (pre[i + 1] < pre[stk.top()]) {
-            stk.push(i + 1);
+        if (pre[i + 1] < pre[stk.back()]) {
+            stk.push_back(i + 1);
         }
     }
 
     int l = -1, r = 0;
-    for (int i = n; i > 0; --i) {
-        while (!stk.empty() && pre[i] - pre[stk.top()] > lowerSum) {
-            int j = stk.top();
-            stk.pop();
+    for (int i = n; i > 0; i--) {
+        while (!stk.empty() && pre[i] - pre[stk.back()] > lowerSum) {
+            int j = stk.back();
+            stk.pop_back();
             if (l < 0 || i - j < r - l) {
                 l = j;
                 r = i;
@@ -291,37 +282,32 @@ auto longestSubarrayWithLowerSum(vector<int>& a, int lowerSum) {
 // 静态区间离线查询最值
 auto rangeMaxWithSt(vector<int>& a, vector<pair<int, int>>& queries) {
     int n = a.size(), m = queries.size();
-    vector<vector<pair<int, int>>> qs(n);
-    for (int i = 0; i < m; ++i) {
+
+    vector<vector<array<int, 2>>> qs(n);
+    for (int i = 0; i < m; i++) {
         auto [l, r] = queries[i];
         qs[r].push_back({l, i});
     }
 
-    vector<int> maxAns(m);
-    vector<int> minAns(m);
-    vector<int> maxSt; // 单调栈，维护最大
-    vector<int> minSt; // 单调栈，维护最小
-    for (int right = 0; right < n; ++right) {
-        while (!maxSt.empty() && a[right] >= a[maxSt.back()]) {
+    vector<int> maxAns(m), minAns(m), maxSt, minSt;
+    for (int r = 0; r < n; r++) {
+        while (!maxSt.empty() && a[r] >= a[maxSt.back()]) {
             maxSt.pop_back();
         }
-        maxSt.push_back(right);
+        maxSt.push_back(r);
 
-        while (!minSt.empty() && a[right] <= a[minSt.back()]) {
+        while (!minSt.empty() && a[r] <= a[minSt.back()]) {
             minSt.pop_back();
         }
-        minSt.push_back(right);
+        minSt.push_back(r);
 
         // 处理所有以当前元素为右端点的查询
-        for (auto& [left, qid] : qs[right]) {
-            auto iter = ranges::lower_bound(maxSt, left); // !
-            if (iter != maxSt.end()) {
-                maxAns[qid] = a[*iter]; // 计算区间最大
+        for (auto& [l, i] : qs[r]) {
+            if (auto iter = ranges::lower_bound(maxSt, l); iter != maxSt.end()) {
+                maxAns[i] = a[*iter];
             }
-
-            iter = ranges::lower_bound(minSt, left);
-            if (iter != minSt.end()) {
-                minAns[qid] = a[*iter]; // 计算区间最小
+            if (auto iter = ranges::lower_bound(minSt, l); iter != minSt.end()) {
+                minAns[i] = a[*iter];
             }
         }
     }
