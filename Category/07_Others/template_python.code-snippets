@@ -8,7 +8,7 @@
             "from collections import Counter, defaultdict, deque",
             "from functools import cache, lru_cache, reduce",
             "from heapq import heapify, heappop, heappush, heappushpop, nlargest, nsmallest",
-            "from itertools import accumulate, combinations, groupby, pairwise, permutations",
+            "from itertools import accumulate, combinations, groupby, pairwise, permutations, product",
             "from math import gcd, hypot, isqrt, lcm, sqrt",
             "from operator import add, iand, ior, mul, xor",
             "from string import ascii_letters, ascii_lowercase, ascii_uppercase",
