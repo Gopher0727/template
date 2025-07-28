@@ -1,5 +1,5 @@
 type T [4]int64
-pq, _ := NewPriorityQueue[T](func(a, b T) bool {
+pq, _ := NewPriorityQueue(func(a, b T) bool {
 
 	return false
 })

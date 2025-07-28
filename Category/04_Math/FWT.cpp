@@ -24,7 +24,7 @@ auto FMT(const vector<int>& a, int Op = 1) {
 }
 
 // 位运算卷积：
-// 给定长为 n 的序列 A，B，求它们的卷积 C[i] = Σ(A[j]·B[k])，其中 Op(j, k) = i，Op 可为 and / or / xor
+// 给定长为 n 的序列 A，B，求它们的卷积 C[i] = Σ(A[j]·B[k])，其中 i = Op(j, k)，Op 可为 and / or / xor
 // 如果把 Op 换成 +，就是多项式乘法
 
 // Or：O(n 2^n)  fast zeta transform
@@ -60,9 +60,9 @@ auto fwtXor(vector<int> a, int Op) {
     for (int len = 2, k = 1; len <= n; len <<= 1, k <<= 1) {
         for (int i = 0; i < n; i += len) {
             for (int j = 0; j < k; j++) {
-                int x = a[i + j], y = a[i + j + len];
+                int x = a[i + j], y = a[i + j + k];
                 a[i + j] = (x + y) * Op; // % mod
-                a[i + j + len] = (x - y) * Op; // % mod
+                a[i + j + k] = (x - y) * Op; // % mod
             }
         }
     }
