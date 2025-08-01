@@ -26,30 +26,30 @@ func (q *Deque) PopBack() (v any) {
 	return
 }
 
-func (q Deque) Front() any {
+func (q *Deque) Front() any {
 	if len(q.l) > 0 {
 		return q.l[len(q.l)-1]
 	}
 	return q.r[0]
 }
 
-func (q Deque) Back() any {
+func (q *Deque) Back() any {
 	if len(q.r) > 0 {
 		return q.r[len(q.r)-1]
 	}
 	return q.l[0]
 }
 
-func (q Deque) Empty() bool {
+func (q *Deque) Empty() bool {
 	return len(q.l) == 0 && len(q.r) == 0
 }
 
-func (q Deque) Len() int {
+func (q *Deque) Len() int {
 	return len(q.l) + len(q.r)
 }
 
 // Get 0 <= i < q.Size()
-func (q Deque) Get(i int) any {
+func (q *Deque) Get(i int) any {
 	if i < len(q.l) {
 		return q.l[len(q.l)-1-i]
 	}

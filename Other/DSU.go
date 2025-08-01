@@ -4,7 +4,7 @@ type DSU struct {
 	block int
 }
 
-func NewDSU(n int) DSU {
+func NewDSU(n int) *DSU {
 	pa := make([]int, n)
 	for i := range pa {
 		pa[i] = i
@@ -13,10 +13,10 @@ func NewDSU(n int) DSU {
 	for i := range siz {
 		siz[i] = 1
 	}
-	return DSU{pa, siz, n}
+	return &DSU{pa, siz, n}
 }
 
-func (dsu DSU) Find(x int) int {
+func (dsu *DSU) Find(x int) int {
 	root := x
 	for dsu.pa[root] != root {
 		root = dsu.pa[root]
@@ -27,7 +27,7 @@ func (dsu DSU) Find(x int) int {
 	return root
 }
 
-func (dsu DSU) Merge(x, y int) bool {
+func (dsu *DSU) Merge(x, y int) bool {
 	px, py := dsu.Find(x), dsu.Find(y)
 	if px == py {
 		return false
@@ -41,10 +41,10 @@ func (dsu DSU) Merge(x, y int) bool {
 	return true
 }
 
-func (dsu DSU) Same(x, y int) bool {
+func (dsu *DSU) Same(x, y int) bool {
 	return dsu.Find(x) == dsu.Find(y)
 }
 
-func (dsu DSU) Size(x int) int {
+func (dsu *DSU) Size(x int) int {
 	return dsu.siz[dsu.Find(x)]
 }
