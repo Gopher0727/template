@@ -2,6 +2,8 @@
 
 [![slashTeen](https://img.shields.io/badge/slashTeen-Codeforces-purple?style=for-the-badge)](https://codeforces.com/profile/slashTeen)
 
+Embrace the journey wherever it leads, and enjoy every moment of it!
+
 Copy and paste. Continuing...
 
 There are some [problems](https://docs.qq.com/sheet/DT3B6ZGRWeWtKcUdm).
