@@ -281,8 +281,8 @@ int mobius(int x) {
 
 
 // 快速写法
-vector<int> mu(n + 1, 1);
-mu[1] = 0;
+vector<int> mu(n + 1);
+mu[1] = 1;
 for (int i = 1; i <= n; i++) {
     for (int j = i * 2; j <= n; j += i) {
         mu[j] -= mu[i];
