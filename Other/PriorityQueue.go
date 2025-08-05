@@ -1,4 +1,4 @@
-type T [4]int64
+type T any
 pq, _ := NewPriorityQueue(func(a, b T) bool {
 
 	return false
