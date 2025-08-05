@@ -16,4 +16,6 @@ There are some [problems](https://docs.qq.com/sheet/DT3B6ZGRWeWtKcUdm).
 
 - by 灵茶山艾府 💭💡🎈：[EndlessCheng/codeforces-go](https://github.com/EndlessCheng/codeforces-go)
 
+- by Yawn-Sean：[Daily_CF_Problems](https://github.com/Yawn-Sean/Daily_CF_Problems)
+
 - by hh2048：[hh2048/XCPC](https://github.com/hh2048/XCPC)
