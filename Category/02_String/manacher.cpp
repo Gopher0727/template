@@ -17,7 +17,7 @@ auto Manacher(const string& s) {
     vector<int> ans(m);
     for (int i = 0, c = 0, r = 0; i < m; i++) {
         int len = r > i ? min(ans[2 * c - i], r - i) : 1;
-        while (i + len <= m && i - len >= 0 && t[i - len] == t[i + len]) {
+        while (i + len < m && i - len >= 0 && t[i - len] == t[i + len]) {
             len++;
         }
         if (i + len > r) {
