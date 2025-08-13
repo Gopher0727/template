@@ -8,7 +8,7 @@ Copy and paste. Continuing...
 
 There are some [problems](https://docs.qq.com/sheet/DT3B6ZGRWeWtKcUdm).
 
-## 其他链接
+## Reference
 
 - by Atcoder：[atcoder/ac-library](https://github.com/atcoder/ac-library)
 
