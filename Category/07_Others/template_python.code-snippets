@@ -24,7 +24,7 @@
             "fmax = lambda x, y: x if x >= y else y",
             "fmin = lambda x, y: y if x >= y else x",
             "",
-            "# https://github.com/GopherTeen/template",
+            "# https://github.com/Gopher0727/template",
             ""
         ]
     },
@@ -47,15 +47,8 @@
             "fmax = lambda x, y: x if x >= y else y",
             "fmin = lambda x, y: y if x >= y else x",
             "",
-            "# https://github.com/GopherTeen/template",
+            "# https://github.com/Gopher0727/template",
             "",
-            "def solve():",
-            "    $0",
-            "    pass",
-            "",
-            "",
-            "if __name__ == \"__main__\":",
-            "    solve()",
             ""
         ]
     },
@@ -78,7 +71,7 @@
             "fmax = lambda x, y: x if x >= y else y",
             "fmin = lambda x, y: y if x >= y else x",
             "",
-            "# https://github.com/GopherTeen/template",
+            "# https://github.com/Gopher0727/template",
             "",
             "def solve():",
             "    $0",
