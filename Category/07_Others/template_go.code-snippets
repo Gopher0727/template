@@ -15,6 +15,9 @@
             "var (",
             "    in  = bufio.NewReader(os.Stdin)",
             "    out = bufio.NewWriter(os.Stdout)",
+            "",
+            "    // MOD = 1_000_000_007",
+            "    // MOD = 998244353",
             ")",
             "",
             "func solve() {",
@@ -26,6 +29,7 @@
             "",
             "    solve()",
             "}",
+            ""
         ]
     },
     "acms": {
@@ -45,6 +49,9 @@
             "var (",
             "    in  = bufio.NewReader(os.Stdin)",
             "    out = bufio.NewWriter(os.Stdout)",
+            "",
+            "    // MOD = 1_000_000_007",
+            "    // MOD = 998244353",
             ")",
             "",
             "func solve() {",
