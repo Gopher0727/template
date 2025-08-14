@@ -1,20 +1,19 @@
 type T any
 pq, _ := NewPriorityQueue(func(a, b T) bool {
-
 	return false
 })
 
 // template
 type PriorityQueue[T any] struct {
-	heaps    []T
-	lessFunc func(a, b T) bool
+	heaps []T
+	Func  func(a, b T) bool
 }
 
-func NewPriorityQueue[T any](less func(a, b T) bool) (*PriorityQueue[T], error) {
-	if less == nil {
-		return nil, errors.New("less func is necessary")
+func NewPriorityQueue[T any](cmp func(a, b T) bool) (*PriorityQueue[T], error) {
+	if cmp == nil {
+		return nil, errors.New("func is necessary")
 	}
-	return &PriorityQueue[T]{lessFunc: less}, nil
+	return &PriorityQueue[T]{Func: cmp}, nil
 }
 
 func (pq *PriorityQueue[T]) Push(t T) {
@@ -53,7 +52,7 @@ func (pq *PriorityQueue[T]) up(child int) {
 		return
 	}
 	parent := (child - 1) >> 1
-	if !pq.lessFunc(pq.heaps[child], pq.heaps[parent]) {
+	if !pq.Func(pq.heaps[child], pq.heaps[parent]) {
 		return
 	}
 	pq.swap(child, parent)
@@ -61,17 +60,17 @@ func (pq *PriorityQueue[T]) up(child int) {
 }
 
 func (pq *PriorityQueue[T]) down(parent int) {
-	lessIdx := parent
+	i := parent
 	lChild, rChild := (parent<<1)+1, (parent<<1)+2
-	if lChild < len(pq.heaps) && pq.lessFunc(pq.heaps[lChild], pq.heaps[lessIdx]) {
-		lessIdx = lChild
+	if lChild < len(pq.heaps) && pq.Func(pq.heaps[lChild], pq.heaps[i]) {
+		i = lChild
 	}
-	if rChild < len(pq.heaps) && pq.lessFunc(pq.heaps[rChild], pq.heaps[lessIdx]) {
-		lessIdx = rChild
+	if rChild < len(pq.heaps) && pq.Func(pq.heaps[rChild], pq.heaps[i]) {
+		i = rChild
 	}
-	if lessIdx == parent {
+	if i == parent {
 		return
 	}
-	pq.swap(lessIdx, parent)
-	pq.down(lessIdx)
+	pq.swap(i, parent)
+	pq.down(i)
 }
