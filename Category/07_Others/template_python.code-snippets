@@ -1,7 +1,7 @@
 {
     "LeetCode": {
+        "prefix": "core",
         "scope": "python",
-        "prefix": "sol",
         "body": [
             "import random",
             "from bisect import bisect_left, bisect_right",
@@ -25,36 +25,13 @@
             "fmin = lambda x, y: y if x >= y else x",
             "",
             "# https://github.com/Gopher0727/template",
+            "",
             ""
         ]
     },
     "acm": {
-        "scope": "python",
         "prefix": "acm",
-        "body": [
-            "import sys",
-            "",
-            "input = lambda: sys.stdin.readline().strip()",
-            "",
-            "I = lambda: input()",
-            "II = lambda: int(input())",
-            "FI = lambda: float(input())",
-            "LI = lambda: input().split()",
-            "LII = lambda: list(map(int, input().split()))",
-            "LFI = lambda: list(map(float, input().split()))",
-            "LGI = lambda: list(map(lambda x: int(x) - 1, input().split()))",
-            "",
-            "fmax = lambda x, y: x if x >= y else y",
-            "fmin = lambda x, y: y if x >= y else x",
-            "",
-            "# https://github.com/Gopher0727/template",
-            "",
-            ""
-        ]
-    },
-    "acms": {
         "scope": "python",
-        "prefix": "acms",
         "body": [
             "import sys",
             "",
@@ -77,26 +54,54 @@
             "    $0",
             "    pass",
             "",
+            "if __name__ == \"__main__\":",
+            "    for _ in range(II()):",
+            "        solve()",
+        ]
+    },
+    "acms": {
+        "prefix": "acms",
+        "scope": "python",
+        "body": [
+            "import sys",
+            "",
+            "input = lambda: sys.stdin.readline().strip()",
+            "",
+            "I = lambda: input()",
+            "II = lambda: int(input())",
+            "FI = lambda: float(input())",
+            "LI = lambda: input().split()",
+            "LII = lambda: list(map(int, input().split()))",
+            "LFI = lambda: list(map(float, input().split()))",
+            "LGI = lambda: list(map(lambda x: int(x) - 1, input().split()))",
+            "",
+            "fmax = lambda x, y: x if x >= y else y",
+            "fmin = lambda x, y: y if x >= y else x",
+            "",
+            "# https://github.com/Gopher0727/template",
+            "",
+            "def solve():",
+            "    $0",
+            "    pass",
             "",
             "if __name__ == \"__main__\":",
             "    for _ in range(II()):",
             "        solve()",
-            ""
         ]
     },
     "MOD_1'000'000'007": {
-        "scope": "python",
         "prefix": "MOD_1'000'000'007",
+        "scope": "python",
         "body": "MOD = 1_000_000_007"
     },
     "MOD_9998244353": {
-        "scope": "python",
         "prefix": "MOD_998244353",
+        "scope": "python",
         "body": "MOD = 998244353"
     },
     "二分查找": {
+        "prefix": "binaryfind",
         "scope": "python",
-        "prefix": "binary_search",
         "body": [
             "def check(x: int) -> bool:",
             "    $0",
@@ -111,39 +116,38 @@
             "        lo = mid",
             "    else:",
             "        hi = mid",
-            ""
         ]
     },
     "上下左右": {
-        "scope": "python",
         "prefix": "dir",
+        "scope": "python",
         "body": [
             "dx = [1, 0, -1, 0]",
             "dy = [0, 1, 0, -1]"
         ]
     },
-    "马": {
-        "scope": "python",
-        "prefix": "dir_horse",
-        "body": [
-            "dx = [1, 1, 2, 2, -1, -1, -2, -2]",
-            "dy = [2, -2, 1, -1, 2, -2, 1, -1]"
-        ]
-    },
     "周围": {
-        "scope": "python",
         "prefix": "dir_around",
+        "scope": "python",
         "body": [
             "dx = [1, 0, -1, 0, 1, 1, -1, -1]",
             "dy = [0, 1, 0, -1, 1, -1, 1, -1]"
         ]
     },
     "四角": {
-        "scope": "python",
         "prefix": "dir_corner",
+        "scope": "python",
         "body": [
             "dx = [-1, -1, 1, 1]",
             "dy = [1, -1, -1, 1]"
         ]
     },
+    "马": {
+        "prefix": "dir_horse",
+        "scope": "python",
+        "body": [
+            "dx = [1, 1, 2, 2, -1, -1, -2, -2]",
+            "dy = [2, -2, 1, -1, 2, -2, 1, -1]"
+        ]
+    }
 }

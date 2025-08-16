@@ -1,7 +1,7 @@
 {
     "LeetCode": {
+        "prefix": "core",
         "scope": "cpp",
-        "prefix": "sol",
         "body": [
             "#include <bits/stdc++.h>",
             "#ifdef LOCAL",
@@ -22,8 +22,8 @@
         ]
     },
     "acm": {
-        "scope": "cpp",
         "prefix": "acm",
+        "scope": "cpp",
         "body": [
             "#include <bits/stdc++.h>",
             "",
@@ -49,8 +49,8 @@
         ]
     },
     "acms": {
-        "scope": "cpp",
         "prefix": "acms",
+        "scope": "cpp",
         "body": [
             "#include <bits/stdc++.h>",
             "",
@@ -80,23 +80,23 @@
         ]
     },
     "MOD_1'000'000'007": {
-        "scope": "cpp",
         "prefix": "MOD_1'000'000'007",
+        "scope": "cpp",
         "body": "static constexpr int MOD = 1'000'000'007;"
     },
     "MOD_9998244353": {
-        "scope": "cpp",
         "prefix": "MOD_998244353",
+        "scope": "cpp",
         "body": "static constexpr int MOD = 998244353;"
     },
     "inf": {
-        "scope": "cpp",
         "prefix": "inf",
+        "scope": "cpp",
         "body": "static constexpr $1 inf = $0;"
     },
     "readFromFile": {
-        "scope": "cpp",
         "prefix": "freopen",
+        "scope": "cpp",
         "body": [
             "#ifdef LOCAL",
             "    // freopen(\"in.txt\", \"r\", stdin);",
@@ -105,8 +105,8 @@
         ]
     },
     "UDLR": {
-        "scope": "cpp",
         "prefix": "UDLR",
+        "scope": "cpp",
         "body": [
             "void go(int& x, int& y, char ch) {",
             "    if (ch == 'U') {",
@@ -122,8 +122,8 @@
         ]
     },
     "二分查找": {
+        "prefix": "binaryfind",
         "scope": "cpp",
-        "prefix": "binary_search",
         "body": [
             "auto check = [&](auto x) {",
             "    $0",
@@ -143,40 +143,40 @@
         ]
     },
     "上下左右": {
-        "scope": "cpp",
         "prefix": "dir",
+        "scope": "cpp",
         "body": [
             "static constexpr int dx[] = {1, 0, -1, 0};",
             "static constexpr int dy[] = {0, 1, 0, -1};"
         ]
     },
-    "马": {
-        "scope": "cpp",
-        "prefix": "dir_horse",
-        "body": [
-            "static constexpr int dx[] = {1, 1, 2, 2, -1, -1, -2, -2};",
-            "static constexpr int dy[] = {2, -2, 1, -1, 2, -2, 1, -1};"
-        ]
-    },
     "周围": {
-        "scope": "cpp",
         "prefix": "dir_around",
+        "scope": "cpp",
         "body": [
             "static constexpr int dx[] = {1, 0, -1, 0, 1, 1, -1, -1};",
             "static constexpr int dy[] = {0, 1, 0, -1, 1, -1, 1, -1};"
         ]
     },
     "四角": {
-        "scope": "cpp",
         "prefix": "dir_corner",
+        "scope": "cpp",
         "body": [
             "static constexpr int dx[] = {-1, -1, 1, 1};",
             "static constexpr int dy[] = {1, -1, -1, 1};"
         ]
     },
-    "init": {
+    "马": {
+        "prefix": "dir_horse",
         "scope": "cpp",
+        "body": [
+            "static constexpr int dx[] = {1, 1, 2, 2, -1, -1, -2, -2};",
+            "static constexpr int dy[] = {2, -2, 1, -1, 2, -2, 1, -1};"
+        ]
+    },
+    "init": {
         "prefix": "init",
+        "scope": "cpp",
         "body": [
             "auto init = [] {",
             "    $0",
@@ -185,8 +185,8 @@
         ]
     },
     "initWithVal": {
-        "scope": "cpp",
         "prefix": "initWithVal",
+        "scope": "cpp",
         "body": [
             "auto $1 = [&] {",
             "    $0",
@@ -194,8 +194,8 @@
         ]
     },
     "lambda": {
-        "scope": "cpp",
         "prefix": "lambda",
+        "scope": "cpp",
         "body": [
             "auto $1 = [&]($0) {",
             "    ",
@@ -204,8 +204,8 @@
         ]
     },
     "lambda递归": {
-        "scope": "cpp",
         "prefix": "lambda_rec",
+        "scope": "cpp",
         "body": [
             "auto $1 = [&](auto&& $1, $0) {",
             "    ",
@@ -214,8 +214,8 @@
         ]
     },
     "lambda递归23版": {
-        "scope": "cpp",
         "prefix": "lambda23_rec",
+        "scope": "cpp",
         "body": [
             "auto $1 = [&](this auto&& $1, $0) {",
             "    ",
@@ -224,8 +224,8 @@
         ]
     },
     "prefix": {
-        "scope": "cpp",
         "prefix": "prefix",
+        "scope": "cpp",
         "body": [
             "vector<i64> pre(n + 1);",
             "for (int i = 0; i < n; i++) {",
@@ -234,8 +234,8 @@
         ]
     },
     "suffix": {
-        "scope": "cpp",
         "prefix": "suffix",
+        "scope": "cpp",
         "body": [
             "vector<i64> suf(n + 1);",
             "for (int i = n - 1; i >= 0; i--) {",
@@ -244,8 +244,8 @@
         ]
     },
     "随机数生成": {
-        "scope": "cpp",
         "prefix": "random",
+        "scope": "cpp",
         "body": [
             "mt19937_64 gen(chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count());",
             "uniform_int_distribution<int> disInt(8e8, 9e8);",
@@ -254,21 +254,21 @@
         ]
     },
     "下标排序": {
-        "scope": "cpp",
         "prefix": "order",
+        "scope": "cpp",
         "body": [
             "vector<int> ord($1);",
             "iota(ord.begin(), ord.end(), 0);",
             "sort(ord.begin(), ord.end(), [&](int i, int j)-> bool { return $0 ;});"
         ]
     },
-    // "priority_queue": {
-    //     "scope": "cpp",
-    //     "prefix": "priority_queue",
-    //     "body": [
-    //         "#include <ext/pb_ds/priority_queue.hpp>",
-    //         "",
-    //         "__gnu_pbds::priority_queue<$1, ${2:less<>}, __gnu_pbds::pairing_heap_tag> pq;"
-    //     ]
-    // },
+    "priority_queue": {
+        "prefix": "priority_queue",
+        "scope": "cpp",
+        "body": [
+            "#include <ext/pb_ds/priority_queue.hpp>",
+            "",
+            "__gnu_pbds::priority_queue<$1, ${2:less<>}, __gnu_pbds::pairing_heap_tag> pq;"
+        ]
+    }
 }

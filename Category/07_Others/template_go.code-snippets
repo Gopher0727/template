@@ -1,4 +1,15 @@
 {
+    "LeetCode": {
+        "prefix": "core",
+        "scope": "go",
+        "body": [
+            "package main",
+            "",
+            "// https://github.com/Gopher0727/template",
+            "",
+            ""
+        ]
+    },
     "acm": {
         "prefix": "acm",
         "scope": "go",
@@ -10,14 +21,9 @@
             "    \"os\"",
             ")",
             "",
-            "// https://github.com/Gopher0727/template",
-            "",
             "var (",
             "    in  = bufio.NewReader(os.Stdin)",
             "    out = bufio.NewWriter(os.Stdout)",
-            "",
-            "    // MOD = 1_000_000_007",
-            "    // MOD = 998244353",
             ")",
             "",
             "func solve() {",
@@ -28,8 +34,7 @@
             "    defer out.Flush()",
             "",
             "    solve()",
-            "}",
-            ""
+            "}"
         ]
     },
     "acms": {
@@ -44,14 +49,9 @@
             "    \"os\"",
             ")",
             "",
-            "// https://github.com/Gopher0727/template",
-            "",
             "var (",
             "    in  = bufio.NewReader(os.Stdin)",
             "    out = bufio.NewWriter(os.Stdout)",
-            "",
-            "    // MOD = 1_000_000_007",
-            "    // MOD = 998244353",
             ")",
             "",
             "func solve() {",
@@ -96,7 +96,102 @@
             "sort.Slice(ord, func(i, j int) bool {",
             "    i, j = ord[i], ord[j]",
             "    return $0",
-            "})",
+            "})"
+        ]
+    },
+    "二分查找": {
+        "prefix": "binaryfind",
+        "scope": "go",
+        "body": [
+            "check := func(x int) bool {",
+            "",
+            "}",
+            "",
+            "lo, hi := $0",
+            "for lo+1 < hi {",
+            "    mid := lo + (hi-lo)/2",
+            "    if check(mid) {",
+            "",
+            "    } else {",
+            "        ",
+            "    }",
+            "}"
+        ]
+    },
+    "上下左右": {
+        "prefix": "dir",
+        "scope": "go",
+        "body": [
+            "dx = [4]int{1, 0, -1, 0}",
+            "dy = [4]int{0, 1, 0, -1}"
+        ]
+    },
+    "周围": {
+        "prefix": "dir_around",
+        "scope": "go",
+        "body": [
+            "dx = [8]int{1, 0, -1, 0, 1, 1, -1, -1}",
+            "dy = [8]int{0, 1, 0, -1, 1, -1, 1, -1}"
+        ]
+    },
+    "四角": {
+        "prefix": "dir_corner",
+        "scope": "go",
+        "body": [
+            "dx = [4]int{-1, -1, 1, 1}",
+            "dy = [4]int{1, -1, -1, 1}"
+        ]
+    },
+    "马": {
+        "prefix": "dir_horse",
+        "scope": "go",
+        "body": [
+            "dx = [8]int{1, 1, 2, 2, -1, -1, -2, -2}",
+            "dy = [8]int{2, -2, 1, -1, 2, -2, 1, -1}"
+        ]
+    },
+    "常用运算": {
+        "prefix": "calc",
+        "scope": "go",
+        "body": [
+            "$0",
+            "",
+            "type Integer interface {",
+            "   ~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64",
+            "}",
+            "",
+            "func abs[T Integer](x T) T {",
+            "   if x < 0 {",
+            "       return -x",
+            "   }",
+            "   return x",
+            "}",
+            "",
+            "func divmod[T Integer](x, y T) (T, T) {",
+            "   return x / y, x % y",
+            "}",
+            "",
+            "func gcd[T Integer](a, b T) T {",
+            "   for b > 0 {",
+            "       a, b = b, a%b",
+            "   }",
+            "   return a",
+            "}",
+            "",
+            "func lcm[T Integer](a, b T) T {",
+            "   return a * b / gcd(a, b)",
+            "}",
+            "",
+            "func qpow[T, V Integer](x T, n V, mod T) T {",
+            "   res := T(1)",
+            "   for ; n > 0; n >>= 1 {",
+            "       if n&1 == 1 {",
+            "           res = res * x % mod",
+            "       }",
+            "       x = x * x % mod",
+            "   }",
+            "   return res",
+            "}"
         ]
     }
 }
