@@ -3,22 +3,22 @@
 template <typename T>
 struct xorBasis {
     static_assert(is_same_v<T, int> || is_same_v<T, long long>, "T must be int or long long");
-    const int B = sizeof(T) * 8;
+    static const int B = sizeof(T) * 8;
 
     array<T, B> b {};
     int cnt = 0;
     bool canBeZero = false;
 
     // "插入失败" 表明原数集（至少选择一个数字）能异或出 0
-    bool insert(T v) {
+    bool insert(T x) {
         for (int i = B - 1; i >= 0; i--) {
-            if (v >> i & 1) {
+            if (x >> i & 1) {
                 if (b[i] == 0) {
-                    b[i] = v;
+                    b[i] = x;
                     cnt++;
                     return true;
                 }
-                v ^= b[i];
+                x ^= b[i];
             }
         }
         canBeZero = true;
@@ -52,14 +52,14 @@ struct xorBasis {
         }
     }
 
-    // v 能否由线性基表出
-    bool decompose(int v) {
+    // x 能否由线性基表出
+    bool decompose(T x) {
         for (int i = B - 1; i >= 0; i--) {
-            if (v >> i & 1) {
+            if (x >> i & 1) {
                 if (b[i] == 0) {
                     return false;
                 }
-                v ^= b[i];
+                x ^= b[i];
             }
         }
         return true;
