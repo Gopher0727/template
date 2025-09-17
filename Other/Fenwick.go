@@ -14,6 +14,9 @@ func (f Fenwick) query(k int) (ans int) {
 }
 
 func (f Fenwick) rangeQuery(l, r int) int {
+	if l > r {
+		panic("invalid range")
+	}
 	return f.query(r) - f.query(l)
 }
 
