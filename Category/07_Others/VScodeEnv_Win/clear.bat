@@ -1,3 +1,5 @@
+REM 注意文件换行 CRLF
+
 @echo off
 setlocal enabledelayedexpansion
 
