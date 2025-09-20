@@ -14,7 +14,7 @@ func (h *Heap) Push(x T) { heap.Push(h.w, x) }
 
 func (h *Heap) Pop() T {
 	if h.w.Len() == 0 {
-		return nil
+		return T{}
 	}
 	return heap.Pop(h.w).(T)
 }
