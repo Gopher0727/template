@@ -48,3 +48,20 @@ func (dsu *DSU) Same(x, y int) bool {
 func (dsu *DSU) Size(x int) int {
 	return dsu.siz[dsu.Find(x)]
 }
+
+func (dsu *DSU) Groups() (res [][]int) {
+	n := len(dsu.pa)
+	idx := make([]int, n)
+	for i := range idx {
+		idx[i] = -1
+	}
+	for i := range n {
+		j := dsu.Find(i)
+		if idx[j] == -1 {
+			idx[j] = len(res)
+			res = append(res, []int{})
+		}
+		res[idx[j]] = append(res[idx[j]], i)
+	}
+	return
+}
