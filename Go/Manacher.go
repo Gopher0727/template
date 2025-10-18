@@ -1,11 +1,11 @@
 func Manacher(s string) (ans []int) {
     m := len(s)*2 + 1
-    t := make([]rune, m)
+    t := make([]byte, m)
     for i, j := 0, 0; i < m; i++ {
         if i%2 == 0 {
             t[i] = '#'
         } else {
-            t[i] = rune(s[j])
+            t[i] = s[j]
             j++
         }
     }
