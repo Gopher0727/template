@@ -1,52 +1,71 @@
 {
-    //* window
-    "window.commandCenter": false,
     //* explorer
     "explorer.confirmDragAndDrop": false,
     "explorer.confirmPasteNative": false,
-    //* workbench
-    // "workbench.editor.enablePreview": false,
-    "workbench.tree.indent": 12,
-    "workbench.startupEditor": "none",
-    "workbench.list.smoothScrolling": true,
-    "workbench.layoutControl.enabled": false,
-    "workbench.iconTheme": "material-icon-theme",
-    "workbench.editor.empty.hint": "hidden",
-    "workbench.colorTheme": "Catppuccin Mocha",
-    //* extensions
-    "extensions.closeExtensionDetailsOnViewChange": true,
+    //* debug
+    "debug.allowBreakpointsEverywhere": true,
+    "debug.console.closeOnEnd": true,
+    "debug.showBreakpointsInOverviewRuler": true,
+    "debug.terminal.clearBeforeReusing": true,
     //* editor
-    "editor.fontSize": 15.5,
-    "editor.inlayHints.enabled": "on",
-    "editor.wordWrap": "on",
-    "editor.occurrencesHighlight": "singleFile",
     // "editor.acceptSuggestionOnEnter": "off",
-    "editor.hover.delay": 100,
-    "editor.mouseWheelZoom": true,
-    "editor.smoothScrolling": true,
-    "editor.cursorBlinking": "smooth",
-    "editor.formatOnPaste": true,
-    "editor.formatOnType": true,
-    "editor.formatOnSave": true,
-    "editor.minimap.enabled": false,
     // "editor.minimap.autohide": true,
-    "editor.guides.bracketPairs": "active",
+    "editor.accessibilitySupport": "off",
+    "editor.cursorBlinking": "smooth",
     "editor.cursorSmoothCaretAnimation": "on",
-    "editor.snippetSuggestions": "top",
-    "editor.suggestSelection": "recentlyUsed",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.fontSize": 16.5,
     "editor.fontLigatures": true,
-    "editor.wordBasedSuggestions": "currentDocument",
-    "editor.suggest.insertMode": "replace",
-    "editor.semanticHighlighting.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "editor.hover.delay": 100,
+    "editor.inlayHints.enabled": "on",
     "editor.linkedEditing": true,
+    "editor.minimap.enabled": false,
+    "editor.occurrencesHighlight": "singleFile",
+    "editor.semanticHighlighting.enabled": true,
+    "editor.snippetSuggestions": "top",
+    "editor.smoothScrolling": true,
+    "editor.suggest.insertMode": "replace",
+    "editor.suggestSelection": "recentlyUsed",
+    "editor.wordBasedSuggestions": "currentDocument",
+    "editor.wordWrap": "on",
+    //* extensions
+    "extensions.autoCheckUpdates": false,
+    "extensions.autoUpdate": false,
+    "extensions.closeExtensionDetailsOnViewChange": true,
+    "extensions.ignoreRecommendations": true,
     //* files
-    "files.autoSaveDelay": 100,
-    "files.autoSave": "afterDelay",
     "files.associations": {
         ".clangd": "yaml",
         ".clang-format": "yaml",
-        "out": "plaintext",
+        "out": "plaintext"
     },
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 100,
+    //* git
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+    "git.openRepositoryInParentFolders": "never",
+    //* github.copilot
+    "github.copilot.enable": {
+        "*": false,
+        "cpp": false,
+        "go": false,
+        "markdown": false,
+        "plaintext": false,
+        "scminput": false
+    },
+    "github.copilot.nextEditSuggestions.enabled": false,
+    //* workbench
+    // "workbench.editor.enablePreview": false,
+    "workbench.editor.empty.hint": "hidden",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.layoutControl.enabled": false,
+    "workbench.list.smoothScrolling": true,
+    "workbench.startupEditor": "none",
+    "workbench.tree.indent": 12,
     //* Python
     "python.terminal.focusAfterLaunch": true,
     "python.analysis.autoFormatStrings": true,
@@ -54,6 +73,7 @@
     "python.analysis.autoImportCompletions": true,
     "python.analysis.inlayHints.functionReturnTypes": true,
     "python.analysis.inlayHints.pytestParameters": true,
+    "python.createEnvironment.trigger": "off",
     "python.languageServer": "Pylance",
     "python.analysis.autoIndent": true,
     "python.REPL.enableREPLSmartSend": false,
@@ -68,25 +88,44 @@
     "[cpp]": {
         "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
     },
-    //* debug
-    "debug.allowBreakpointsEverywhere": true,
-    "debug.console.closeOnEnd": true,
-    "debug.showBreakpointsInOverviewRuler": true,
-    "debug.terminal.clearBeforeReusing": true,
     //* terminal
-    "terminal.integrated.fontFamily": "CommitMono Nerd Font",
     // "terminal.integrated.fontFamily": "Maple Mono SC NF",
-    "terminal.integrated.enableMultiLinePasteWarning": "never",
     // "terminal.integrated.defaultProfile.windows": "Arch (WSL)",
+    "terminal.integrated.fontFamily": "CommitMono Nerd Font",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.enableMultiLinePasteWarning": "never",
     "terminal.integrated.defaultProfile.linux": "fish",
     "terminal.integrated.smoothScrolling": true,
     "terminal.integrated.cursorStyle": "line",
     "terminal.integrated.cursorBlinking": true,
     "terminal.integrated.fontSize": 15,
-    //* extensions
-    "extensions.autoCheckUpdates": false,
-    "extensions.ignoreRecommendations": true,
-    "extensions.autoUpdate": false,
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": {
+            "source": "PowerShell",
+            "icon": "terminal-powershell"
+        },
+        "Command Prompt": {
+            "path": [
+                "${env:windir}\\Sysnative\\cmd.exe",
+                "${env:windir}\\System32\\cmd.exe"
+            ],
+            "args": [],
+            "icon": "terminal-cmd"
+        },
+        "Git Bash": {
+            "source": "Git Bash"
+        },
+        "Arch (WSL)": {
+            "path": "C:\\WINDOWS\\System32\\wsl.exe",
+            "args": [
+                "-d",
+                "Arch"
+            ]
+        },
+        "Windows PowerShell": {
+            "path": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        }
+    },
     //* better-comments
     "better-comments.tags": [
         {
@@ -139,8 +178,8 @@
     "scm.diffDecorations": "overview",
     //* markdown
     "markdown.extension.completion.enabled": true,
-    //* git
-    "git.enableSmartCommit": true,
-    "git.confirmSync": false,
-    "git.openRepositoryInParentFolders": "never",
+    //* window
+    "window.commandCenter": false,
+    //* cph
+    "cph.general.saveLocation": "",
 }

@@ -1,11 +1,8 @@
 {
-    "cph.general.saveLocation": "D:/Code/OJ_Code/.cph",
-    // "cph.general.menuChoices": "cpp python",
+    "cph.general.saveLocation": ".cph",
     "cph.general.defaultLanguage": "cpp",
-    "cph.language.cpp.Args": "-std=c++23 -O2 -ID:/Code/OJ_Code/headers -DLOCAL",
-    /* 注意 cph 采用 clang++ 编译 */
-    // "cph.language.cpp.Args": "-std=c++23 -O2 -stdlib=libc++ -ID:/Code/OJ_Code/headers -DLOCAL",
-    "cph.language.python.Command": "pypy3.10",
+    "cph.language.cpp.Args": "-std=c++23 -O2 -ID:/Code/CppTest/headers -DLOCAL",
+    "cph.language.python.Command": "python3",
     "cph.general.firstTime": false,
     "cph.general.autoShowJudge": true,
     // "cph.general.useShortCodeForcesName": true,
@@ -29,7 +26,7 @@
         "-Wno-vla", // 禁用变量长度数组(VLA)的警告
         "-g",
         "-DLOCAL",
-        "-ID:/Code/OJ_Code/headers"
+        "-Iheaders"
         // CompilationDatabase: build/
     ]
 }

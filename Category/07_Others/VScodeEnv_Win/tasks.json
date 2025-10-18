@@ -27,7 +27,7 @@
                 //
                 "-g",
                 "-DLOCAL",
-                "-ID:/Code/OJ_Code/headers",
+                "-Iheaders",
                 // "-Wconversion",
                 // "-Wall",
                 "${file}",
