@@ -1,23 +1,23 @@
 type Fenwick []int
 
-func (f Fenwick) add(k, v int) {
+func (f Fenwick) Add(k, v int) {
 	for i := k + 1; i <= len(f); i += i & -i {
 		f[i-1] += v
 	}
 }
 
-func (f Fenwick) query(k int) (ans int) {
+func (f Fenwick) Query(k int) (ans int) {
 	for i := k; i > 0; i &= i - 1 {
 		ans += f[i-1]
 	}
 	return
 }
 
-func (f Fenwick) rangeQuery(l, r int) int {
+func (f Fenwick) RangeQuery(l, r int) int {
 	if l > r {
 		panic("invalid range")
 	}
-	return f.query(r) - f.query(l)
+	return f.Query(r) - f.Query(l)
 }
 
 func (f Fenwick) Select(k int) (x int) {
