@@ -11,7 +11,7 @@
             "from itertools import accumulate, combinations, groupby, pairwise, permutations, product",
             "from math import gcd, hypot, isqrt, lcm, sqrt",
             "from operator import add, iand, ior, mul, xor",
-            "from string import ascii_letters, ascii_lowercase, ascii_uppercase",
+            "from string import ascii_letters, ascii_lowercase, ascii_uppercase, digits",
             "from timeit import timeit",
             "from typing import List, NamedTuple, Optional, Tuple, cast",
             "",
@@ -50,7 +50,12 @@
             "",
             "# https://github.com/Gopher0727/template",
             "",
+            "def solve():",
+            "    $0",
+            "    pass",
             "",
+            "if __name__ == \"__main__\":",
+            "    solve()",
         ]
     },
     "acms": {
