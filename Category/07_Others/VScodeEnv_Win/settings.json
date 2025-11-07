@@ -1,8 +1,7 @@
 {
     "cph.general.saveLocation": ".cph",
     "cph.general.defaultLanguage": "cpp",
-    "cph.language.cpp.Args": "-std=c++23 -O2 -ID:/Code/CppTest/headers -DLOCAL",
-    "cph.language.python.Command": "python3",
+    "cph.language.cpp.Args": "-std=c++23 -O2 -ID:/Code/ACM/acm-cpp/headers -DLOCAL",
     "cph.general.firstTime": false,
     "cph.general.autoShowJudge": true,
     // "cph.general.useShortCodeForcesName": true,
@@ -26,7 +25,7 @@
         "-Wno-vla", // 禁用变量长度数组(VLA)的警告
         "-g",
         "-DLOCAL",
-        "-Iheaders"
+        "-ID:/Code/ACM/acm-cpp/headers"
         // CompilationDatabase: build/
     ]
 }
