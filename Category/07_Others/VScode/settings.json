@@ -45,6 +45,7 @@
     "files.autoSave": "afterDelay",
     "files.autoSaveDelay": 100,
     //* git
+    "git.autofetch": true,
     "git.confirmSync": false,
     "git.enableSmartCommit": true,
     "git.openRepositoryInParentFolders": "never",
@@ -59,6 +60,7 @@
     },
     "github.copilot.nextEditSuggestions.enabled": false,
     //* workbench
+    "workbench.colorTheme": "Catppuccin Macchiato",
     // "workbench.editor.enablePreview": false,
     "workbench.editor.empty.hint": "hidden",
     "workbench.iconTheme": "material-icon-theme",
@@ -182,4 +184,6 @@
     "window.commandCenter": false,
     //* cph
     "cph.general.saveLocation": "",
+    //* db
+    "database-client.capitalizeKeywordsWhenFormatting": true,
 }
