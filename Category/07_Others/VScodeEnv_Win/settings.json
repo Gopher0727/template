@@ -1,7 +1,7 @@
 {
-    "cph.general.saveLocation": ".cph",
+    "cph.general.saveLocation": "D:/Code/awesome-cpp/.cph",
     "cph.general.defaultLanguage": "cpp",
-    "cph.language.cpp.Args": "-std=c++23 -O2 -ID:/Code/ACM/acm-cpp/headers -DLOCAL",
+    "cph.language.cpp.Args": "-std=c++23 -O2 -ID:/Code/awesome-cpp/Inc -DLOCAL -LD:/SDK/MSYS2/mingw64/lib -l:libstdc++exp.a",
     "cph.general.firstTime": false,
     "cph.general.autoShowJudge": true,
     // "cph.general.useShortCodeForcesName": true,
@@ -25,7 +25,7 @@
         "-Wno-vla", // 禁用变量长度数组(VLA)的警告
         "-g",
         "-DLOCAL",
-        "-ID:/Code/ACM/acm-cpp/headers"
+        "-ID:/Code/awesome-cpp/Inc"
         // CompilationDatabase: build/
     ]
 }
