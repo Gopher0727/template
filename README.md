@@ -1,9 +1,9 @@
 # Code template
 
 [![Gopher0727](https://img.shields.io/badge/Gopher0727-Codeforces-blue?style=for-the-badge)](https://codeforces.com/profile/Gopher0727)
-[![slashTeen](https://img.shields.io/badge/slashTeen-Atcoder-blue?style=for-the-badge)](https://atcoder.jp/users/slashTeen)
+[![slashTeen](https://img.shields.io/badge/slashTeen-Atcoder-yellow?style=for-the-badge)](https://atcoder.jp/users/slashTeen)
 
-**Embrace the journey wherever it leads, and enjoy every moment of it!**
+**Embrace the journey wherever it leads and enjoy every moment of it!**
 
 Copy and paste. Continuing...
 
