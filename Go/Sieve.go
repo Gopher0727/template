@@ -26,17 +26,15 @@ func Sieve() []int {
 
 // 线性筛 + 最小质因数 + 欧拉函数 + 莫比乌斯函数
 var (
-    primes []int
-
-    N = 2_000_000
+    N       = 2_000_000
+    isPrime = make([]bool, N+1)
+    primes  = make([]int, 0, N+1)
+    minp    = make([]int, N+1)
+    phi     = make([]int, N+1)
+    mu      = make([]int, N+1)
 )
 
-func Sieve() ([]bool, []int, []int, []int) {
-    isPrime := make([]bool, N+1)
-    minp := make([]int, N+1)
-    phi := make([]int, N+1)
-    mu := make([]int, N+1)
-
+func init() {
     for i := 2; i <= N; i++ {
         isPrime[i] = true
     }
@@ -66,7 +64,6 @@ func Sieve() ([]bool, []int, []int, []int) {
             }
         }
     }
-    return isPrime, minp, phi, mu
 }
 
 

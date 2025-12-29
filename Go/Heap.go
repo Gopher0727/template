@@ -12,9 +12,9 @@ func NewHeap(cmp func(a, b T) bool) *Heap {
 
 func (h *Heap) Push(x T) { heap.Push(h.w, x) }
 
-func (h *Heap) Pop() T {
+func (h *Heap) Pop() (_ T) {
 	if h.w.Len() == 0 {
-		return T{}
+		return
 	}
 	return heap.Pop(h.w).(T)
 }
