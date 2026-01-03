@@ -105,7 +105,7 @@ func (t *Tree) LCA(u, v int) int {
 }
 
 // GetDistance 返回节点 u 和 v 之间的边数距离和带权距离
-func (t *Tree) GetDistance(u, v int) []int {
+func (t *Tree) GetDistance(u, v int) (int, int) {
 	o := t.LCA(u, v)
-	return []int{t.dep[u] + t.dep[v] - 2*t.dep[o], t.dis[u] + t.dis[v] - 2*t.dis[o]}
+	return t.dep[u] + t.dep[v] - 2*t.dep[o], t.dis[u] + t.dis[v] - 2*t.dis[o]
 }
