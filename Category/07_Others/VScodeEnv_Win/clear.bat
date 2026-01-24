@@ -1,34 +1,28 @@
-REM 注意文件换行 CRLF
+@REM 注意文件换行 CRLF
 
 @echo off
 setlocal enabledelayedexpansion
 
-REM 设置文件夹路径数组，使用分号分隔不同的路径
-set "folders=.cph; build"
-for %%i in (%folders%) do (
-    if exist "%%i\" (
-        pushd "%%i"
-        del /q *
-        popd
-        echo Dir %%i has been cleared.
-    ) else (
-        echo Dir %%i does not exist.
+REM 白名单目录（要保留的）
+set KEEP=src .vscode
+
+for /d %%D in (*) do (
+    set DELETE=1
+    for %%K in (%KEEP%) do (
+        if /I "%%D"=="%%K" set DELETE=0
+    )
+    if !DELETE! EQU 1 (
+        rmdir /s /q "%%D"
     )
 )
+echo Dir has been cleared.
 
-REM 删除当前目录下的所有 .cpp 文件
-set "fileType=*.cpp"
+REM 删除当前目录下的所有 .go 文件
+set "fileType=*.go"
 if exist "%fileType%" (
     del /f /q %fileType%
 )
-echo Files .cpp has been cleared.
-
-REM 删除当前目录下的所有 .py 文件
-set "fileType=*.py"
-if exist "%fileType%" (
-    del /f /q %fileType%
-)
-echo Files .py has been cleared.
+echo Files .go has been cleared.
 
 REM 删除当前目录下的所有 .exe 文件
 set "fileType=*.exe"
