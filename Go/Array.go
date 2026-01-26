@@ -1,4 +1,4 @@
-// [l, r]
+// Reverse [l, r] 闭区间
 func Reverse[T any](a []T, l, r int) {
 	for l < r {
 		a[l], a[r] = a[r], a[l]
