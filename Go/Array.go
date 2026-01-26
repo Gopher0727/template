@@ -1,0 +1,15 @@
+// [l, r]
+func Reverse[T any](a []T, l, r int) {
+	for l < r {
+		a[l], a[r] = a[r], a[l]
+		l++
+		r--
+	}
+}
+
+func PrintArray[T any](a []T) {
+	for _, x := range a {
+		fmt.Fprint(out, x, " ")
+	}
+	fmt.Fprintln(out)
+}
