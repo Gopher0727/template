@@ -1,5 +1,12 @@
+type Number interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 |
+		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 |
+		~float32 | ~float64 |
+		~complex64 | ~complex128
+}
+
 // RangeSum [l, r] 闭区间求和
-func RangeSum[T any](a []T, l, r int) (ans T) {
+func RangeSum[T Number](a []T, l, r int) (ans T) {
 	for l <= r {
 		ans += a[l]
 		l++
