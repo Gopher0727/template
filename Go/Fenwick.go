@@ -6,6 +6,7 @@ func (f Fenwick) Add(k, v int) {
 	}
 }
 
+// Query [0, k)
 func (f Fenwick) Query(k int) (ans int) {
 	for i := k; i > 0; i &= i - 1 {
 		ans += f[i-1]
@@ -13,6 +14,7 @@ func (f Fenwick) Query(k int) (ans int) {
 	return
 }
 
+// RangeQuery [l, r)
 func (f Fenwick) RangeQuery(l, r int) int {
 	if l > r {
 		panic("invalid range")
