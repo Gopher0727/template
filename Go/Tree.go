@@ -40,8 +40,7 @@ func (t *Tree) AddEdge(u, v, w int) { t.adj[u] = append(t.adj[u], [2]int{v, w}) 
 
 func (t *Tree) SetRoot(r int) { t.root = r }
 
-func (t *Tree) Work(r int) {
-	t.root = r
+func (t *Tree) Work() {
 	clk := 0
 	var dfs func(u, p int)
 	dfs = func(u, p int) {
@@ -61,7 +60,7 @@ func (t *Tree) Work(r int) {
 		}
 		t.out[u] = clk
 	}
-	dfs(r, -1)
+	dfs(t.root, -1)
 
 	for k := 1; k < len(t.up); k++ {
 		for v := range t.n {
