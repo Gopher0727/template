@@ -4,11 +4,7 @@ type Heap struct {
 	w *wrapper
 }
 
-func NewHeap(cmp func(a, b T) bool) *Heap {
-	w := &wrapper{cmp: cmp}
-	heap.Init(w)
-	return &Heap{w: w}
-}
+func NewHeap(cmp func(a, b T) bool) *Heap { return &Heap{w: &wrapper{cmp: cmp}} }
 
 func (h *Heap) Push(x T) { heap.Push(h.w, x) }
 
@@ -20,6 +16,20 @@ func (h *Heap) Pop() (_ T) {
 }
 
 func (h *Heap) Len() int { return h.w.Len() }
+
+func (h *Heap) String() string {
+	tmp := &wrapper{
+		a:   append([]T(nil), h.w.a...),
+		cmp: h.w.cmp,
+	}
+	heap.Init(tmp)
+
+	res := make([]T, 0, tmp.Len())
+	for tmp.Len() > 0 {
+		res = append(res, heap.Pop(tmp).(T))
+	}
+	return fmt.Sprint(res)
+}
 
 // 内部 heap wrapper，负责实现 heap.Interface
 type wrapper struct {
