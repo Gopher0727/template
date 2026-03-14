@@ -88,16 +88,6 @@
             "        solve()",
         ]
     },
-    "MOD_1'000'000'007": {
-        "prefix": "MOD_1'000'000'007",
-        "scope": "python",
-        "body": "MOD = 1_000_000_007"
-    },
-    "MOD_9998244353": {
-        "prefix": "MOD_998244353",
-        "scope": "python",
-        "body": "MOD = 998244353"
-    },
     "二分查找": {
         "prefix": "binaryfind",
         "scope": "python",

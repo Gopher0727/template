@@ -5,8 +5,9 @@
         "body": [
             "#include <bits/stdc++.h>",
             "#ifdef LOCAL",
-            "#include \"LeetCode.hpp\"",
             "#include <debug.h>",
+            "",
+            "#include \"LeetCode.hpp\"",
             "#else",
             "#define debug(...) void(0)",
             "#endif",
@@ -106,23 +107,6 @@
             "#endif",
         ]
     },
-    "UDLR": {
-        "prefix": "UDLR",
-        "scope": "cpp",
-        "body": [
-            "void go(int& x, int& y, char ch) {",
-            "    if (ch == 'U') {",
-            "        x--;",
-            "    } else if (ch == 'D') {",
-            "        x++;",
-            "    } else if (ch == 'L') {",
-            "        y--;",
-            "    } else if (ch == 'R') {",
-            "        y++;",
-            "    }",
-            "}",
-        ]
-    },
     "二分查找": {
         "prefix": "binaryfind",
         "scope": "cpp",
@@ -176,25 +160,6 @@
             "static constexpr int dy[] = {2, -2, 1, -1, 2, -2, 1, -1};"
         ]
     },
-    "init": {
-        "prefix": "init",
-        "scope": "cpp",
-        "body": [
-            "auto init = [] {",
-            "    $0",
-            "    return 0;",
-            "}();"
-        ]
-    },
-    "initWithVal": {
-        "prefix": "initWithVal",
-        "scope": "cpp",
-        "body": [
-            "auto $1 = [&] {",
-            "    $0",
-            "}();"
-        ]
-    },
     "lambda": {
         "prefix": "lambda",
         "scope": "cpp",
@@ -225,26 +190,6 @@
             "$1();"
         ]
     },
-    "prefix": {
-        "prefix": "prefix",
-        "scope": "cpp",
-        "body": [
-            "vector<i64> pre(n + 1);",
-            "for (int i = 0; i < n; i++) {",
-            "    pre[i + 1] = pre[i] + a[i];",
-            "}"
-        ]
-    },
-    "suffix": {
-        "prefix": "suffix",
-        "scope": "cpp",
-        "body": [
-            "vector<i64> suf(n + 1);",
-            "for (int i = n - 1; i >= 0; i--) {",
-            "    suf[i] = suf[i + 1] + a[i];",
-            "}"
-        ]
-    },
     "随机数生成": {
         "prefix": "random",
         "scope": "cpp",
@@ -253,24 +198,6 @@
             "uniform_int_distribution<int> disInt(8e8, 9e8);",
             "uniform_real_distribution<int> disReal(8e8, 9e8);",
             "auto rnd = disInt(gen); // 固定值"
-        ]
-    },
-    "下标排序": {
-        "prefix": "order",
-        "scope": "cpp",
-        "body": [
-            "vector<int> ord($1);",
-            "iota(ord.begin(), ord.end(), 0);",
-            "sort(ord.begin(), ord.end(), [&](int i, int j)-> bool { return $0 ;});"
-        ]
-    },
-    "priority_queue": {
-        "prefix": "priority_queue",
-        "scope": "cpp",
-        "body": [
-            "#include <ext/pb_ds/priority_queue.hpp>",
-            "",
-            "__gnu_pbds::priority_queue<$1, ${2:less<>}, __gnu_pbds::pairing_heap_tag> pq;"
         ]
     }
 }
