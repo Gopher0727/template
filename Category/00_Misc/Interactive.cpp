@@ -12,17 +12,3 @@ void respond(Args... args) {
     cout << "! ";
     ((cout << args << ' '), ...) << endl;
 }
-
-
-// Python:
-/*
-
-def query(*args):
-    print("?", *args, flush=True)
-    return II()
-
-
-def respond(*args):
-    print("!", *args, flush=True)
-
-*/
