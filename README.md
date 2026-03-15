@@ -1,6 +1,6 @@
 # Code template
 
-[![Gopher0727](https://img.shields.io/badge/-Codeforces-blue?style=for-the-badge)](https://codeforces.com/profile/LittleGopher)
+[![Gopher0727](https://img.shields.io/badge/-Codeforces-purple?style=for-the-badge)](https://codeforces.com/profile/LittleGopher)
 [![slashTeen](https://img.shields.io/badge/-Atcoder-yellow?style=for-the-badge)](https://atcoder.jp/users/slashTeen)
 
 **Embrace the journey wherever it leads and enjoy every moment of it!**
