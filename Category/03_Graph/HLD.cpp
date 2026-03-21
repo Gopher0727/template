@@ -1,4 +1,4 @@
-﻿// 树链剖分（Heavy-Light Decomposition，HLD）
+// 树链剖分（Heavy-Light Decomposition，HLD）
 //
 // 1. 如果权值在边上的话，则先将权值压到深度大的点上，再建立线段树。
 // 2. 节点 x 的子树对应的 'DFS序' 区间为 [in[x], in[x] + siz[x] - 1]。
