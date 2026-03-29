@@ -1,7 +1,7 @@
 var (
 	mod = 998244353
 
-	N    = 100
+	N    = int(2e5 + 10)
 	fac  = make([]int, N+1)
 	ifac = make([]int, N+1)
 )
