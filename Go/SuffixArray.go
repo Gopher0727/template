@@ -1,31 +1,30 @@
-func SuffixArray(s string) ([]int32, []int, []int) {
-    index := suffixarray.New([]byte(s))
+func SuffixArray(s string) (sa []int32, rnk []int, lcp []int) {
+	n := len(s)
 
-    // 找到 sa
-    sa := *(*[]int32)(unsafe.Pointer(reflect.ValueOf(index).Elem().FieldByName("sa").Field(0).UnsafeAddr()))
+	// sa[k] = i 表示字典序第 k 小的后缀的起始位置为 i
+	index := suffixarray.New([]byte(s))
+	sa = *(*[]int32)(unsafe.Pointer(reflect.ValueOf(index).Elem().FieldByName("sa").Field(0).UnsafeAddr()))
 
-    // rank 数组
-    n := len(s)
-    rank := make([]int, n)
-    for i := range n {
-        rank[sa[i]] = i
-    }
+	// rnk[i] 表示后缀 s[i:] 按字典序的排名
+	rnk = make([]int, n)
+	for i, x := range sa {
+		rnk[x] = i
+	}
 
-    // height 数组
-    height := make([]int, n)
-    h := 0
-    for i, rk := range rank {
-        if h > 0 {
-            h--
-        }
-        if rk > 0 {
-            j := int(sa[rk-1])
-            for i+h < n && j+h < n && s[i+h] == s[j+h] {
-                h++
-            }
-        }
-        height[rk] = h
-    }
-
-    return sa, rank, height
+	// lcp[i] = k 表示 s[i] 与 s[i-1] 的 LCP 长度为 k
+	lcp = make([]int, n)
+	h := 0
+	for i, rk := range rnk {
+		if h > 0 {
+			h--
+		}
+		if rk > 0 {
+			j := int(sa[rk-1])
+			for i+h < n && j+h < n && s[i+h] == s[j+h] {
+				h++
+			}
+		}
+		lcp[rk] = h
+	}
+	return
 }
