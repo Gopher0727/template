@@ -21,10 +21,7 @@ func (p *Point) SubAssign(q Point) {
 
 func ConvexHull(points []Point) (hi []Point, lo []Point) {
     slices.SortFunc(points, func(a, b Point) int {
-        if a.x == b.x {
-            return a.y - b.y
-        }
-        return a.x - b.x
+        return cmp.Or(a.x-b.x, a.y-b.y)
     })
 
     for _, p := range points {

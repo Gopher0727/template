@@ -1,9 +1,9 @@
 # 作者：灵茶山艾府
 # 链接：https://leetcode.cn/discuss/post/3581838/fen-xiang-gun-ti-dan-dong-tai-gui-hua-ru-007o/
 def DigitalDP(low: int, high: int) -> int:
-    low_s = list(map(int, str(low)))
+    high_s = list(map(int, str(high)))
     n = len(high_s)
-    high_s = list(map(int, str(high).zfill(n)))
+    low_s = list(map(int, str(low).zfill(n)))
     # diff_lh = n - len(low_s)
 
     @cache
