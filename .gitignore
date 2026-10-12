@@ -1,3 +1,8 @@
 # .gitignore file
+ 
+### MacOS ###
 .DS_Store
-test.cpp
+
+### Rust ###
+target/
+Cargo.lock
