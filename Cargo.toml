@@ -1,0 +1,10 @@
+[package]
+name = "template"
+version = "0.1.0"
+edition = "2024"
+
+[[test]]
+name = "segment_test"
+path = "Rust/segment_test.rs"
+
+[dependencies]
