@@ -1,12 +1,18 @@
 max_width = 120
 
+# 自动调整 use 导入顺序
 reorder_imports = true
+
+# 自动调整 mod 声明顺序
 reorder_modules = true
 
+# 合并多个 derive
 merge_derives = true
 
+# 格式化宏内部代码
 format_macro_bodies = true
 
+# 允许参与对齐的字段名长度差
 struct_field_align_threshold = 10
 
 # You can: `cargo +nightly fmt`
